@@ -19,7 +19,7 @@ app.post('/login', async(req, res) => {
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password are required.' });
         }
-
+        
 
         const user = await User.findOne({ username });
 
@@ -43,15 +43,16 @@ app.post('/login', async(req, res) => {
 
 app.post('/signup', async(req, res) => {
     try {
-        const { username, password } = req.body;
+        const { name,username, password } = req.body;
 
-        if (!username || !password) {
-            return res.status(400).json({ error: 'Username and password are required.' });
+        if (!name || !username || !password) {
+            return res.status(400).json({ error: 'Name and Username and password are required.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({
+            name,
             username,
             password: hashedPassword
         });
@@ -71,21 +72,21 @@ app.post('/forgot-password', async(req, res) => {
     const { email } = req.body;
 
 
-    // if (!email) {
-    //     return res.status(400).json({ error: 'Email is required.' });
-    // }
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required.' });
+    }
 
     try {
-        // const user = await User.findOne({ username: email });
+        const user = await User.findOne({ username: email });
 
-        // if (!user) {
-        //     return res.status(404).json({ error: 'User not found.' });
-        // }
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
 
-        // const resetToken = generateResetToken();
-        // await sendPasswordResetEmail(email, resetToken);
+        const resetToken = generateResetToken();
+        await sendPasswordResetEmail(email, resetToken);
 
-        // await updateUserResetToken(user._id, resetToken);
+        await updateUserResetToken(user._id, resetToken);
 
         return res.status(200).json({ message: 'Password reset email sent.' });
     } catch (error) {
@@ -94,85 +95,70 @@ app.post('/forgot-password', async(req, res) => {
     }
 });
 
-// app.get('/reset-password/:token', async(req, res) => {
-//     const { token } = req.params;
+app.post('/reset-password/:token', async(req, res) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+    const user = await User.findOne({
+        token: token,
+        tokenexpire: { $gt: Date.now() },
+    });
 
-//     const user = await User.findOne({
-//         resetPasswordToken: token,
-//         resetPasswordExpires: { $gt: Date.now() },
-//     });
+    if (!user) {
+        return res.status(400).json({ error: 'Password reset token is invalid or has expired.' });
+    }
 
-//     if (!user) {
-//         return res.status(400).json({ error: 'Password reset token is invalid or has expired.' });
-//     }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
 
-//     res.render('password-reset-form', { token });
-// });
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
 
-// app.post('/reset-password/:token', async(req, res) => {
-//     const { token } = req.params;
-//     const { newPassword } = req.body;
+    await user.save();
 
-//     const user = await User.findOne({
-//         resetPasswordToken: token,
-//         resetPasswordExpires: { $gt: Date.now() },
-//     });
+    res.status(200).json({ message: 'Password reset successful.' });
+});
 
-//     if (!user) {
-//         return res.status(400).json({ error: 'Password reset token is invalid or has expired.' });
-//     }
+function generateResetToken() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const tokenLength = 32;
+    let token = '';
+    for (let i = 0; i < tokenLength; i++) {
+        token += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return token;
+}
 
-//     const hashedPassword = await bcrypt.hash(newPassword, 10);
-//     user.password = hashedPassword;
+async function sendPasswordResetEmail(email, resetToken) {
+    const mailOptions = {
+        from: 'agrocom0532@gmail.com',
+        to: email,
+        subject: 'Password Reset',
+        text: `To reset your password, use it token ${resetToken}`,
+    };
 
-//     user.resetPasswordToken = undefined;
-//     user.resetPasswordExpires = undefined;
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Password reset email sent:', info.response);
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+    }
+}
 
-//     await user.save();
-
-//     res.status(200).json({ message: 'Password reset successful.' });
-// });
-
-// function generateResetToken() {
-//     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//     const tokenLength = 32;
-//     let token = '';
-//     for (let i = 0; i < tokenLength; i++) {
-//         token += characters.charAt(Math.floor(Math.random() * characters.length));
-//     }
-//     return token;
-// }
-
-// async function sendPasswordResetEmail(email, resetToken) {
-//     const mailOptions = {
-//         from: 'agrocom0532@gmail.com',
-//         to: email,
-//         subject: 'Password Reset',
-//         text: `To reset your password, click this link: http://localhost:3000/reset-password/${resetToken}`,
-//     };
-
-//     try {
-//         const info = await transporter.sendMail(mailOptions);
-//         console.log('Password reset email sent:', info.response);
-//     } catch (error) {
-//         console.error('Error sending password reset email:', error);
-//     }
-// }
-
-// async function updateUserResetToken(userId, resetToken) {
-//     try {
-//         const user = await User.findById(userId);
-//         if (user) {
-//             user.resetPasswordToken = resetToken;
-//             user.resetPasswordExpires = new Date(Date.now() + 3600000); 
-//             console.log('User reset token updated successfully.');
-//         } else {
-//             console.log('User not found.');
-//         }
-//     } catch (error) {
-//         console.error('Error updating user reset token:', error);
-//     }
-// }
+async function updateUserResetToken(userId, resetToken) {
+    try {
+        const user = await User.findById(userId);
+        if (user) {
+            user.resetPasswordToken = resetToken;
+            user.resetPasswordExpires = new Date(Date.now() + 3600000);
+            let res = await User.updateOne({_id:userId},{$set:{token:resetToken,tokenexpire:user.resetPasswordExpires}}) 
+            console.log('User reset token updated successfully.');
+        } else {
+            console.log('User not found.');
+        }
+    } catch (error) {
+        console.error('Error updating user reset token:', error);
+    }
+}
 
 
 app.listen(PORT, () => {
