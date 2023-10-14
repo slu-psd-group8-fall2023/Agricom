@@ -8,6 +8,10 @@ This is the frontend repository for our Agricom application. This facilitates us
 - Allow new users to signup to the application
 - Allow existing user to reset password
 
+## Install packages
+- Install required packages before running the application using the following command
+  `npm install` 
+
 ## Development server
 
 Run `ng serve` to run the application in local environment. Navigate to `http://localhost:4200/`.
