@@ -8,21 +8,17 @@ Our project is AgriCom. AgriCom is an innovative agricultural platform designed 
 npm i
 
 ## Usage
-1. The user can sign up for the application by giving the user info.
-2. The user can log in to the application by using the username and password.
-3. The user can change the password if forgotten by using the forgotten password.
+1. The user can sign up for the application by giving the user info.The endpoint is `HTTP://127.0.0.0:3000/signup('user123','user123@gmail.com', 'password123')`.
+2. The user can log in to the application using the username and password. The endpoint is `HTTP://127.0.0.0:3000/login('user123@gmail.com', 'password123')`.
+3. The user can change the password if forgotten by using the forgotten password. The endpoint is `HTTP://127.0.0.0:3000/forgotten password('user123@gmail.com')`.
 # Example code snippet
 app.post('/login', async(req, res) => {
     # Your login logic here
     }
 
 # Usage example
-HTTP://127.0.0.0:3000/login('user123', 'password123')
+`HTTP://127.0.0.0:3000/login('user123', 'password123')`
 
 ## Features
   - Implement the backend flow for login, signup, and ForgetPassword.
-  - Integrate backend database (DB) integration.
-
-## Contact
-Please contact AgriCom at agrocom0532@gmail.com for questions or support.
-
+  - Implement backend database (DB) integration.
