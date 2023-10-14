@@ -17,7 +17,7 @@ app.post('/login', async(req, res) => {
     }
 
 # Usage example
-HTTP://login('user123', 'password123')
+HTTP://127.0.0.0:3000/login('user123', 'password123')
 
 ## Features
   - Implement the backend flow for login, signup, and ForgetPassword.
