@@ -19,6 +19,7 @@
               <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control" placeholder="Password"
                 required>
             </div>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
             <button (click)="login()" type="submit" class="btn btn-primary">Sign In</button>
           </form>
           <p (click)="showSignup()">Don't have an account? <a>Sign Up</a></p>
@@ -39,13 +40,27 @@
               <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control" placeholder="Password"
                 required>
             </div>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
             <button (click)="signup()" type="submit" class="btn btn-secondary">Sign Up</button>
           </form>
           <p (click)="showLogin()">Already have an account? <a>Sign In</a></p>
         </div>
 
-        <div class="form" [hidden]="!authCtrl.showPasswordReset">
+        <div class="form" [hidden]="!authCtrl.showForgotPassword">
           <h2>Password Reset</h2>
+          <form>
+            <div class="form-group">
+              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Enter your email address"
+                required>
+            </div>
+            <p (click)="showLogin()">Remember the password? <a>Sign In</a></p>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
+            <button (click)="forgotPasssword()" type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+
+        <div class="form" [hidden]="!authCtrl.showPasswordReset">
+          <h2>Password Reset</h2> <label> A password reset mail has been sent to your mail</label>
           <form>
             <div class="form-group">
               <input type="text" name="Token" [(ngModel)]="authCtrl.token" class="form-control" placeholder="Enter the token"
@@ -61,7 +76,7 @@
               <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
             </div>
             <p (click)="showLogin()">Remember the password? <a>Sign In</a></p>
-            <button (click)="forgotPasssword()" type="submit" class="btn btn-primary">Reset Password</button>
+            <button (click)="resetPasssword()" type="submit" class="btn btn-primary">Reset Password</button>
           </form>
         </div>
       </div>
@@ -86,6 +101,7 @@
               <input type="email" id="email" ng-model="authCtrl.forgotPassEmail" class="form-control"
                 placeholder="Email" required>
             </div>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
