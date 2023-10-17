@@ -15,6 +15,13 @@ db();
 // Register middleware
 app.use(cors);
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods","PUT,GET,POST,DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");    
+    next();
+  });
+
 // Register authentication routes
 app.post('/login', handleLogin);
 app.post('/signup', handleSignup);
