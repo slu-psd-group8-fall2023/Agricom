@@ -7,7 +7,7 @@ const authUtil = require('./authutil')
  */
 async function handleLogin(req, res) {
     const loginres = await authUtil.userLogin(req, res)
-    res.json(loginres)
+    return loginres
 }
 
 /**
@@ -16,8 +16,8 @@ async function handleLogin(req, res) {
  * @param {object} res
  */
 async function handleSignup(req, res) {
-    const loginres = await authUtil.userSignUp(req, res)
-    res.json(loginres)
+    const usersign = await authUtil.userSignUp(req, res)
+    return usersign
 }
 
 /**
@@ -26,8 +26,8 @@ async function handleSignup(req, res) {
  * @param {object} res
  */
 async function handleForgotPassword(req, res) {
-    const signupres = await authUtil.userForgotPassword(req, res)
-    res.json(signupres)
+    const forgetpass = await authUtil.userForgotPassword(req, res)
+    return forgetpass
 }
 
 /**
@@ -37,7 +37,7 @@ async function handleForgotPassword(req, res) {
  */
 async function handleResetPassword(req, res) {
     const forgotres = await authUtil.userResetPassword(req, res)
-    res.json(forgotres)
+    return forgotres
 }
 
 module.exports = {
