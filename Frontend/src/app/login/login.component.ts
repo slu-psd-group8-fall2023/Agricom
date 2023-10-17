@@ -18,6 +18,7 @@ export class LoginComponent {
       showSignIn:false,
       showSignUp:false,
       showPasswordReset:false,
+      showForgotPassword:false,
       name: '',
       email: '',
       password: '',
@@ -40,6 +41,11 @@ export class LoginComponent {
   }
 
   showForgotpassword() {
+    this.reset()
+    this.authCtrl.showForgotPassword = true;
+  }
+  
+  async showResetPassword() {
     this.reset()
     this.authCtrl.showPasswordReset = true;
   }
@@ -64,14 +70,44 @@ export class LoginComponent {
       password: this.authCtrl.password
     };
     try {
-      let data = await this.defaultService.httpPostCall(environment.SIGNUP_API, params);
-      console.log(data);
+      // let data = await this.defaultService.httpPostCall(environment.SIGNUP_API, params);
+      // console.log(data);
+      this.defaultService.httpPostCall(environment.SIGNUP_API, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+        },
+        err => {
+          console.log(err);
+        }
+      )
     } catch(e) {
       this.authCtrl.errorMessage = e;
     }
   }
 
   async forgotPasssword() {
+    let params = {
+      username: this.authCtrl.email
+    };
+    try {
+      // let data = await this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params);
+      this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+          this.showResetPassword();
+        },
+        err => {
+          console.log(err);
+        }
+      )
+    } catch(e) {
+      this.authCtrl.errorMessage = e;
+    }
+  }
+
+  async resetPasssword() {
     if(this.authCtrl.newPassword != this.authCtrl.confirmNewPassword) {
       this.authCtrl.errorMessage = 'Passwords do not match';
       return;
@@ -83,8 +119,17 @@ export class LoginComponent {
     };
     
     try {
-      let data = await this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params);
-      console.log(data);
+      // let data = await this.defaultService.httpPostCall(`${environment.RESET_PASS_API}/${this.authCtrl.token}`, params);
+      // console.log(data);
+      this.defaultService.httpPostCall(`${environment.RESET_PASS_API}/${this.authCtrl.token}`, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+        },
+        err => {
+          console.log(err);
+        }
+      )
     } catch(e) {
       this.authCtrl.errorMessage = e;
     }
