@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const db = require('./database/db');
 const { cors, handleError, notFound } = require('./middleware');
 const { handleLogin, handleSignup, handleForgotPassword, handleResetPassword } = require('./api');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
