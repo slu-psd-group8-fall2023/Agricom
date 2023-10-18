@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+</head>
+<body>
+    <div id="post-bar">
+    <div class="dropdown-container">
+        <button class="btn btn-primary" id="dropdown-button">post</button>
+        <div class="dropdown-content" id="dropdown-content">
+            <form (ngSubmit)="submitForm()">
+                <input class="form-control" type="text" id="title" placeholder="title" [(ngModel)]="formData.title" name="title" required><input class="form-control" type="file" id="picture" [(ngModel)]="formData.picture" name="picture" accept="image/*" >
+
+                <textarea class="form-control" id="description" name="description" rows="4" placeholder="Whats in you heart" [(ngModel)]="formData.description" required></textarea>
+
+                <button type="submit" class="btn btn-success" id="post_submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+    <script>
+        const dropdownButton = document.getElementById('dropdown-button');
+        const dropdownContent = document.getElementById('dropdown-content');
+        let isDropdownOpen = false;
+
+        dropdownButton.addEventListener('click', function() {
+            isDropdownOpen = !isDropdownOpen;
+            dropdownContent.style.display = isDropdownOpen ? 'block' : 'none';
+        });
+    </script>
+
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
