@@ -43,7 +43,7 @@ function handleError(err, req, res, next) {
    * @param {object} res
    */
 function notFound(req, res) {
-    res.status(404).json({ error: "Not Found" })
+    res.status(505).json({ error: "http is not supported" })
 }
 
 module.exports = {

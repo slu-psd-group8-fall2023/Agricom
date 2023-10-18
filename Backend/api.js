@@ -1,4 +1,5 @@
 const authUtil = require('./authutil')
+const userpost = require('./userpost')
 
 /**
  * handles login
@@ -41,9 +42,31 @@ async function handleResetPassword(req, res) {
 }
 
 
+/**
+ * handleResetPassword
+ * @param {object} req
+ * @param {object} res
+ */
+async function userPost(req, res) {
+    const postres = await userpost.userPost(req, res)
+    return postres
+}
+
+/**
+ * handleResetPassword
+ * @param {object} req
+ * @param {object} res
+ */
+async function retrievePosts(req, res) {
+    const retrieveres = await userpost.retrievePosts(req, res)
+    return retrieveress
+}
+
 module.exports = {
     handleLogin,
     handleSignup,
     handleForgotPassword,
     handleResetPassword,
+    userPost,
+    retrievePosts,
 };
