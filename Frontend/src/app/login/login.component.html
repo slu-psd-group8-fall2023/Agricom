@@ -2,82 +2,110 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
-  
+
 </head>
-  <body>
-    <div class="container" >
-      <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-          <div class="form" [hidden]="!authCtrl.showSignIn">
-            <h2>Sign In</h2>
-            <form ng-submit="authCtrl.signIn()">
-              <div class="form-group">
-                <input type="text" ng-model="authCtrl.signInEmail" class="form-control" placeholder="Email" required>
-              </div>
-              <div class="form-group">
-                <input type="password" ng-model="authCtrl.signInPassword" class="form-control" placeholder="Password" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Sign In</button>
-            </form>
-            <p (click)="showSignup()">Don't have an account? <a>Sign Up</a></p>
-            <p (click)="showForgotpassword()">Forgot your password? <a href="#" data-toggle="modal" data-target="#forgotPasswordModal">Reset Password</a></p>
-          </div>
-  
-          <div class="form" [hidden]="!authCtrl.showSignUp">
-            <h2>Sign Up</h2>
-            <form ng-submit="authCtrl.signUp()">
-              <div class="form-group">
-                <input type="text" ng-model="authCtrl.signUpName" class="form-control" placeholder="Name" required>
-              </div>
-              <div class="form-group">
-                <input type="text" ng-model="authCtrl.signUpEmail" class="form-control" placeholder="Email" required>
-              </div>
-              <div class="form-group">
-                <input type="password" ng-model="authCtrl.signUpPassword" class="form-control" placeholder="Password" required>
-              </div>
-              <button type="submit" class="btn btn-secondary">Sign Up</button>
-            </form>
-            <p (click)="showLogin()">Already have an account? <a>Sign In</a></p>
-          </div>
-  
-          <div class="form" [hidden]="!authCtrl.showPasswordReset">
-            <h2>Password Reset</h2>
-            <form ng-submit="authCtrl.resetPassword()">
-              <div class="form-group">
-                <input type="text" ng-model="authCtrl.resetToken" class="form-control" placeholder="Enter the token" required>
-              </div>
-              <div class="form-group">
-                <input type="password" ng-model="authCtrl.newPassword" class="form-control" placeholder="New Password" required>
-              </div>
-              <div class="form-group">
-                <input type="password" ng-model="authCtrl.confirmNewPassword" class="form-control" placeholder="Confirm New Password" required>
-              </div>
-              <p (click)="showLogin()">Remember the password? <a>Sign In</a></p>
-              <button type="submit" class="btn btn-primary">Reset Password</button>
-            </form>
-          </div>
+
+<body>
+  <div class="container">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-6">
+        <div class="form" [hidden]="!authCtrl.showSignIn">
+          <h2>Sign In</h2>
+          <form>
+            <div class="form-group">
+              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+              <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control" placeholder="Password"
+                required>
+            </div>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
+            <button (click)="login()" type="submit" class="btn btn-primary">Sign In</button>
+          </form>
+          <p (click)="showSignup()">Don't have an account? <a>Sign Up</a></p>
+          <p (click)="showForgotpassword()">Forgot your password? <a href="#" data-toggle="modal"
+              data-target="#forgotPasswordModal">Reset Password</a></p>
+        </div>
+
+        <div class="form" [hidden]="!authCtrl.showSignUp">
+          <h2>Sign Up</h2>
+          <form>
+            <div class="form-group">
+              <input type="text" name="Name" [(ngModel)]="authCtrl.name" class="form-control" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+              <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control" placeholder="Password"
+                required>
+            </div>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
+            <button (click)="signup()" type="submit" class="btn btn-secondary">Sign Up</button>
+          </form>
+          <p (click)="showLogin()">Already have an account? <a>Sign In</a></p>
+        </div>
+
+        <div class="form" [hidden]="!authCtrl.showForgotPassword">
+          <h2>Password Reset</h2>
+          <form>
+            <div class="form-group">
+              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Enter your email address"
+                required>
+            </div>
+            <p (click)="showLogin()">Remember the password? <a>Sign In</a></p>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
+            <button (click)="forgotPasssword()" type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+
+        <div class="form" [hidden]="!authCtrl.showPasswordReset">
+          <h2>Password Reset</h2> <label> A password reset mail has been sent to your mail</label>
+          <form>
+            <div class="form-group">
+              <input type="text" name="Token" [(ngModel)]="authCtrl.token" class="form-control" placeholder="Enter the token"
+                required>
+            </div>
+            <div class="form-group">
+              <input type="password" name="Password" [(ngModel)]="authCtrl.newPassword" class="form-control" placeholder="New Password"
+                required>
+            </div>
+            <div class="form-group">
+              <input type="password" name="Confirm Password" [(ngModel)]="authCtrl.confirmNewPassword" class="form-control"
+                placeholder="Confirm New Password" required>
+              <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
+            </div>
+            <p (click)="showLogin()">Remember the password? <a>Sign In</a></p>
+            <button (click)="resetPasssword()" type="submit" class="btn btn-primary">Reset Password</button>
+          </form>
         </div>
       </div>
     </div>
-  
-    <!-- Forgot Password Modal -->
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Forgot Password</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form ng-submit="authCtrl.forgotPass()">
-              <div class="form-group">
-                <label for="email">Enter your email:</label>
-                <input type="email" id="email" ng-model="authCtrl.forgotPassEmail" class="form-control" placeholder="Email" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Forgot Password</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form ng-submit="authCtrl.forgotPass()">
+            <div class="form-group">
+              <label for="email">Enter your email:</label>
+              <input type="email" id="email" ng-model="authCtrl.forgotPassEmail" class="form-control"
+                placeholder="Email" required>
+            </div>
+            <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
       </div>
+    </div>
+  </div>
 </body>

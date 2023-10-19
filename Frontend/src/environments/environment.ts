@@ -1,6 +1,7 @@
 export const environment = {
     production: false,
-    LOGIN_API: '127.0.0.1/login',
-    SIGNUP_API: '127.0.0.1/signup',
-    FORGOT_PASS_API: '127.0.0.1/forgot-password',
+    LOGIN_API: 'http://localhost:3000/login',
+    SIGNUP_API: 'http://127.0.0.1:3000/signup',
+    FORGOT_PASS_API: 'http://127.0.0.1:3000/forgot-password',
+    RESET_PASS_API: 'http://127.0.0.1:3000/reset-password',
 }

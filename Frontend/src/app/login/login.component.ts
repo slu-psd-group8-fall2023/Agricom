@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from '../../environments/environment';
+import { DefaultService } from "../default.service";
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -8,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class LoginComponent {
   authCtrl:any;
-  constructor(private http: HttpClient) {
+  constructor(private defaultService:DefaultService) {
     this.showLogin();
   }
 
@@ -17,11 +18,15 @@ export class LoginComponent {
       showSignIn:false,
       showSignUp:false,
       showPasswordReset:false,
+      showForgotPassword:false,
       name: '',
       email: '',
       password: '',
       newPassword: '',
-      confirmNewPassword: ''
+      confirmNewPassword: '',
+      token: '',
+      passwordNoMatch: false,
+      errorMessage: ''
     }
   }
   showLogin() {
@@ -37,31 +42,106 @@ export class LoginComponent {
 
   showForgotpassword() {
     this.reset()
+    this.authCtrl.showForgotPassword = true;
+  }
+  
+  async showResetPassword() {
+    this.reset()
     this.authCtrl.showPasswordReset = true;
   }
 
-  login() {
+  async login() {
     let params = {
       username: this.authCtrl.email,
       password: this.authCtrl.password
     };
-    let data = this.http.post(environment.LOGIN_API, params);
+    try {
+      // let data = await this.defaultService.postReq(environment.LOGIN_API, params);
+      // console.log(data);
+      // return 0;
+      this.defaultService.httpPostCall(environment.LOGIN_API, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+        },
+        err => {
+          console.log(err);
+        }
+      )
+    } catch(e) {
+      this.authCtrl.errorMessage = e;
+    }
   }
 
-  signup() {
+  async signup() {
     let params = {
       name: this.authCtrl.name,
       username: this.authCtrl.email,
       password: this.authCtrl.password
     };
-    let data = this.http.post(environment.SIGNUP_API, params);
+    try {
+      // let data = await this.defaultService.httpPostCall(environment.SIGNUP_API, params);
+      // console.log(data);
+      this.defaultService.httpPostCall(environment.SIGNUP_API, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+        },
+        err => {
+          console.log(err);
+        }
+      )
+    } catch(e) {
+      this.authCtrl.errorMessage = e;
+    }
   }
 
-  forgot_passsword() {
+  async forgotPasssword() {
     let params = {
-      username: this.authCtrl.newPassword,
+      username: this.authCtrl.email
+    };
+    try {
+      // let data = await this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params);
+      this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+          this.showResetPassword();
+        },
+        err => {
+          console.log(err);
+        }
+      )
+    } catch(e) {
+      this.authCtrl.errorMessage = e;
+    }
+  }
+
+  async resetPasssword() {
+    if(this.authCtrl.newPassword != this.authCtrl.confirmNewPassword) {
+      this.authCtrl.errorMessage = 'Passwords do not match';
+      return;
+    }
+    let params = {
+      token: this.authCtrl.token,
+      username: this.authCtrl.email,
       password: this.authCtrl.confirmNewPassword
     };
-    let data = this.http.post(environment.FORGOT_PASS_API, params);
+    
+    try {
+      // let data = await this.defaultService.httpPostCall(`${environment.RESET_PASS_API}/${this.authCtrl.token}`, params);
+      // console.log(data);
+      this.defaultService.httpPostCall(`${environment.RESET_PASS_API}/${this.authCtrl.token}`, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+        },
+        err => {
+          console.log(err);
+        }
+      )
+    } catch(e) {
+      this.authCtrl.errorMessage = e;
+    }
   }
 }
