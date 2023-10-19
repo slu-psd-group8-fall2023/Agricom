@@ -58,6 +58,18 @@ export class LoginComponent {
     try {
       let data = await this.defaultService.httpPostCall(environment.LOGIN_API, params);
       console.log(data);
+      // let data = await this.defaultService.postReq(environment.LOGIN_API, params);
+      // console.log(data);
+      // return 0;
+      this.defaultService.httpPostCall(environment.LOGIN_API, params).subscribe(
+        data => {
+          let response = data['data'];
+          console.log(response);
+        },
+        err => {
+          console.log(err);
+        }
+      )
     } catch(e) {
       this.authCtrl.errorMessage = e;
     }
