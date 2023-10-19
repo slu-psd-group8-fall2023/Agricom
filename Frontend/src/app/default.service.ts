@@ -12,7 +12,15 @@ export class DefaultService {
   }
 
   public httpPostCall(url:any, params:any , headers?:any): Observable<any> {
-    return this.http.post<any>(url, params, { headers: headers });
+    return this.http.post<any>(url, {body:params}, {
+        headers:
+          new HttpHeaders(
+            {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          )
+      });
   }
 
 }
