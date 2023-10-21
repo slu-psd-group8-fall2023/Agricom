@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <!-- Include Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
-</head>
-<body>
-    <div id="post-bar">
+<div id="post-bar">
     <div class="dropdown-container">
-        <button class="btn btn-primary" id="dropdown-button">post</button>
-        <div class="dropdown-content" id="dropdown-content">
+        <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">post</button>
+        <div class="dropdown-content" id="dropdown-content" [style.display]="isDropdownOpen ? 'block' : 'none'">
             <form (ngSubmit)="submitForm()">
                 <input class="form-control" type="text" id="title" placeholder="title" [(ngModel)]="formData.title" name="title" required><input class="form-control" type="file" id="picture" [(ngModel)]="formData.picture" name="picture" accept="image/*" >
 
@@ -20,20 +12,24 @@
         </div>
     </div>
 </div>
-    <script>
-        const dropdownButton = document.getElementById('dropdown-button');
-        const dropdownContent = document.getElementById('dropdown-content');
-        let isDropdownOpen = false;
+<br><br><br>
+<!-- scrollable-and showing posts on screen -->
+<div class="data-container" (scroll)="onScroll()">
+    <div *ngFor="let item of data" class="data-item">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <div class="card">
+                        <img class="card-img-top" src="{{picture}}" alt="User Picture">
+                        <div class="card-body">
+                            <h5 class="card-title">User ID: {{ userId }}</h5>
+                            <p class="card-text">{{ description }}</p>
+                            <button class="btn btn-primary">Discussion Box</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        dropdownButton.addEventListener('click', function() {
-            isDropdownOpen = !isDropdownOpen;
-            dropdownContent.style.display = isDropdownOpen ? 'block' : 'none';
-        });
-    </script>
-
-    <!-- Include Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
