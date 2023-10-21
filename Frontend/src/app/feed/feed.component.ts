@@ -24,7 +24,7 @@ export class FeedComponent {
   description:''
 }
 
-
+//submiting data to backend
 submitForm(): void {
   // Retrieve data from the form and store it in the 'formData' object
   this.formData.title = (document.getElementById('title') as HTMLInputElement).value;
@@ -35,7 +35,7 @@ submitForm(): void {
   console.log('Form Data:', this.formData);
 }
 
-// component to show post on page
+// angular code to show post on page and onscrolling it retrives the data and shows on ascreen
   users: any[] = [];
   isLoading = false;
 
