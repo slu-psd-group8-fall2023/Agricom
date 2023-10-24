@@ -8,10 +8,10 @@ orbs:
 jobs:
   build_and_test: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
-    - node/test:
-          app-dir: "~/project/Backend"
     steps:
       - checkout
+      - node/test:
+          app-dir: "~/project/Backend"
       - node/install-packages:
           pkg-manager: npm
       # - run:
@@ -21,7 +21,7 @@ jobs:
           command: npm run build
           name: Build app
       - persist_to_workspace:
-          root: ~/project/Backend
+          root: ~/project/
           paths:
             - .
             
