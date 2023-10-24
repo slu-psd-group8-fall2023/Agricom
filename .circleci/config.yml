@@ -56,4 +56,5 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+      - list_dir
       - build_and_test
