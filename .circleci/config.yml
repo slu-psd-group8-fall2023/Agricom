@@ -8,6 +8,7 @@ orbs:
 jobs:
   list_dir: 
     steps:
+      - checkout
       run:
         command: ls -l
         
