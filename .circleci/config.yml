@@ -16,10 +16,10 @@ jobs:
       #     command: npm run test
       #     name: Run tests
       - run:
-          command: cd ./Backend && npm run build
+          command: npm run build
           name: Build app
       - persist_to_workspace:
-          root: ~/project
+          root: ~/project/Backend
           paths:
             - .
             
