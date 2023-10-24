@@ -11,12 +11,13 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          app-dir: "~/project/Backend/"
+          app-dir: "~/project/Frontend/"
           pkg-manager: npm
       # - run:
       #     command: npm run test
       #     name: Run tests
       - run:
+          app-dir: "~/project/Backend/"
           command: npm run build
           name: Build app
       - persist_to_workspace:
