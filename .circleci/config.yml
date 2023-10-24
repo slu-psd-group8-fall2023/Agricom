@@ -8,7 +8,7 @@ orbs:
 jobs:
   build_and_test: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
-    working_directory: "./Frontend/"
+    working_directory: "/home/circleci/project/Frontend/"
     steps:
       - checkout
       # - node/install-packages:
@@ -27,9 +27,9 @@ jobs:
           command: npm run build
           name: Build app
       - persist_to_workspace:
-          root: ~/project/
+          root: /home/circleci/project/
           paths:
-            - .
+            - Frontend
             
   say-hello:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
