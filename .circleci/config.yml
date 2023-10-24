@@ -10,9 +10,8 @@ jobs:
     executor: node/default # use the default executor defined within the orb
     steps:
       - checkout
-      - node/test:
-          app-dir: "~/project/Backend"
       - node/install-packages:
+          app-dir: "~/project/Backend"
           pkg-manager: npm
       # - run:
       #     command: npm run test
