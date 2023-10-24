@@ -6,6 +6,11 @@ orbs:
   node: circleci/node@5.0.2
 
 jobs:
+  list_dir: 
+    steps:
+      run:
+        command: ls -l
+        
   build_and_test: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
     working_directory: "/home/circleci/project/Frontend/"
