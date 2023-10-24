@@ -11,12 +11,12 @@ jobs:
     working_directory: "/home/circleci/project/Frontend/"
     steps:
       - checkout
-        path: ~/projects
       # - node/install-packages:
       #     app-dir: "~/project/Frontend/"
       #     pkg-manager: npm
       - run:
           name: Install node_modules with npm
+          app-dir: "~/project/Frontend/"
           command: npm install
       - run:
             name: Install angularcli
