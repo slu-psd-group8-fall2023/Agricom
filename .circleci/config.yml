@@ -8,26 +8,22 @@ orbs:
 jobs:
   build_and_test: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
-    working_directory: "~/Frontend/"
+    working_directory: "~/project/Frontend/"
     steps:
       - checkout
       # - node/install-packages:
       #     app-dir: "~/project/Frontend/"
       #     pkg-manager: npm
       - run:
-          app-dir: "~/project/Frontend/"
           name: Install node_modules with npm
           command: npm install
       - run:
-            app-dir: "~/project/Frontend/"
             name: Install angularcli
             command: sudo npm install -g @angular/cli@latest
       - run:
-          app-dir: "~/project/Frontend/"
           command: npm run test
           name: Run tests
       - run:
-          app-dir: "~/project/Frontend/"
           command: npm run build
           name: Build app
       - persist_to_workspace:
