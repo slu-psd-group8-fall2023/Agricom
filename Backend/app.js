@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./database/db');
-const { cors, handleError, notFound } = require('./middleware');
+const { cors, handleError } = require('./middleware');
 const api = require('./api');
 
 const app = express();
@@ -31,8 +31,6 @@ app.post('/posts', api.userPost)
 app.get('/retrieveposts',api.retrievePosts)
 app.post('/postcomments', api.addCommentToPost);
 app.get('/getpostcomments', api.getCommentsForPost);
-// Handle 404 Not Found
-app.use(notFound);
 
 // Handle errors
 app.use(handleError);
