@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+/**
+ * Post Schema for User Post
+ * Which contains the username,title,content,image,createAt,comments
+ * In Comments contains username,content,CreatedAt
+ */
 const postSchema = new mongoose.Schema({
 username:{
     type: String,
