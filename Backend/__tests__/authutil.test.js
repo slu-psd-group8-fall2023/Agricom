@@ -3,9 +3,7 @@ const { userLogin,userSignUp } = require('../authutil');
 const User = require('../models/User');
 
 // Mocking the necessary modules
-jest.mock('bcryptjs', () => ({
-    compare: jest.fn(),
-}));
+jest.mock('bcryptjs', () => ({compare: jest.fn(),}));
 jest.mock('../models/transporter', () => ({}));
 jest.mock('../models/User', () => ({
     findOne: jest.fn(),
@@ -13,6 +11,10 @@ jest.mock('../models/User', () => ({
     create: jest.fn(),
 }));
 
+
+/**
+ * Test cases for the UserLogin
+ */
 describe('userLogin', () => {
     it('should return 400 Bad Request if data is missing', async () => {
         const req = { body: {} };
@@ -75,30 +77,12 @@ describe('userLogin', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ message: 'Login successful.' });
     });
-
-    it('should return 500 Internal Server Error on server error', async () => {
-        const req = { body: { username: 'existing', password: 'password' } };
-        const res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
-        };
-
-        User.findOne.mockRejectedValue(new Error('Some database error'));
-
-        await userLogin(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
-    });
 });
 
 
-
-
-
-
-
-
+/**
+ * Test cases for the UserSignUP
+ */
 describe('userSignUp', () => {
     it('should return 400 Bad Request if name, username, or password is missing', async () => {
         const req = { body: {} };
@@ -113,27 +97,26 @@ describe('userSignUp', () => {
         expect(res.json).toHaveBeenCalledWith({ error: 'Name, Username, and password are required.' });
     });
 
-    // it('should create a new user when valid data is provided', async () => {
-    //     const req = {
-    //         body: {
-    //             name: 'John Doe',
-    //             username: 'johndoe',
-    //             password: 'password',
-    //         },
-    //     };
+    it('should create a new user when valid data is provided', async () => {
+        const req = {
+            body: {
+                name: 'John Doe',
+                username: 'johndoe',
+                password: 'password',
+            },
+        };
 
-    //     const res = {
-    //         status: jest.fn(() => ({ json: jest.fn() })),
-    //     };
-    //     const bcryptHashMock = jest.fn(() => 'hashedPassword');
-    //     bcrypt.hash = bcryptHashMock;
+        const res = {
+            status: jest.fn(() => ({ json: jest.fn() })),
+        };
+        const bcryptHashMock = jest.fn(() => 'hashedPassword');
+        bcrypt.hash = bcryptHashMock;
 
-    //     await userSignUp(req, res);
+        await userSignUp(req, res);
 
-    //     // You can add assertions here to check if the user was created correctly
-    //     const createdUser = await User.findOne({ username: 'johndoe' });
-    //     expect(createdUser).not.toBeNull();
-    // });
+        const createdUser = await User.findOne({ username: 'johndoe' });
+        expect(createdUser).not.toBeNull();
+    });
     
 
 

@@ -6,6 +6,10 @@ const Post = require('../models/Post');
 jest.mock('../models/User');
 jest.mock('../models/Post');
 
+
+/**
+ * Test cases for the UserPost
+ */
 describe('userPost', () => {
   it('should create a new post for an existing user', async () => {
     User.findOne.mockResolvedValue({username: 'testUser',
@@ -87,6 +91,10 @@ describe('userPost', () => {
   });
 });
 
+
+/**
+ * Test cases for the UserPost
+ */
 // describe('retrievePosts', () => {
 //   it('retrieves posts and sorts them by creation date in descending order', async () => {
 //     const posts = [
