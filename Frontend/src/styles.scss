@@ -8,13 +8,12 @@ body {
 }
 
 .container {
-    opacity: 0.5;
     margin-top: 50px;
     padding:0;
 }
-.container:hover {
-    opacity: 1; /* When hovered over, the div becomes fully visible */
-}
+// .container:hover {
+//     opacity: 1; /* When hovered over, the div becomes fully visible */
+// }
 
 /* Form Styles */
 .form {

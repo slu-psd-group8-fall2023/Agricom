@@ -26,6 +26,14 @@ body {
   .card {
     width: 18rem;
   }
+
+  .card-body {
+    opacity: 0.5;
+  }
+
+  .card-body:hover {
+    opacity: 1;
+  }
   
 #dropdown-button {
     width: 150px; /* Adjust the width when hovering */

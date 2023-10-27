@@ -30,7 +30,7 @@ export class FeedComponent {
   }
 
   //submiting data to backend
-  submitForm(): void {
+  async submitForm() {
     console.log("Submitting")
     
     // You can access the form data using 'formData' object
@@ -38,25 +38,25 @@ export class FeedComponent {
     try {
       // let data = await this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params);
       let params = {
-        username: this.authService.email,
+        username: "udkr1996@gmail.com",
         title: this.formData.title,
         content: this.formData.description,
         image: this.formData.picture,
         createdAt: Date.now()
       }
-      this.defaultService.httpPostCall(environment.CREATE_POST_API, this.formData).subscribe(
-        data => {
+      await this.defaultService.httpPostCall(environment.CREATE_POST_API, params).subscribe(
+        (data: any) => {
           this.toastr.success("Succesfully created post");
           let response = data['data'];
           console.log(response);
         },
-        err => {
+        (err: any) => {
           this.toastr.error("Error creating post! \n Please try again");
           console.log(err);
         }
       )
     } catch (e) {
-      // this.errorMessage = e;
+      this.toastr.error("Error creating post! \n Please try again");
     }
   }
 
@@ -72,7 +72,7 @@ export class FeedComponent {
   loadInitialUserData() {
     this.isLoading = true;
     this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
-      this.users = data;
+        this.data = data.posts;
       this.isLoading = false;
     });
   }
@@ -81,7 +81,7 @@ export class FeedComponent {
     if (!this.isLoading) {
       this.isLoading = true;
       this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
-        this.users = this.users.concat(data);
+        this.data = this.data.concat(data.posts);
         this.isLoading = false;
       });
     }
