@@ -1,41 +1,66 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { DefaultService } from "../default.service";
+import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-feed',
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent {
-  
-  constructor(private dataService: DefaultService) {}
 
-    isDropdownOpen = false;
-    toggleDropdown() {
-      this.isDropdownOpen = !this.isDropdownOpen;
+  authService: any;
+
+  constructor(private defaultService: DefaultService, private toastr: ToastrService) { }
+
+  isDropdownOpen = false;
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+  // app.ts
+  data: any;
+  picture: any;
+  userId: any;
+  description: any;
+  formData: any = {
+    title: '',
+    picture: '',
+    description: ''
+  }
+
+  //submiting data to backend
+  async submitForm() {
+    console.log("Submitting")
+    
+    // You can access the form data using 'formData' object
+    console.log('Form Data:', this.formData);
+    try {
+      // let data = await this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params);
+      let params = {
+        username: "udkr1996@gmail.com",
+        title: this.formData.title,
+        content: this.formData.description,
+        image: this.formData.picture,
+        createdAt: Date.now()
+      }
+      await this.defaultService.httpPostCall(environment.CREATE_POST_API, params).subscribe(
+        (data: any) => {
+          this.toastr.success("Succesfully created post");
+          let response = data['data'];
+          console.log(response);
+        },
+        (err: any) => {
+          this.toastr.error("Error creating post! \n Please try again");
+          console.log(err);
+        }
+      )
+    } catch (e) {
+      this.toastr.error("Error creating post! \n Please try again");
     }
-// app.ts
-    data:any;
-    picture:any;
-    userId:any;
-    description:any;
- formData:any =  {
-  title:'',
-  picture:'',
-  description:''
-}
+  }
 
-//submiting data to backend
-submitForm(): void {
-  // Retrieve data from the form and store it in the 'formData' object
-  this.formData.title = (document.getElementById('title') as HTMLInputElement).value;
-  this.formData.picture = (document.getElementById('picture') as HTMLInputElement).value;
-  this.formData.description = (document.getElementById('description') as HTMLTextAreaElement).value;
-
-  // You can access the form data using 'formData' object
-  console.log('Form Data:', this.formData);
-}
-
-// angular code to show post on page and onscrolling it retrives the data and shows on ascreen
+  // angular code to show post on page and onscrolling it retrives the data and shows on ascreen
   users: any[] = [];
   isLoading = false;
 
@@ -46,8 +71,8 @@ submitForm(): void {
 
   loadInitialUserData() {
     this.isLoading = true;
-    this.dataService.getData().subscribe((data:any) => {
-      this.users = data;
+    this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
+        this.data = data.posts;
       this.isLoading = false;
     });
   }
@@ -55,8 +80,8 @@ submitForm(): void {
   loadMoreUserData() {
     if (!this.isLoading) {
       this.isLoading = true;
-      this.dataService.getData().subscribe((data:any) => {
-        this.users = this.users.concat(data);
+      this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
+        this.data = this.data.concat(data.posts);
         this.isLoading = false;
       });
     }

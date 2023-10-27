@@ -45,7 +45,7 @@ async function userSignUp(req, res) {
 
         // Check if name, username, and password are provided
         if (!name || !username || !password) {
-            return res.status(400).json({ error: 'Name and Username and password are required.' });
+            return res.status(400).json({ error: 'Name, Username, and password are required.' });
         }
 
         // Hash the provided password for security
@@ -177,6 +177,7 @@ async function updateUserResetToken(userId, resetToken) {
         console.error('Error updating user reset token:', error);
     }
 }
+
 
 module.exports = {
     userLogin,
