@@ -29,6 +29,8 @@ app.post('/forgot-password', api.handleForgotPassword);
 app.post('/reset-password/:token', api.handleResetPassword);
 app.post('/posts', api.userPost)
 app.get('/retrieveposts',api.retrievePosts)
+app.post('/postcomments', api.addCommentToPost);
+app.get('/getpostcomments', api.getCommentsForPost);
 // Handle 404 Not Found
 app.use(notFound);
 

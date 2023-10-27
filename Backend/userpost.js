@@ -72,8 +72,37 @@ async function addCommentToPost(req, res) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
+/**
+ * Function to retrieve comments for a post and sort them by createdAt
+ */
+async function getCommentsForPost(req, res) {
+    try {
+      const { postId } = req.params; // Extract the post ID from the URL
+  
+      // Find the post by its ID
+      const post = await Post.findOne(postId);
+  
+      if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+  
+      // Sort the comments by createdAt in descending order
+      const sortedComments = post.Comments.sort((a, b) => a.createdAt - b.createdAt);
+  
+      res.status(200).json({ comments: sortedComments });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+
+  
+
 module.exports = {
     userPost,
     retrievePosts,
     addCommentToPost,
+    getCommentsForPost,
 };
