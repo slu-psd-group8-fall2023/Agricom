@@ -43,7 +43,7 @@ async function handleResetPassword(req, res) {
 
 
 /**
- * handleResetPassword
+ * handleUserPost
  * @param {object} req
  * @param {object} res
  */
@@ -53,13 +53,13 @@ async function userPost(req, res) {
 }
 
 /**
- * handleResetPassword
+ * handleRetrievePosts
  * @param {object} req
  * @param {object} res
  */
 async function retrievePosts(req, res) {
     const retrieveres = await userpost.retrievePosts(req, res)
-    return retrieveress
+    return retrieveres
 }
 
 module.exports = {
