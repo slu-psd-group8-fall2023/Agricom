@@ -16,9 +16,20 @@ body {
     width: 300px; /* Adjust the width of the dropdown-container */
     
 }
-
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card {
+    width: 18rem;
+  }
+  
 #dropdown-button {
-    width: 100px; /* Adjust the width when hovering */
+    width: 150px; /* Adjust the width when hovering */
+    height: 50px;
 }
 #dropdown-content{
     width:800px;
@@ -49,7 +60,8 @@ body {
 }
 #post_submit{
 align-self: center;
-size: 100px;
+size: 10px;
+width:100px;
 margin-left: 100px;
 }
 .dropdown-content {
@@ -60,5 +72,5 @@ margin-left: 100px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     right: 0;
     border-radius: 1cm;
-    background-color: rgb(233, 189, 173);
+    background-color: rgb(247, 244, 243);
 }
