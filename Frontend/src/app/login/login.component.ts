@@ -56,8 +56,6 @@ export class LoginComponent {
       password: this.authCtrl.password
     };
     try {
-      let data = await this.defaultService.httpPostCall(environment.LOGIN_API, params);
-      console.log(data);
       // let data = await this.defaultService.postReq(environment.LOGIN_API, params);
       // console.log(data);
       // return 0;

@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema({
         required: false
     }
 });
-
 // Create a Mongoose model based on the defined schema, named 'User'
 const User = mongoose.model('User', userSchema);
 

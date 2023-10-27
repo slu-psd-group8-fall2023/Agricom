@@ -23,10 +23,4 @@ export class DefaultService {
       });
   }
 
-  private apiUrl = 'YOUR_API_URL'; // Replace with your API endpoint
-
-  getData(): Observable<any> {
-    // Make an HTTP GET request to fetch data from the API
-    return this.http.get(this.apiUrl);
-  }
 }
