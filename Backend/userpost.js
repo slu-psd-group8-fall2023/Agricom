@@ -36,7 +36,7 @@ async function userPost(req, res) {
 async function retrievePosts(req, res) {
     try {
         // Find all posts and sort by createdAt in descending order
-        const posts = await Post.find().sort({ createdAt: -1 });
+        const posts = await Post.find().sort({ createdAt: 'desc' });
 
         res.status(200).json({ posts });
     } catch (error) {
