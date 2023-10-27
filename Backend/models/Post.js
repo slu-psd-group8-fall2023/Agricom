@@ -21,7 +21,23 @@ createdAt:{
     type: Number,
     default: Date.now,  
     required: true
-}
+},
+Comments:[{
+    username: {
+        type: String,
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Number,
+        default: Date.now,
+        required: true
+    }
+
+}]
 });
 
 const Post = mongoose.model('Posts', postSchema);
