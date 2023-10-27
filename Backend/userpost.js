@@ -14,7 +14,7 @@ async function userPost(req, res) {
     });
 
     if (!user) {
-        return res.status(400).json({ error: 'Password reset token is invalid or has expired.' });
+        return res.status(400).json({ error: 'User not found.' });
     }
 
     const newPost = new Post({
@@ -31,12 +31,12 @@ async function userPost(req, res) {
 }
 
 /**
- * Function to retrieve posts
+ * Function to retrieve posts  and sort them by createdAt 
  */
 async function retrievePosts(req, res) {
     try {
         // Find all posts and sort by createdAt in descending order
-        const posts = await Post.find().sort({ createdAt: -1 });
+        const posts = await Post.find().sort({ createdAt: 'desc' });
 
         res.status(200).json({ posts });
     } catch (error) {
@@ -45,7 +45,35 @@ async function retrievePosts(req, res) {
     }
 }
 
+/**
+ * Function to add a comment to a post
+ */
+async function addCommentToPost(req, res) {
+    try {
+      const { _id } = req.params; // Extract the post ID from the URL
+      const { username, content, createdAt } = req.body;
+  
+      // Find the post by its ID
+      const post = await Post.findOne(_id);
+  
+      if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+  
+      // Add the comment to the post's comments array
+      post.Comments.push({ username, content, createdAt });
+  
+      // Save the updated post with the new comment
+      await post.save();
+  
+      res.status(201).json({ message: 'Comment added successfully', post });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
 module.exports = {
     userPost,
     retrievePosts,
+    addCommentToPost,
 };
