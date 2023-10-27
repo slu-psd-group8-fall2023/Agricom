@@ -14,7 +14,7 @@ async function userPost(req, res) {
     });
 
     if (!user) {
-        return res.status(400).json({ error: 'Password reset token is invalid or has expired.' });
+        return res.status(400).json({ error: 'User not found.' });
     }
 
     const newPost = new Post({
@@ -31,12 +31,12 @@ async function userPost(req, res) {
 }
 
 /**
- * Function to retrieve posts
+ * Function to retrieve posts  and sort them by createdAt 
  */
 async function retrievePosts(req, res) {
     try {
         // Find all posts and sort by createdAt in descending order
-        const posts = await Post.find().sort({ createdAt: -1 });
+        const posts = await Post.find().sort({ createdAt: 'desc' });
 
         res.status(200).json({ posts });
     } catch (error) {
