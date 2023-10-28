@@ -12,7 +12,7 @@ export class FeedComponent {
 
   authService: any;
 
-  constructor(private defaultService: DefaultService, private toastr: ToastrService) { }
+  constructor(private dataService: DefaultService, private toastr: ToastrService) { }
 
   isDropdownOpen = false;
   toggleDropdown() {
@@ -44,7 +44,7 @@ export class FeedComponent {
         image: this.formData.picture,
         createdAt: Date.now()
       }
-      await this.defaultService.httpPostCall(environment.CREATE_POST_API, params).subscribe(
+      await this.dataService.httpPostCall(environment.CREATE_POST_API, params).subscribe(
         (data: any) => {
           this.toastr.success("Succesfully created post");
           let response = data['data'];
@@ -71,8 +71,8 @@ export class FeedComponent {
 
   loadInitialUserData() {
     this.isLoading = true;
-    this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
-        this.data = data.posts;
+    this.dataService.getData().subscribe((data:any) => {
+      this.users = data;
       this.isLoading = false;
     });
   }
@@ -80,12 +80,13 @@ export class FeedComponent {
   loadMoreUserData() {
     if (!this.isLoading) {
       this.isLoading = true;
-      this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
-        this.data = this.data.concat(data.posts);
+      this.dataService.getData().subscribe((data:any) => {
+        this.users = this.users.concat(data);
         this.isLoading = false;
       });
     }
   }
+
 
   @HostListener('window:scroll', ['$event'])
   onScroll() {

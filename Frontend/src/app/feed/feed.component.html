@@ -14,19 +14,21 @@
 </div>
 <br><br><br>
 <!-- scrollable-and showing posts on screen -->
-<div class="container mt-4" (scroll)="onScroll()" [hidden]="isDropdownOpen">
-        <div class="row">
-            <div class="col-12">
-                <div  *ngFor="let item of data" class="card mb-4">
-                    <img class="card-img-top" src="{{item.picture}}" alt="">
-                    <div class="card-body">
-                        <h5 class="card-title">Title:{{ item.title }}</h5>
-                        <small class="text-muted">Created By:{{ item.username }}</small>
-                        <p class="card-text">{{ item.content }}</p>
-                        <!-- <button class="btn btn-primary">Discussion Box</button> -->
+<div class="data-container" (scroll)="onScroll()">
+    <div *ngFor="let item of data" class="data-item">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <div class="card">
+                        <img class="card-img-top" src="{{picture}}" alt="User Picture">
+                        <div class="card-body">
+                            <h5 class="card-title">User ID: {{ userId }}</h5>
+                            <p class="card-text">{{ description }}</p>
+                            <button class="btn btn-primary">Discussion Box</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </div>
-
