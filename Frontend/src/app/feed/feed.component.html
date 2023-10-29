@@ -15,9 +15,8 @@
 <br><br><br>
 <!-- scrollable-and showing posts on screen -->
 <div class="container mt-4" (scroll)="onScroll()" [hidden]="isDropdownOpen">
-        <div class="row">
             <div class="col-12">
-                <div  *ngFor="let item of data" class="card mb-4">
+                <div  *ngFor="let item of data" class="card mb-4 custom-card">
                     <img class="card-img-top" src="{{item.picture}}" alt="">
                     <div class="card-body">
                         <h5 class="card-title">Title:{{ item.title }}</h5>
@@ -27,6 +26,5 @@
                     </div>
                 </div>
             </div>
-        </div>
 </div>
 

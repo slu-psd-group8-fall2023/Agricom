@@ -12,8 +12,8 @@ body {
 .dropdown-container {
     position: absolute;
     top: 20px;
-    right: 20px; /* Adjust this to change the position to the right */
-    width: 300px; /* Adjust the width of the dropdown-container */
+    left: 80%; /* Adjust this to change the position to the right */
+    width: 10%; /* Adjust the width of the dropdown-container */
     
 }
 .container {
@@ -24,44 +24,47 @@ body {
   }
   
   .card {
-    width: 18rem;
+    width: 80%;
   }
 
   .card-body {
-    opacity: 0.5;
+    width: 100%;
   }
 
-  .card-body:hover {
-    opacity: 1;
-  }
-  
+
 #dropdown-button {
-    width: 150px; /* Adjust the width when hovering */
-    height: 50px;
+    width: 100%; /* Adjust the width when hovering */
+    height: 20%;
+    text-align: center;
 }
 #dropdown-content{
-    width:800px;
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 300px; /* Increase the min-width to make it wider */
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    right: 0;
+    border-radius: 1cm;
+    background-color: rgb(247, 244, 243);
 }
 #title,#picture,#description{
-    width: 600px;
+    width: 100%;
     margin: auto;
     border-radius: 10px;
     background-color: rgb(209, 188, 179);
 }
 #title:hover{
-    width: 600px;
     margin: auto;
     border-radius: 10px;
     background-color: #f9f9f9;
 }
 #picture:hover{
-    width: 600px;
+
     margin: auto;
     border-radius: 10px;
     background-color: #f9f9f9;
 }
 #description:hover{
-    width: 600px;
     margin: auto;
     border-radius: 10px;
     background-color: #f9f9f9;
@@ -82,3 +85,17 @@ margin-left: 100px;
     border-radius: 1cm;
     background-color: rgb(247, 244, 243);
 }
+/* Add this to your CSS file */
+.custom-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Card will take the full width of the container */
+    max-width: 400px; /* Adjust the maximum width as needed */
+    margin: 0 auto; /* Center the card horizontally */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
