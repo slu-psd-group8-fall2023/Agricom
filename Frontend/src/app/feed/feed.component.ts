@@ -84,8 +84,10 @@ export class FeedComponent {
     if (!this.isLoading) {
       this.isLoading = true;
       this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
-        this.data = this.data.concat(data.posts);
-        this.isLoading = false;
+        if(data.posts[data.posts.length-1]._id!=this.data[this.data.length-1]._id) {
+          this.data = this.data.concat(data.posts);
+          this.isLoading = false;
+        }
       });
     }
   }
