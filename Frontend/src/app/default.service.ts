@@ -11,7 +11,7 @@ export class DefaultService {
   }
 
   public httpPostCall(url:any, params:any , headers?:any): Observable<any> {
-    return this.http.post<any>(url, {body:params}, {
+    return this.http.post<any>(url, params, {
         headers:
           new HttpHeaders(
             {
