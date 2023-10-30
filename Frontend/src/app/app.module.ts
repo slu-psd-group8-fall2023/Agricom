@@ -10,13 +10,14 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { FeedComponent } from './feed/feed.component';
-
+import { HeaderComponent } from './header/header.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
-    FeedComponent
+    FeedComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
