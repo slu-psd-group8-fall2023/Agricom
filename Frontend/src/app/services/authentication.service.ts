@@ -30,7 +30,7 @@ export class AuthenticationService {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
                 user.authdata = window.btoa(username + ':' + password);
                 localStorage.setItem('user', JSON.stringify(user));
-                this.userSubject.next(user);
+                this.userSubject.next({...user, username});
                 return user;
             }));
     }
