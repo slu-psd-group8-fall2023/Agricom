@@ -37,17 +37,8 @@ function handleError(err, req, res, next) {
     res.status(500).json({ error: "Internal Error Occurred" })
 }
 
-/**
-   * Send a 404 response if no route is found
-   * @param {object} req
-   * @param {object} res
-   */
-function notFound(req, res) {
-    res.status(505).json({ error: "http is not supported" })
-}
 
 module.exports = {
     cors,
     handleError,
-    notFound
 }
