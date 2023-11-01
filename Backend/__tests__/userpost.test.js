@@ -7,6 +7,7 @@ jest.mock('../models/User');
 jest.mock('../models/Post');
 
 
+
 /**
  * Test cases for the UserPost
  */
@@ -178,42 +179,78 @@ describe('addCommentToPost', () => {
   expect(post.Comments.length).toBe(1); // Ensure the comment was added
    });
 
+it('Adding a Comment to a Post with Existing Comments', async () => {
+   const req = {
+    params: { _id: 'existing_post_id' },
+    body: {
+        username: 'jane_doe',
+        content: 'Another test comment.',
+        createdAt: new Date()
+    }
+};
+
+// Ensure the Post model returns a post with existing comments
+const post = {
+    _id: 'existing_post_id',
+    Comments: [{ username: 'john_doe', content: 'First comment', createdAt: new Date() }]
+};
+
+// Mock the Post.findOne and Post.save functions
+Post.findOne = jest.fn().mockResolvedValue(post);
+post.save = jest.fn().mockResolvedValue(post);
+
+const res = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn()
+};
+
+// Call the function
+await addCommentToPost(req, res);
+
+// Assertions
+expect(res.status).toHaveBeenCalledWith(201);
+expect(res.json).toHaveBeenCalledWith({ message: 'Comment added successfully', post });
+expect(post.Comments.length).toBe(2); // Ensure the new comment was added
+
+});
+
+it('Adding a Comment to a Post with Existing Comments', async () => {
+
+const req = {
+    params: { _id: 'existing_post_id' },
+    body: {
+        username: 'alice_smith',
+        content: 'A comment on an empty post.',
+        createdAt: new Date()
+    }
+};
+
+// Ensure the Post model returns a post with no existing comments
+const post = { _id: 'existing_post_id', Comments: [] };
+
+// Mock the Post.findOne and Post.save functions
+Post.findOne = jest.fn().mockResolvedValue(post);
+post.save = jest.fn().mockResolvedValue(post);
+
+const res = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn()
+};
+
+// Call the function
+await addCommentToPost(req, res);
+
+// Assertions
+expect(res.status).toHaveBeenCalledWith(201);
+expect(res.json).toHaveBeenCalledWith({ message: 'Comment added successfully', post });
+expect(post.Comments.length).toBe(1); // Ensure the comment was added
+
+
+});
+
+});
+
 describe('getCommentsForPost', () => {
-  // it('should retrieve comments for a post and sort them by creation date', async () => {
-  //   const postId = 'testPostId';
-  //   const postMock = {
-  //     _id: postId,
-  //     comments: [
-  //       { username: 'user1', content: 'Comment 1', createdAt: new Date('2023-10-25T10:00:00Z') },
-  //       { username: 'user2', content: 'Comment 2', createdAt: new Date('2023-10-24T10:00:00Z') },
-  //       { username: 'user3', content: 'Comment 3', createdAt: new Date('2023-10-26T10:00:00Z') },
-  //     ],
-  //   };
-
-  //   // Mock Post.findById to return the post with comments
-  //   Post.findOne.mockResolvedValue(postMock);
-
-  //   const req = {
-  //     params: { postId },
-  //   };
-
-  //   const res = {
-  //     status: jest.fn().mockReturnThis(),
-  //     json: jest.fn(),
-  //   };
-
-  //   await getCommentsForPost(req, res);
-
-  //   // Ensure the comments are sorted by creation date
-  //   expect(res.status).toHaveBeenCalledWith(200);
-  //   expect(res.json).toHaveBeenCalledWith({
-  //     comments: expect.arrayContaining([
-  //       expect.objectContaining({ username: 'user3', content: 'Comment 3' }),
-  //       expect.objectContaining({ username: 'user1', content: 'Comment 1' }),
-  //       expect.objectContaining({ username: 'user2', content: 'Comment 2' }),
-  //     ]),
-  //   });
-  // });
 
   it('should return an error for a non-existing post', async () => {
     const postId = 'nonExistentPostId';
