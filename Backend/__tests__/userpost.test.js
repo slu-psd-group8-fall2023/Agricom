@@ -92,70 +92,7 @@ describe('userPost', () => {
 });
 
 
-/**
- * Test cases for the UserPost
- */
-// describe('retrievePosts', () => {
-//   it('retrieves posts and sorts them by creation date in descending order', async () => {
-//     const posts = [
-//       { title: 'Post 1', createdAt: new Date('2023-10-25T10:00:00Z') },
-//       { title: 'Post 2', createdAt: new Date('2023-10-26T10:00:00Z') },
-//       { title: 'Post 3', createdAt: new Date('2023-10-24T10:00:00Z') },
-//     ];
-//     jest.spyOn(Post, 'find').mockResolvedValue(posts);
-  
-//     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-//     await retrievePosts(null, res);
-  
-//     expect(Post.find).toHaveBeenCalled();
-//     expect(Post.find).toHaveBeenCalledWith();
-//     expect(Post.find.sort).toHaveBeenCalledWith({ createdAt: 'desc' });
-//     expect(res.status).toHaveBeenCalledWith(200);
-//     expect(res.json).toHaveBeenCalledWith({ posts });
-//   });
-// });
-
-
-
 describe('addCommentToPost', () => {
-  // it('should add a comment to a post', async () => {
-  //   const postId = 'testPostId';
-  //   const commentData = {
-  //     username: 'testUser',
-  //     content: 'This is a test comment',
-  //     createdAt: 1697408297
-  //   };
-
-  //   // Mock the behavior of Post.findById and save
-  //   const postMock = {
-  //     _id: postId,
-  //     comments: [],
-  //     save: jest.fn(),
-  //   };
-  //   Post.findOne.mockResolvedValue(postMock);
-
-  //   const req = {
-  //     params: { postId },
-  //     body: commentData,
-  //   };
-
-  //   const res = {
-  //     status: jest.fn().mockReturnThis(),
-  //     json: jest.fn(),
-  //   };
-
-  //   await addCommentToPost(req, res);
-
-  //   // Check if the comment is added to the post and response is as expected
-  //   expect(postMock.comments).toHaveLength(1);
-  //   expect(postMock.comments[0].username).toBe('testUser');
-  //   expect(postMock.comments[0].content).toBe('This is a test comment');
-  //   expect(res.status).toHaveBeenCalledWith(201);
-  //   expect(res.json).toHaveBeenCalledWith({
-  //     message: 'Comment added successfully',
-  //     post: expect.any(Object), // You can further specify the expected data here.
-  //   });
-  // });
 
   it('should return an error for a non-existing post', async () => {
     const postId = 'nonExistentPostId';
@@ -208,7 +145,38 @@ describe('addCommentToPost', () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
   });
-});
+
+
+  it('should add a comment to an existing post', async () => {
+    const req = {
+      params: { _id: 'existing_post_id' },
+      body: {
+          username: 'john_doe',
+          content: 'This is a test comment.',
+          createdAt: new Date()
+      }
+  };
+  
+  // Ensure the Post model returns an existing post for the given ID
+  const post = { _id: 'existing_post_id', Comments: [] };
+  
+  // Mock the Post.findOne and Post.save functions
+  Post.findOne = jest.fn().mockResolvedValue(post);
+  post.save = jest.fn().mockResolvedValue(post);
+  
+  const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+  };
+  
+  // Call the function
+  await addCommentToPost(req, res);
+  
+  // Assertions
+  expect(res.status).toHaveBeenCalledWith(201);
+  expect(res.json).toHaveBeenCalledWith({ message: 'Comment added successfully', post });
+  expect(post.Comments.length).toBe(1); // Ensure the comment was added
+   });
 
 describe('getCommentsForPost', () => {
   // it('should retrieve comments for a post and sort them by creation date', async () => {
