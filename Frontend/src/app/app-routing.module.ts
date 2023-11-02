@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: 'detect', component: DetectComponent, canActivate: [AuthGuard]},
 
   { path: 'feed', component: FeedComponent, canActivate: [AuthGuard] },
+  { path: 'detect', component: DetectComponent},
   { path: '**', redirectTo: 'feed' }
 
 ];

@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { FeedComponent } from './feed/feed.component';
+import { DetectComponent } from './detect/detect.component';
 import { HeaderComponent } from './header/header.component';
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { HeaderComponent } from './header/header.component';
     HomeComponent,
     LoginComponent,
     FeedComponent,
+    DetectComponent
     HeaderComponent
   ],
   imports: [
