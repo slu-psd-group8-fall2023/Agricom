@@ -10,7 +10,11 @@ const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: 'feed', component: FeedComponent },
-  { path: 'detect', component: DetectComponent}
+  { path: 'detect', component: DetectComponent},
+
+  { path: 'feed', component: FeedComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: 'feed' }
+
 ];
 
 @NgModule({
