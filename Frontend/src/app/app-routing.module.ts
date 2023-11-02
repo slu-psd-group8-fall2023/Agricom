@@ -9,8 +9,7 @@ import { AuthGuard } from './helpers/auth.guard';
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'feed', component: FeedComponent },
-  { path: 'detect', component: DetectComponent},
+  { path: 'detect', component: DetectComponent, canActivate: [AuthGuard]},
 
   { path: 'feed', component: FeedComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'feed' }
