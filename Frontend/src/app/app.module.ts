@@ -11,7 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { FeedComponent } from './feed/feed.component';
 import { DetectComponent } from './detect/detect.component';
-
+import { HeaderComponent } from './header/header.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,6 +19,7 @@ import { DetectComponent } from './detect/detect.component';
     LoginComponent,
     FeedComponent,
     DetectComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
