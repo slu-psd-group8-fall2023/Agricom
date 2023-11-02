@@ -1,0 +1,28 @@
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #bddfc5 !important">
+    <div class="container-fluid margin-both-sides-5">
+      <a class="navbar-brand" href="#">Agricom</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item" [routerLinkActive]="['active']">
+            <a class="nav-link" [routerLink]="['feed']" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['active']">
+            <a class="nav-link" [routerLink]="['prediction']" href="#">Predictions</a>
+          </li>
+        </ul>
+      </div>
+      <ul class="nav justify-content-end dropleft">
+          <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle m-0 p-0" data-bs-toggle="dropdown" ><i class="fa fa-user-circle-o fa-2x"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+              <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+            </ul>
+          </li>
+      </ul>
+    </div>
+  </nav>

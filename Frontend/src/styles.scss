@@ -97,3 +97,12 @@ a:hover {
     background-color: #1f8d3e;
 }
 
+.opacity-75 {
+    opacity: 0.75;
+}
+
+header {
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+}
