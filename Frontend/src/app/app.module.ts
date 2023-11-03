@@ -18,8 +18,8 @@ import { HeaderComponent } from './header/header.component';
     HomeComponent,
     LoginComponent,
     FeedComponent,
-    DetectComponent
-    HeaderComponent
+    DetectComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
