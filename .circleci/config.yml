@@ -2,6 +2,8 @@ version: 2.1
 
 jobs:
   install_dependencies_frontend:
+    docker:
+      - image: circleci/node:14.17
     steps:
       - checkout
       - run:
@@ -14,6 +16,8 @@ jobs:
           working_directory: Frontend
 
   install_dependencies_backend:
+    docker:
+      - image: circleci/node:14.17
     steps:
       - checkout
       - run:
