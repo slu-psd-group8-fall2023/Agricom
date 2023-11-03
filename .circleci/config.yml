@@ -25,7 +25,7 @@ jobs:
           command: npm install
       - run:
           name: Run Backend Tests
-          command: npx jest
+          command: npx jest --config ../jest.config.js
 
 workflows:
   version: 2
