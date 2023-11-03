@@ -2,25 +2,27 @@ version: 2.1
 
 jobs:
   install_dependencies_frontend:
+    docker:
+      - image: circleci/node:14.17
     steps:
       - checkout
       - run:
           name: Install Node.js Dependencies
           command: npm install
           working_directory: Frontend
-
       - run:
           name: Install Angular CLI
           command: npm install -g @angular/cli
           working_directory: Frontend
 
   install_dependencies_backend:
+    docker:
+      - image: circleci/node:14.17
     steps:
       - checkout
       - run:
           name: Install Backend Dependencies
           command: npm install
-
       - run:
           name: Run Backend Tests
           command: npx jest
