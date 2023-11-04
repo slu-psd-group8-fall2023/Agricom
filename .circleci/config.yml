@@ -6,7 +6,7 @@ orbs:
 jobs: 
     angular-test:
       docker:
-        - image: circleci/node:14.15-browsers
+        - image: circleci/node:14.20-browsers
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
