@@ -4,13 +4,10 @@ orbs:
   node: circleci/node@5.1.0
 
 workflows:
-    example-workflow:
+    backend-testcases:
       jobs:
         - node/run:
             pkg-manager: npm 
             resource_class: large 
             app-dir: ~/project/Backend 
             npm-run: test
-store_artifacts:
-    path: jekyll/_site/docs/
-    destination: circleci-
