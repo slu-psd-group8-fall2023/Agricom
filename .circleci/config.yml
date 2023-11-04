@@ -15,6 +15,9 @@ jobs:
             name: Install Angular CLI
             command: npm install -g @angular/cli
         - run:
+            name: Change folder
+            command: cd ~/project/Frontend
+        - run:
             name: Install Angular Dependencies
             command: npm install
         - run:
