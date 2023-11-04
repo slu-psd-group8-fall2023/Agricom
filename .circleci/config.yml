@@ -3,23 +3,36 @@ version: 2.1
 orbs:
   node: circleci/node@5.1.0
 
+jobs: 
+    angular-test:
+      docker:
+        - image: circleci/node:14.17  # Use the appropriate Node.js version
+      steps:
+        - checkout
+        - run:
+            name: Install Angular CLI
+            command: npm install -g @angular/cli
+        - restore_cache:
+            keys:
+              - angular-deps-{{ checksum "package.json" }}
+        - run:
+            name: Install Angular Dependencies
+            command: npm install
+        - save_cache:
+            key: angular-deps-{{ checksum "package.json" }}
+            paths:
+              - ./node_modules
+        - run:
+            name: Run Angular Tests
+            command: ng test
 workflows:
     backend:
       jobs:
-        - testcases:
+        - node/run:
             pkg-manager: npm 
             resource_class: large 
             app-dir: ~/project/Backend 
             npm-run: test
-    frontend:
-      jobs:
-        - build:
-            pkg-manager: npm 
-            resource_class: large 
-            app-dir: ~/project/Frontend 
-            npm-run: build
-        - testcases:
-            pkg-manager: npm 
-            resource_class: large 
-            app-dir: ~/project/Frontend 
-            npm-run: test
+
+        - angular-test
+  
