@@ -1,15 +1,13 @@
 version: 2.1
 
-jobs:
-  install_dependencies_frontend:
-    steps:
-      - checkout
-      - run:
-          name: Install Node.js Dependencies
-          command: npm install
-          working_directory: Frontend
+orbs:
+  node: circleci/node@5.1.0
 
-      - run:
-          name: Install Angular CLI
-          command: npm install -g @angular/cli
-          working_directory: Frontend
+workflows:
+    example-workflow:
+      jobs:
+        - node/run:
+            pkg-manager: npm 
+            resource_class: large 
+            app-dir: ~/project/Backend 
+            npm-run: test 
