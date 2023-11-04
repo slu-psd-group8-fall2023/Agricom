@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.1.0
+  node: circleci/node@16.3.1
 
 jobs: 
     angular-test:
@@ -16,12 +16,12 @@ jobs:
             command: npm install -g @angular/cli@latest
         - run:
             command: npm link @angular/cli
-        - run:
-            command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-        - run:
-            command: nvm install latest
-        - run:
-            command: nvm use latest
+        # - run:
+        #     command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+        # - run:
+        #     command: nvm install latest
+        # - run:
+        #     command: nvm use latest
         - run:
             name: Change folder
             command: cd ~/project/Frontend
