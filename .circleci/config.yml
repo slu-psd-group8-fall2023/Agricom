@@ -4,10 +4,22 @@ orbs:
   node: circleci/node@5.1.0
 
 workflows:
-    backend-testcases:
+    backend:
       jobs:
-        - node/run:
+        - testcases:
             pkg-manager: npm 
             resource_class: large 
             app-dir: ~/project/Backend 
+            npm-run: test
+    frontend:
+      jobs:
+        - build:
+            pkg-manager: npm 
+            resource_class: large 
+            app-dir: ~/project/Frontend 
+            npm-run: build
+        - testcases:
+            pkg-manager: npm 
+            resource_class: large 
+            app-dir: ~/project/Frontend 
             npm-run: test
