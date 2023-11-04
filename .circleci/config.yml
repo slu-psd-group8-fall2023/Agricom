@@ -11,4 +11,4 @@ workflows:
         - node/run:
             pkg-manager: npm 
             resource_class: large 
-            app-dir: ~/Agricom/Backend 
+            app-dir: ~/project/Backend 
