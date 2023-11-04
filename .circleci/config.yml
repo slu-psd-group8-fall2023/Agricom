@@ -6,7 +6,7 @@ orbs:
 jobs: 
     angular-test:
       docker:
-        - image: circleci/node:16.14-browsers
+        - image: circleci/node:16.13.1-bullseye-browsers-legacy
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
@@ -16,6 +16,10 @@ jobs:
             command: npm install -g @angular/cli@latest
         - run:
             command: npm link @angular/cli
+        - run:
+            command: nvm install latest
+        - run:
+            command: nvm use latest
         - run:
             name: Change folder
             command: cd ~/project/Frontend
