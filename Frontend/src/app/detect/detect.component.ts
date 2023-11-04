@@ -35,7 +35,6 @@ export class DetectComponent {
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('image', this.selectedFile);
-      console.log(formData)
       this.http.post<any>('http://127.0.0.1:5000/submit', formData).subscribe(
         (response:any) => {
           this.result = response.result;
@@ -58,7 +57,7 @@ export class DetectComponent {
           this.response_got=false;
           setTimeout(() => {
             this.result = 'please upload the picture of crop leaf';
-          }, 4000);
+          }, 2000);
         }
       );
        // Simulating a 2-second delay (replace with actual detection logic)
