@@ -1,20 +1,26 @@
 /* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    background-image: url('crop-gif-7.gif');
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
 }
 
 .container {
+  height: 100vh;
+  width: 100%; /* Full width */
+//   margin-top: 50px;
+  padding: 0;
+}
+.form_container{
     opacity: 0.5;
-    margin-top: 50px;
-    padding:0;
 }
-.container:hover {
-    opacity: 1; /* When hovered over, the div becomes fully visible */
+.form_container:hover{
+    opacity: 1;
 }
+// .container:hover {
+//     opacity: 1; /* When hovered over, the div becomes fully visible */
+// }
 
 /* Form Styles */
 .form {
@@ -89,4 +95,19 @@ a:hover {
 
 .form-signup button[type="submit"]:hover {
     background-color: #1f8d3e;
+}
+
+.opacity-75 {
+    opacity: 0.75;
+}
+
+header {
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+}
+
+.margin-both-sides-5{
+    margin-left: 5%;
+    margin-right: 5%;
 }

@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+
 import { environment } from '../../environments/environment';
 import { DefaultService } from "../default.service";
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +14,14 @@ import { DefaultService } from "../default.service";
 })
 export class LoginComponent {
   authCtrl:any;
-  constructor(private defaultService:DefaultService) {
+  constructor(private defaultService:DefaultService,
+    private authenticationService: AuthenticationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastr: ToastrService) {
+    if (this.authenticationService.userValue) {
+      this.router.navigate(['/feed']);
+    }
     this.showLogin();
   }
 
@@ -56,20 +68,18 @@ export class LoginComponent {
       password: this.authCtrl.password
     };
     try {
-      let data = await this.defaultService.httpPostCall(environment.LOGIN_API, params);
-      console.log(data);
-      // let data = await this.defaultService.postReq(environment.LOGIN_API, params);
-      // console.log(data);
-      // return 0;
-      this.defaultService.httpPostCall(environment.LOGIN_API, params).subscribe(
-        data => {
-          let response = data['data'];
-          console.log(response);
-        },
-        err => {
-          console.log(err);
-        }
-      )
+      this.authenticationService.login(params.username, params.password)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    // get return url from route parameters or default to '/'
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/feed';
+                    this.router.navigate([returnUrl]);
+                },
+                error: error => {
+                  this.authCtrl.errorMessage = error;
+                }
+            });
     } catch(e) {
       this.authCtrl.errorMessage = e;
     }
@@ -82,12 +92,10 @@ export class LoginComponent {
       password: this.authCtrl.password
     };
     try {
-      // let data = await this.defaultService.httpPostCall(environment.SIGNUP_API, params);
-      // console.log(data);
       this.defaultService.httpPostCall(environment.SIGNUP_API, params).subscribe(
         data => {
-          let response = data['data'];
-          console.log(response);
+          this.toastr.success("You can now continue to login", "Signup Successful");
+          this.showLogin();
         },
         err => {
           console.log(err);
@@ -100,10 +108,9 @@ export class LoginComponent {
 
   async forgotPasssword() {
     let params = {
-      username: this.authCtrl.email
+      email: this.authCtrl.email
     };
     try {
-      // let data = await this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params);
       this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params).subscribe(
         data => {
           let response = data['data'];
@@ -127,16 +134,14 @@ export class LoginComponent {
     let params = {
       token: this.authCtrl.token,
       username: this.authCtrl.email,
-      password: this.authCtrl.confirmNewPassword
+      newPassword: this.authCtrl.confirmNewPassword
     };
     
     try {
-      // let data = await this.defaultService.httpPostCall(`${environment.RESET_PASS_API}/${this.authCtrl.token}`, params);
-      // console.log(data);
       this.defaultService.httpPostCall(`${environment.RESET_PASS_API}/${this.authCtrl.token}`, params).subscribe(
         data => {
-          let response = data['data'];
-          console.log(response);
+          this.toastr.success("You can now continue to login", "Password Reset Successful");
+          this.showLogin();
         },
         err => {
           console.log(err);

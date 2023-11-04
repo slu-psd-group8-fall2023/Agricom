@@ -1,13 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./database/db');
-const { cors, handleError, notFound } = require('./middleware');
+const { cors, handleError } = require('./middleware');
 const api = require('./api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb', extended: true}));
 
 // Connect to Database
 db();
@@ -29,8 +29,8 @@ app.post('/forgot-password', api.handleForgotPassword);
 app.post('/reset-password/:token', api.handleResetPassword);
 app.post('/posts', api.userPost)
 app.get('/retrieveposts',api.retrievePosts)
-// Handle 404 Not Found
-app.use(notFound);
+app.post('/postcomments', api.addCommentToPost);
+app.get('/getpostcomments', api.getCommentsForPost);
 
 // Handle errors
 app.use(handleError);
