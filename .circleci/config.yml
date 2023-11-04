@@ -6,7 +6,7 @@ orbs:
 jobs: 
     angular-test:
       docker:
-        - image: alexsuch/angular-cli  # Use the appropriate Node.js version
+        - image: trion/ng-cli
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
