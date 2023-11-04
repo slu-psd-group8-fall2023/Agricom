@@ -12,3 +12,4 @@ workflows:
             pkg-manager: npm 
             resource_class: large 
             app-dir: ~/project/Backend 
+            npm-run: test 
