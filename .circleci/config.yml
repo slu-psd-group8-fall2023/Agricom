@@ -11,6 +11,14 @@ jobs:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
         - checkout
+        - run: 
+            command: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+        - run: 
+            command: echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+        - run: 
+            command: apt-get update
+        - run: 
+            command: apt-get install -y google-chrome-stable xvfb
         - run:
             name: Install Angular CLI
             command: npm install -g @angular/cli
