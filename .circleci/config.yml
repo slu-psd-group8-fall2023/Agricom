@@ -7,6 +7,8 @@ jobs:
     angular-test:
       docker:
         - image: circleci/node:14.17  # Use the appropriate Node.js version
+      environment:
+        NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
         - checkout
         - run:
