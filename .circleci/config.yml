@@ -6,7 +6,7 @@ orbs:
 jobs: 
     angular-test:
       docker:
-        - image: circleci/node:erbium-bullseye-browsers-legacy
+        - image: circleci/node:16.4.0
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
