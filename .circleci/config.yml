@@ -6,7 +6,7 @@ orbs:
 jobs: 
     angular-test:
       docker:
-        - image: trion/ng-cli
+        - image: node:16.0.0-browsers
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
