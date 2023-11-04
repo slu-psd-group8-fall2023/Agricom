@@ -11,6 +11,6 @@ workflows:
             resource_class: large 
             app-dir: ~/project/Backend 
             npm-run: test
-        - store_artifacts:
-            path: jekyll/_site/docs/
-            destination: circleci-
+            - store_artifacts:
+                path: jekyll/_site/docs/
+                destination: circleci-
