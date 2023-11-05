@@ -295,6 +295,51 @@ describe('getCommentsForPost', () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
   });
+
+
+  it('should retrieve and sort comments for an existing post', async () => {
+  // Define a valid post ID for an existing post
+  const postId = "existing_post_id";
+
+  // Create a mock post object with comments
+  const mockPost = {
+    _id: postId,
+    Comments: [
+      {
+        username: "user1",
+        content: "This is the first comment.",
+        createdAt: new Date(),
+      },
+      {
+        username: "user2",
+        content: "This is the second comment.",
+        createdAt: new Date(),
+      },
+    ],
+    // Other properties of the post
+  };
+
+  // Mock the Post model's findOne method
+  Post.findOne = jest.fn().mockResolvedValue(mockPost);
+
+  // Create mock request and response objects
+  const req = {
+    params: { _id: postId },
+  };
+
+  const res = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+
+  // Call the getCommentsForPost function
+  await getCommentsForPost(req, res);
+
+  // Assertions
+  expect(res.status).toHaveBeenCalledWith(200);
+  expect(res.json).toHaveBeenCalledWith({ comments: mockPost.Comments });
+});
+  
 });
 
 

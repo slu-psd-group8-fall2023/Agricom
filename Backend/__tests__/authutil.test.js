@@ -117,19 +117,43 @@ describe('userSignUp', () => {
         const createdUser = await User.findOne({ username: 'johndoe' });
         expect(createdUser).not.toBeNull();
     });
+
+    it('should handle existing user', async () => {
+        // Mock User.findOne to return an existing user
+        User.findOne.mockResolvedValue({});
     
-
-
-    it('should return 500 Internal Server Error on server error', async () => {
-        const req = { body: { name: 'John Doe', username: 'johndoe', password: 'password' } };
-        const res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
+        const req = {
+            body: {
+                name: 'John Doe',
+                username: 'johndoe@example.com',
+                password: 'password',
+            },
         };
-
+    
+        const jsonMock = jest.fn();
+        const res = {
+            status: jest.fn(() => ({ json: jsonMock })),
+        };
+    
         await userSignUp(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(jsonMock).toHaveBeenCalledWith({ error: 'User already exists on this mail.' });
     });
+    
+    it('should return 500 Internal Server Error on server error', async () => {
+        // Mock User.findOne to simulate a server error
+        User.findOne.mockRejectedValue(new Error('Some server error'));
+    
+        const req = { body: { name: 'John Doe', username: '******', password: '*****' } };
+        const jsonMock = jest.fn();
+        const res = {
+            status: jest.fn(() => ({ json: jsonMock })),
+        };
+    
+        await userSignUp(req, res);
+    
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(jsonMock).toHaveBeenCalledWith({ error: 'Internal Server Error' });
+    });
+    
 });

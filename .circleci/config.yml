@@ -41,4 +41,3 @@ workflows:
             npm-run: test
 
         - angular-test
-  
