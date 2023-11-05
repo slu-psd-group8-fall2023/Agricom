@@ -71,44 +71,7 @@ describe('DetectComponent', () => {
     expect(component.picture_error).toBeFalse();
   });
 
- /* it('should show an error message when no image is submitted', () => {
-    // Set the selectedFile to null to simulate no image selected
-    component.selectedFile = null;
-    fixture.detectChanges(); // Trigger change detection
-  
-    // Simulate the form submission
-    const event = new Event('submit');
-    const preventDefaultSpy = spyOn(event, 'preventDefault'); // Spy on preventDefault
-    component.onSubmit(event);
-  
-    // Expectations
-    expect(preventDefaultSpy).toHaveBeenCalled(); // Ensure preventDefault is called
-    expect(component.picture_error).toBeTrue();
-    expect(component.response_got).toBeFalse();
-    expect(component.result).toBeUndefined();
-  });*/
-  
-
- /* it('should display result details when a response is received', () => {
-    const response = {
-      result: {
-        title: 'Test Title',
-        description: 'Test Description',
-        prevent: 'Preventive Steps',
-        image_url: 'test-image-url',
-        supplement_name: 'Supplement Name',
-        supplement_image_url: 'supplement-image-url',
-        supplement_buy_link: 'supplement-buy-link',
-      },
-    };
-    const file = new File([''], 'test.png', { type: 'image/png' });
-    const event = { target: { files: [file] } };
-
-    component.onFileSelected(event);
-    component.onSubmit(new Event('submit'));
-
-    expect(component.result).toEqual(response.result);
-  });*/
+ 
   
   
 });
