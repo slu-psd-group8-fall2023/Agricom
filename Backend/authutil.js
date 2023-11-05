@@ -48,6 +48,14 @@ async function userSignUp(req, res) {
             return res.status(400).json({ error: 'Name, Username, and password are required.' });
         }
 
+         // Find the user by the provided username
+        const user = await User.findOne({ username });
+
+        if (user) {
+            return res.status(200).json({ error: 'User already exists on this mail.' });
+        }
+
+
         // Hash the provided password for security
         const hashedPassword = await bcrypt.hash(password, 10);
 
