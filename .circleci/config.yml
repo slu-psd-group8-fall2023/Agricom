@@ -6,7 +6,7 @@ orbs:
 jobs: 
     angular-test:
       docker:
-        - image: circleci/node:14.20-browsers
+        - image: circleci/node:16.13.1-bullseye-browsers-legacy
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
@@ -28,6 +28,9 @@ jobs:
         - run:
             name: Install Angular Dependencies
             command: cd ~/project/Frontend && npm install --force
+        - run:
+            name: Run Angular Tests
+            command: cd ~/project/Frontend && npm run test
 workflows:
     backend:
       jobs:
