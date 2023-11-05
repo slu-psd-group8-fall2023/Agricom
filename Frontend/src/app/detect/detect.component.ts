@@ -5,7 +5,7 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-detect',
   templateUrl: './detect.component.html',
-  styleUrls: ['./detect.component.scss'] // If you have a custom CSS file
+  styleUrls: ['./detect.component.scss'] 
 })
 export class DetectComponent {
   picture_error:boolean;
@@ -60,7 +60,7 @@ export class DetectComponent {
           }, 2000);
         }
       );
-       // Simulating a 2-second delay (replace with actual detection logic)
+       
     }
   }
   
