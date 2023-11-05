@@ -14,7 +14,11 @@ body {
     top: 60px;
     left: 80%; /* Adjust this to change the position to the right */
     width: 10%; /* Adjust the width of the dropdown-container */
+    z-index: 1;
     
+}
+form {
+    margin: 3% !important;
 }
 .container {
     height: 100%;
@@ -51,7 +55,7 @@ body {
     width: 100%;
     margin: auto;
     border-radius: 10px;
-    background-color: rgb(209, 188, 179);
+    // background-color: rgb(209, 188, 179);
 }
 #title:hover{
     margin: auto;
@@ -78,7 +82,7 @@ margin-left: 100px;
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    // background-color: #f9f9f9;
     min-width: 250px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     right: 0;

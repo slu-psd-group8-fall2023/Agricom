@@ -1,8 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule } from '@angular/forms';
-
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FeedComponent } from './feed.component';
+import { By } from '@angular/platform-browser';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import HttpClientTestingModule
+import { DefaultService } from '../default.service';
+import { of } from 'rxjs';
+import { ToastrModule } from 'ngx-toastr'
+import { FormsModule } from '@angular/forms';
 
 describe('FeedComponent', () => {
   let component: FeedComponent;
@@ -11,85 +14,77 @@ describe('FeedComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [FeedComponent],
-      imports:[HttpClientTestingModule,FormsModule],
-    });
+      imports: [HttpClientTestingModule, ToastrModule.forRoot(), FormsModule], 
+      providers: [DefaultService],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(FeedComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the formData object on input changes', () => {
-    const titleInput = fixture.nativeElement.querySelector('#title');
-    titleInput.value = 'Test Title';
-    titleInput.dispatchEvent(new Event('input'));
-    
-    const descriptionInput = fixture.nativeElement.querySelector('#description');
-    descriptionInput.value = 'Test Description';
-    descriptionInput.dispatchEvent(new Event('input'));
-    
-    // Set the file input value if needed (you may need to mock file input changes)
-    //console.log(component.formData.title);
-    // Trigger the form submit
-    const form = fixture.nativeElement.querySelector('form');
-    form.dispatchEvent(new Event('submit'));
-    fixture.detectChanges();
-    
-    // Check if formData is correctly updated
-    expect(component.formData.title).toBe('Test Title');
-    expect(component.formData.description).toBe('Test Description');
-    // Check the file input if necessary
-    
-  });
+  it('should display the post creation form when the "Post" button is clicked', () => {
+    const postButton = fixture.debugElement.query(By.css('#dropdown-button')).nativeElement;
+    const dropdownContent = fixture.debugElement.query(By.css('#dropdown-content')).nativeElement;
 
-  it('should handle infinite scrolling', () => {
-    // Simulate a scroll event to trigger onScroll()
-    // Check if the data array is updated with new items
-  });
+    // Simulate clicking the "Post" button
+    postButton.click();
+    fixture.detectChanges(); // Trigger change detection
 
-  it('should render the correct number of data items', () => {
-    // Create a sample data array
-    const sampleData = [
-      { userId: 1, description: 'Item 1', picture: 'url1' },
-      { userId: 2, description: 'Item 2', picture: 'url2' },
-      { userId: 3, description: 'Item 3', picture: 'url3' },
+    // Check the actual display style property
+    const displayStyle = dropdownContent.style.display;
+    expect(displayStyle).toBe('block');
+});
+
+it('should submit the post creation form', () => {
+  // Set values in the form
+  component.formData.title = 'Test Title';
+  component.formData.description = 'Test Description';
+  component.formData.picture = 'test-image-url.jpg';
+  // Spy on the submitForm function to check if it's called
+  const submitFormSpy = spyOn(component, 'submitForm');
+  // Trigger the submit button click
+  const submitButton = fixture.debugElement.query(By.css('#post_submit')).nativeElement;
+  submitButton.click();
+  // Expect the submitForm function to have been called
+  expect(submitFormSpy).toHaveBeenCalled();
+});
+
+
+  it('should load and display posts', () => {
+    // Simulate loading posts
+    const mockPosts = [
+      {
+        title: 'Post 1',
+        content: 'Content 1',
+        // Add other properties as needed
+      },
+      {
+        title: 'Post 2',
+        content: 'Content 2',
+        // Add other properties as needed
+      },
     ];
-    component.data = sampleData;
-    fixture.detectChanges();
-    // Verify that the template renders the correct number of items
-    const dataItems = fixture.nativeElement.querySelectorAll('.data-item');
-    // Expect the number of rendered items to match the length of the sample data array
-    expect(dataItems.length).toBe(sampleData.length);
-  });
-
-  /*it('should display user information and bind correctly with default values', () => {
-    // By default, component properties are empty or null
-    // No need to set them explicitly
+  
+    // Set the component's data property with mock posts
+    component.data = mockPosts;
     fixture.detectChanges();
   
-    // Verify that the elements have the default values
-    const img = fixture.nativeElement.querySelector('img');
-    
-    const userId = fixture.nativeElement.querySelector('.card-title');
-    const description = fixture.nativeElement.querySelector('.card-text');
-    console.log(description);
-    // Ensure that the default values are correctly displayed
-    expect(img.getAttribute('src')).toBe(null); 
-   
-  });*/
+    // Verify that the posts are displayed on the page
+    const postCards = fixture.debugElement.queryAll(By.css('.custom-card'));
+    expect(postCards.length).toBe(mockPosts.length);
   
-  
-  
-
-  it('should handle styling and visibility correctly', () => {
-    const dropdownContent = fixture.nativeElement.querySelector('.dropdown-content');
-    if (component.isDropdownOpen) {
-      expect(dropdownContent.style.display).toBe('block');
-    } else {
-      expect(dropdownContent.style.display).toBe('none');
+    // Check that the post titles and content are displayed as expected
+    for (let i = 0; i < mockPosts.length; i++) {
+      const postTitle = postCards[i].query(By.css('.card-title')).nativeElement.textContent;
+      const postContent = postCards[i].query(By.css('.card-text')).nativeElement.textContent;
+      expect(postTitle).toBe(mockPosts[i].title);
+      expect(postContent).toBe(mockPosts[i].content);
+      // Add more expectations for other properties if needed
     }
   });
+  
 });
