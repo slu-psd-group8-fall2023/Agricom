@@ -7,7 +7,7 @@ const api = require('./api');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json({limit: '50mb', extended: true}));
+app.use(bodyParser.json({limit: '50mb', extended:true}));
 
 // Connect to Database
 db();
