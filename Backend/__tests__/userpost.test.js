@@ -92,7 +92,9 @@ describe('userPost', () => {
   });
 });
 
-
+/**
+ * Test cases for the UserPost to addcomments
+ */
 describe('addCommentToPost', () => {
 
   it('should return an error for a non-existing post', async () => {
@@ -250,6 +252,10 @@ expect(post.Comments.length).toBe(1); // Ensure the comment was added
 
 });
 
+
+/**
+ * Test cases for the UserPost to retrieve comments
+ */
 describe('getCommentsForPost', () => {
 
   it('should return an error for a non-existing post', async () => {
