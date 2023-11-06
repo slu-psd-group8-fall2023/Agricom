@@ -1,43 +1,43 @@
 version: 2.1
 
-jobs:
-  install_dependencies_frontend:
-    docker:
-      - image: circleci/node:14.17
-    steps:
-      - checkout
-      - run:
-          name: Install Node.js Dependencies
-          command: npm install
-          working_directory: Frontend
-      - run:
-          name: Install Angular CLI
-          command: npm install -g @angular/cli
-          working_directory: Frontend
+orbs:
+  node: circleci/node@5.1.0
 
-  install_dependencies_backend:
-    docker:
-      - image: circleci/node:14.17
-    steps:
-      - checkout
-      - run:
-          name: Install Backend Dependencies
-          command: npm install
-      - run:
-          name: Run Backend Tests
-          command: npx jest --config=../backend/jest.config.js
-
+jobs: 
+    angular-test:
+      docker:
+        - image: circleci/node:16.13.1-bullseye-browsers-legacy
+      environment:
+        NPM_CONFIG_PREFIX: "~/.npm-global"
+      steps:
+        - checkout
+        - run:
+            name: Install Angular CLI
+            command: npm install -g @angular/cli@latest
+        - run:
+            command: npm link @angular/cli
+        # - run:
+        #     command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+        # - run:
+        #     command: nvm install latest
+        # - run:
+        #     command: nvm use latest
+        - run:
+            name: Change folder
+            command: cd ~/project/Frontend
+        - run:
+            name: Install Angular Dependencies
+            command: cd ~/project/Frontend && npm install --force
+        # - run:
+        #     name: Run Angular Tests
+        #     command: cd ~/project/Frontend && npm run test
 workflows:
-  version: 2
-  build-and-test:
-    jobs:
-      - install_dependencies_frontend:
-          filters:
-            branches:
-              only:
-                - GROUP-59-Testcases-for-save-comments
-      - install_dependencies_backend:
-          filters:
-            branches:
-              only:
-                - GROUP-59-Testcases-for-save-comments
+    backend:
+      jobs:
+        - node/run:
+            pkg-manager: npm 
+            resource_class: large 
+            app-dir: ~/project/Backend 
+            npm-run: test
+
+        - angular-test
