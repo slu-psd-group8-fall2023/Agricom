@@ -2,13 +2,25 @@
     <div id="post-bar">
         <div class="dropdown-container">
             <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">Post</button>
-            <div class="dropdown-content" id="dropdown-content" [style.display]="isDropdownOpen ? 'block' : 'none'">
+            <div class="dropdown-content mt-2" id="dropdown-content"
+                [style.display]="isDropdownOpen ? 'block' : 'none'">
                 <form>
-                    <input class="form-control" type="text" id="title" placeholder="title" [(ngModel)]="formData.title" name="title" required><input class="form-control" type="file" id="picture" (change)="handleUpload($event)" name="picture" accept="image/*" >
-
-                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Whats in you heart" [(ngModel)]="formData.description" required></textarea>
-
-                    <button type="submit" class="btn btn-success" id="post_submit" (click)="submitForm()">Submit</button>
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="title" placeholder="title"
+                            [(ngModel)]="formData.title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="file" id="picture" (change)="handleUpload($event)"
+                            name="picture" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="description" name="description" rows="4"
+                            placeholder="Whats in you heart" [(ngModel)]="formData.description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" id="post_submit"
+                            (click)="submitForm()">Submit</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -16,16 +28,16 @@
     <br><br><br>
     <!-- scrollable-and showing posts on screen -->
     <div class="container mt-4" (scroll)="onScroll()" [ngClass]="{'opacity-75':isDropdownOpen}">
-                <div class="col-12">
-                    <div  *ngFor="let item of data" class="card mb-4 custom-card">
-                        <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.title }}</h5>
-                            <small class="text-muted">Created By:{{ item.username }}</small>
-                            <p class="card-text">{{ item.content }}</p>
-                            <!-- <button class="btn btn-primary">Discussion Box</button> -->
-                        </div>
-                    </div>
+        <div class="col-12">
+            <div *ngFor="let item of data" class="card mb-4 custom-card">
+                <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <small class="text-muted">Created By:{{ item.username }}</small>
+                    <p class="card-text">{{ item.content }}</p>
+                    <!-- <button class="btn btn-primary">Discussion Box</button> -->
                 </div>
+            </div>
+        </div>
     </div>
 </div>
