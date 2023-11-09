@@ -32,7 +32,7 @@ jobs:
         #     name: Run Angular Tests
         #     command: cd ~/project/Frontend && npm run test
 workflows:
-    backend:
+    testcases:
       jobs:
         - node/run:
             pkg-manager: npm 
