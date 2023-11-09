@@ -59,6 +59,11 @@ async function addCommentToPost(req, res) {
       if (!post) {
         return res.status(404).json({ message: 'Post not found' });
       }
+
+     // Ensure that the post has a 'Comments' array
+     if (!post.Comments) {
+         post.Comments = [];
+     }
   
       // Add the comment to the post's comments array
       post.Comments.push({ username, content, createdAt });
