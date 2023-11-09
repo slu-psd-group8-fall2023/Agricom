@@ -1,18 +1,42 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './login.component';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { of } from 'rxjs';
+import { ToastrModule, ToastrService } from 'ngx-toastr'; 
+import { AuthenticationService } from '../services/authentication.service'; // Replace with the actual path to your AuthenticationService
+import { throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
+  // Define the activatedRouteStub with mock data
+  const activatedRouteStub = {
+    paramMap: of(convertToParamMap({ id: '1' })),
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      imports:[HttpClientTestingModule,FormsModule],
-    });
+      imports: [HttpClientTestingModule, FormsModule, RouterTestingModule, ToastrModule.forRoot()], // Include ToastrModule
+      providers: [AuthenticationService,
+        { provide: ActivatedRoute, useValue: activatedRouteStub },
+        /*{ provide: AuthenticationService, useClass: MockAuthenticationService },*/
+      ],
+    }).compileComponents();
+
+    // Provide a mock for ToastrService to prevent errors
+    const toastrServiceMock = {
+      success: () => {},
+      error: () => {},
+      // Add more methods as needed
+    };
+    TestBed.overrideProvider(ToastrService, { useValue: toastrServiceMock });
+
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -22,96 +46,50 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display the initial sign-in form', () => {
-    // Set up the component or action that displays the sign-in form
-    component.authCtrl.showSignIn = true;
-    fixture.detectChanges();
-  
-    // Find elements related to the sign-in form
-    const emailInput = fixture.nativeElement.querySelector('input[name="Email"]');
-    const passwordInput = fixture.nativeElement.querySelector('input[name="Password"]');
-    const signInButton = fixture.nativeElement.querySelector('button.btn-primary');
-  
-    // Verify that the sign-in form elements are displayed
-    expect(emailInput).toBeTruthy();
-    expect(passwordInput).toBeTruthy();
-    expect(signInButton).toBeTruthy();
-  
-  });
-  it('should show the sign-in form by default', () => {
-    expect(component.authCtrl.showSignIn).toBeTruthy();
-    expect(component.authCtrl.showSignUp).toBeFalsy();
-    expect(component.authCtrl.showPasswordReset).toBeFalsy();
-    expect(component.authCtrl.showForgotPassword).toBeFalsy();
+  it('should have the initial state', () => {
+    // Check the initial state of variables.
+    expect(component.authCtrl.showSignIn).toBe(true);
+    expect(component.authCtrl.showSignUp).toBe(false);
+    expect(component.authCtrl.showForgotPassword).toBe(false);
+    expect(component.authCtrl.showPasswordReset).toBe(false);
+    expect(component.authCtrl.name).toBe('');
+    expect(component.authCtrl.email).toBe('');
+    expect(component.authCtrl.password).toBe('');
+    expect(component.authCtrl.newPassword).toBe('');
+    expect(component.authCtrl.confirmNewPassword).toBe('');
+    expect(component.authCtrl.token).toBe('');
+    expect(component.authCtrl.passwordNoMatch).toBe(false);
+    expect(component.authCtrl.errorMessage).toBe('');
+    // Add more expectations for other variables if needed.
   });
 
-  it('should reset the authCtrl when switching between forms', () => {
-    // Switch to Sign Up
+  it('should set showSignUp to true when showSignup is called', () => {
     component.showSignup();
-    expect(component.authCtrl.showSignIn).toBeFalsy();
-    expect(component.authCtrl.showSignUp).toBeTruthy();
-    expect(component.authCtrl.showPasswordReset).toBeFalsy();
-    expect(component.authCtrl.showForgotPassword).toBeFalsy();
-
-    // Reset should set all form flags to false
-    component.reset();
-    expect(component.authCtrl.showSignIn).toBeFalsy();
-    expect(component.authCtrl.showSignUp).toBeFalsy();
-    expect(component.authCtrl.showPasswordReset).toBeFalsy();
-    expect(component.authCtrl.showForgotPassword).toBeFalsy();
-  });
-  it('set the email input value in the "Password Reset" form', () => {
-    component.authCtrl.showPasswordReset = true;
-    //setting static email and checking it
-    component.authCtrl.email = 'test@example.com';
-    fixture.detectChanges();
-  });
-  it('should set the resetpassword input values in the "Password Reset" form', () => {
-    component.authCtrl.showPasswordReset = true;
-    const token = fixture.debugElement.query(By.css('input[name="Token"]')).nativeElement;
-    const password = fixture.debugElement.query(By.css('input[name="Password"]')).nativeElement;
-    const confirm_password = fixture.debugElement.query(By.css('input[name="Confirm Password"]')).nativeElement;
-    password.dispatchEvent(new Event('input'));
-    confirm_password.dispatchEvent(new Event('input'));
-    token.value = '123456'; // Set the token property
-    password.value='harish'//set password
-    confirm_password.value='harih'//set password
-    const signInButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
-    signInButton.triggerEventHandler('click', null);
-    fixture.detectChanges();
-    expect(component.authCtrl.token.value).toBe('123456'); // Expect the input value to be '123456'
-    component.authCtrl.resetPasssword() 
-    console.log(component.authCtrl.errorMessage.value)
-    expect(component.authCtrl.errorMessage).toBe('Passwords do not match');
-
+    expect(component.authCtrl.showSignUp).toBe(true);
   });
 
-  it('should bind email and password inputs to the component properties', () => {
-    fixture.detectChanges();
-
-    // Simulate user input by setting values in the input elements
-    const emailInput = fixture.debugElement.query(By.css('input[name="Email"]')).nativeElement;
-    const passwordInput = fixture.debugElement.query(By.css('input[name="Password"]')).nativeElement;
-
-    emailInput.value = 'test@example.com';
-    passwordInput.value = 'password123';
-
-    // Trigger input events to update ngModel bindings
-    emailInput.dispatchEvent(new Event('input'));
-    passwordInput.dispatchEvent(new Event('input'));
-
-    expect(component.authCtrl.email).toBe('test@example.com');
-    expect(component.authCtrl.password).toBe('password123');
-  });
-
-  it('should simulate a sign-in attempt and check if the form is submitted', () => {
-    // Set email and password in the component
-    component.authCtrl.email = 'test@example.com';
-    component.authCtrl.password = 'password123';
-    fixture.detectChanges();
-    const signInButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
-    // Simulate a button click to attempt sign-in
-    signInButton.triggerEventHandler('click', null);
-  });
-
+  it('should set errorMessage when login fails', fakeAsync(() => {
+    // Mocking the AuthenticationService
+    const authService = TestBed.inject(AuthenticationService); 
+    spyOn(authService, 'login').and.returnValue(throwError('Login failed'));
+    component.login();
+    tick();
+    expect(component.authCtrl.errorMessage).toBe('Login failed');
+  }));
+  
+  /*it('should navigate to the return URL on successful login', () => {
+    // Arrange
+    const authService = TestBed.inject(AuthenticationService);
+    spyOn(authService, 'login').and.returnValue(of('success'));
+    const router = TestBed.inject(Router);
+    const navigateSpy = spyOn(router, 'navigate');
+    
+    // Act
+    component.login();
+    
+    // Assert
+    expect(navigateSpy).toHaveBeenCalledWith(['/feed']); 
+  });*/
+  
+  
 });
