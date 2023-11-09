@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { userLogin,userSignUp } = require('../authutil');
+const { userLogin,userSignUp,userForgotPassword,userResetPassword } = require('../authutil');
 const User = require('../models/User');
 
 // Mocking the necessary modules
@@ -157,3 +157,62 @@ describe('userSignUp', () => {
     });
     
 });
+
+
+describe('User Password Reset', () => {
+    // Mocking necessary dependencies, e.g., Express request and response objects
+    const req = { body: {}, params: {} };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+  
+    it('should return a 400 status with an error message when email is missing', async () => {
+      await userForgotPassword(req, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Email is required.' });
+    });
+  
+    it('should return a 400 status with an error message when the reset token is invalid or expired', async () => {
+      req.params.token = 'invalid-token'; // Use an invalid token
+      req.body.newPassword = 'new-password';
+  
+      const user = null; // User not found, simulating an expired or invalid token
+      User.findOne.mockResolvedValue(user);
+  
+      await userResetPassword(req, res);
+  
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        error: 'Password reset token is invalid or has expired.',
+      });
+    });
+
+    it('should reset the user password and return a 200 status on success', async () => {
+        req.params.token = 'valid-token'; // Use a valid token
+        req.body.newPassword = 'new-password';
+      
+        const user = {
+          _id: 'mockUserId',
+          token: 'valid-token',
+          tokenexpire: new Date(Date.now() + 3600000),
+          password: 'existing-password',
+          // Other user properties...
+          save: jest.fn(), // Use jest.fn() to create a mock function for save
+        };
+      
+        // Mock the bcrypt.hash function
+        bcrypt.hash.mockResolvedValue('hashed-password');
+        User.findOne.mockResolvedValue(user);
+      
+        await userResetPassword(req, res);
+      
+        expect(bcrypt.hash).toHaveBeenCalledWith(req.body.newPassword, 10);
+        expect(user.password).toEqual('hashed-password');
+        expect(user.resetPasswordToken).toBeUndefined();
+        expect(user.resetPasswordExpires).toBeUndefined();
+        expect(user.save).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Password reset successful.' });
+      });      
+  }); 
