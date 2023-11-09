@@ -3,6 +3,7 @@ import { DefaultService } from "../default.service";
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-feed',
@@ -12,7 +13,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class FeedComponent {
 
   authService: any;
-  constructor(private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer) { }
+  user:any;
+  constructor(private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService) { }
 
   isDropdownOpen = false;
   toggleDropdown() {
@@ -38,7 +40,7 @@ export class FeedComponent {
     try {
       // let data = await this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params);
       let params = {
-        username: "udkr1996@gmail.com",
+        username: this.user.username,
         title: this.formData.title,
         content: this.formData.description,
         image: this.formData.picture,
@@ -67,6 +69,7 @@ export class FeedComponent {
 
   ngOnInit(): void {
     this.loadInitialUserData();
+    this.user = this.authenticationService.userValue;
   }
 
   loadInitialUserData() {
