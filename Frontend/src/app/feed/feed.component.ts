@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthenticationService } from '../services/authentication.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-feed',
@@ -15,7 +15,10 @@ export class FeedComponent {
 
   authService: any;
   user:any;
-  constructor(private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { }
+  constructor(config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { 
+    config.backdrop = 'static';
+		config.keyboard = false;
+  }
 
   isDropdownOpen = false;
   toggleDropdown() {
@@ -55,6 +58,7 @@ export class FeedComponent {
         (data: any) => {
           this.toastr.success("Succesfully created post");
           let response = data['data'];
+          this.loadInitialUserData();
           console.log(response);
         },
         (err: any) => {
@@ -112,8 +116,9 @@ export class FeedComponent {
 
   toggleDiscussionBox(modal:any, postData:any) {
     this.discussionBox = ! this.discussionBox;
-    this.selectedPostId = postData
+    this.selectedPostId = postData._id
     this.comments = postData.Comments
+    this.commentText = '';
     this.modalService.open(modal, { scrollable: true });
   }
 
@@ -128,7 +133,7 @@ export class FeedComponent {
 
   async submitComment() {
     let params = {
-      _id: {_id:this.selectedPostId},
+      postId: this.selectedPostId,
       username: this.user.username,
       content: this.commentText,
       createdAt: Date.now()
@@ -140,8 +145,9 @@ export class FeedComponent {
       await this.defaultService.httpPostCall(`${environment.ADD_COMMENT_API}`, params).subscribe(
         (data: any) => {
           this.toastr.success("Succesfully posted comment");
-          let response = data['data'];
-          console.log(response);
+          this.comments = data.post.Comments
+          this.commentText = '';
+          console.log(data.post._id);
         },
         (err: any) => {
           this.toastr.error("Error creating post! \n Please try again");
