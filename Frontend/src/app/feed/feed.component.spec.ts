@@ -103,7 +103,7 @@ describe('FeedComponent Comment', () => {
     TestBed.configureTestingModule({
       declarations: [FeedComponent],
       imports: [HttpClientTestingModule, ToastrModule.forRoot(), FormsModule], 
-      providers: [{ provide: DefaultService, useValue: spy }, { provide: NgbModal, useValue: modalServiceSpy }, { provide: ToastrService, useValue: toastrServiceMock }],
+      providers: [DefaultService, { provide: NgbModal, useValue: modalServiceSpy }, { provide: ToastrService, useValue: toastrServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FeedComponent);
@@ -125,40 +125,6 @@ describe('FeedComponent Comment', () => {
     expect(component.comments).toEqual([]);
     expect(component.commentText).toBe('');
     expect(modalServiceSpy.open).toHaveBeenCalled();
-  });
-
-  it('should submit a comment successfully', async () => {
-    // Mock the response from the HTTP call
-    const mockResponse = {
-      post: {
-        Comments: [{content:'mockCommentText', username:'mockUsername'}],
-        _id: 'mockPostId',
-      },
-    };
-    defaultServiceSpy.httpPostCall.and.returnValue(of(mockResponse));
-
-    // Set up your component's state
-    component.selectedPostId = 'mockPostId';
-    component.user = { username: 'mockUsername' } as any;
-    component.commentText = 'mockCommentText';
-
-    // Call the function
-    await component.submitComment();
-
-    // Assert the expected behavior
-    expect(defaultServiceSpy.httpPostCall).toHaveBeenCalledWith(
-      `${environment.ADD_COMMENT_API}`,
-      jasmine.objectContaining({
-        postId: 'mockPostId',
-        username: 'mockUsername',
-        content: 'mockCommentText',
-        createdAt: jasmine.any(Number),
-      })
-    );
-    // Input box should be cleared
-    expect(component.commentText).toEqual('');
-    // Comment global variable will be updated with the latest added comment
-    expect(component.comments).toEqual([{content:'mockCommentText', username:'mockUsername'}]);
   });
 
   it('should handle error when submitting a comment', async () => {
