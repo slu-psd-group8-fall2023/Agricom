@@ -6,7 +6,7 @@ orbs:
 jobs: 
     angular-test:
       docker:
-        - image: udkreddy96/angular-env
+        - image: circleci/node:latest
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
@@ -22,9 +22,9 @@ jobs:
         #     command: nvm install latest
         # - run:
         #     command: nvm use latest
-        - run:
-            name: Change folder
-            command: cd ~/project/Frontend
+        # - run:
+        #     name: Change folder
+        #     command: cd ~/project/Frontend
         - run:
             name: Install Angular Dependencies
             command: cd ~/project/Frontend && npm install --force
