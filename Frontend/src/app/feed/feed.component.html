@@ -19,7 +19,9 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" id="post_submit"
-                            (click)="submitForm()">Submit</button>
+                            (click)="submitForm()" [disabled]="createPostBtnLoader">Submit
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="createPostBtnLoader"></span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -29,6 +31,7 @@
     <!-- scrollable-and showing posts on screen -->
     <div class="container mt-5" (scroll)="onScroll()" [ngClass]="{'opacity-75':isDropdownOpen}">
         <div class="col-12">
+
             <div *ngFor="let item of data" class="card mb-5 custom-card">
                 <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
                 <div class="card-body">
@@ -36,8 +39,48 @@
                     <small class="text-muted">Created By:{{ item.username }}</small>
                     <p class="card-text">{{ item.content }}</p>
                     <!-- <button class="btn btn-primary">Discussion Box</button> -->
+                <div *ngFor="let item of data" class="card mb-4 custom-card">
+                    <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <small class="text-muted">Created By:{{ item.username }}</small>
+                        <p class="card-text">{{ item.content }}</p>
+                        <button class="btn btn-primary" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>
+
+<ng-template #myModal let-modal >
+    <!-- <div class="modal-dailog"> -->
+    <div class="modal-header">
+        <h4 class="modal-title">Discussion Box</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex justify-content-center" *ngIf="commentsLoader">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <ng-container *ngFor="let comment of comments">
+            <div class="justify-content-between">
+                <small class="text-muted m-1">Created By: {{comment.username}}</small>
+                <small class="text-muted m-1">Created on: {{comment.createdAt}}</small>
+            </div>
+            <p>
+                {{comment.content}}
+            </p><hr>
+        </ng-container>
+        <ng-container *ngIf="!comments.length">
+            <small class="text-muted">Nothing happened here!. <br> Start the Discussion by adding a comment</small>
+        </ng-container>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <input type="text" class="width-70" id="comment-text" autocomplete="off" [(ngModel)]="commentText">
+        <button class="button btn btn-primary" (click)="submitComment()" [disabled]="commentsBtnLoader">Add comment 
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="commentsBtnLoader"></span>
+        </button>
+    </div>
+</ng-template>
