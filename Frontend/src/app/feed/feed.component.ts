@@ -43,6 +43,7 @@ export class FeedComponent {
   commentsBtnLoader:boolean = false;
   createPostBtnLoader:boolean = false;
 
+
   //submiting data to backend
   async submitForm() {
     this.createPostBtnLoader = true;
@@ -140,6 +141,7 @@ export class FeedComponent {
       this.comments = data.comments;
       this.commentsLoader = false;
     });
+
   }
 
   handleUpload(event:any) {
@@ -174,6 +176,7 @@ export class FeedComponent {
         (err: any) => {
           this.commentsBtnLoader = false;
           this.toastr.error("Error creating comment! \n Please try again");
+
           console.log(err);
         }
       )
@@ -189,4 +192,5 @@ export class FeedComponent {
       modalContentElement.scrollTop = modalContentElement.scrollHeight;
     } catch(err) { }                 
 }
+
 }
