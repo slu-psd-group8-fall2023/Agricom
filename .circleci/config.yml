@@ -11,9 +11,9 @@ jobs:
         NPM_CONFIG_PREFIX: "~/.npm-global"
       steps:
         - checkout
-        - run:
-            name: Install Angular CLI
-            command: npm install -g @angular/cli@latest
+        # - run:
+        #     name: Install Angular CLI
+        #     command: npm install -g @angular/cli@latest
         - run:
             command: npm link @angular/cli
         # - run:
