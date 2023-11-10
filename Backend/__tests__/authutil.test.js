@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
-const { userLogin,userSignUp,userForgotPassword,userResetPassword } = require('../authutil');
+const { userLogin,userSignUp,userForgotPassword,userResetPassword} = require('../authutil');
 const User = require('../models/User');
-
 // Mocking the necessary modules
 jest.mock('bcryptjs', () => ({compare: jest.fn(),}));
 jest.mock('../models/transporter', () => ({}));
@@ -155,68 +154,50 @@ describe('userSignUp', () => {
         expect(res.status).toHaveBeenCalledWith(500);
         expect(jsonMock).toHaveBeenCalledWith({ error: 'Internal Server Error' });
     });
-    
 });
 
 
-describe('User Password Reset', () => {
-    // Mocking necessary dependencies, e.g., Express request and response objects
-    const req = { body: {}, params: {} };
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-  
-    it('should return a 400 status with an error message when email is missing', async () => {
-      await userForgotPassword(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Email is required.' });
-    });
-  
-    it('should return a 400 status with an error message when the reset token is invalid or expired', async () => {
-      req.params.token = 'invalid-token'; // Use an invalid token
-      req.body.newPassword = 'new-password';
-  
-      const user = null; // User not found, simulating an expired or invalid token
-      User.findOne.mockResolvedValue(user);
-  
-      await userResetPassword(req, res);
-  
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        error: 'Password reset token is invalid or has expired.',
-      });
-    });
+/**
+ * Test cases for the Forgetpassword
+ */
+describe('userForgotPassword', () => {
+  it('Email not provided', async () => {
+    const req = { body: { } }; // Missing email in the request
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-    it('should reset the user password and return a 200 status on success', async () => {
-        req.params.token = 'valid-token'; // Use a valid token
-        req.body.newPassword = 'new-password';
-      
-        const user = {
-          _id: 'mockUserId',
-          token: 'valid-token',
-          tokenexpire: new Date(Date.now() + 3600000),
-          password: 'existing-password',
-          // Other user properties...
-          save: jest.fn(), // Use jest.fn() to create a mock function for save
-        };
-      
-        // Mock the bcrypt.hash function
-        bcrypt.hash.mockResolvedValue('hashed-password');
-        User.findOne.mockResolvedValue(user);
-      
-        await userResetPassword(req, res);
-      
-        expect(bcrypt.hash).toHaveBeenCalledWith(req.body.newPassword, 10);
-        expect(user.password).toEqual('hashed-password');
-        expect(user.resetPasswordToken).toBeUndefined();
-        expect(user.resetPasswordExpires).toBeUndefined();
-        expect(user.save).toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Password reset successful.' });
-      });      
-  }); 
+    await userForgotPassword(req, res);
 
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Email is required.' });
+  });
+
+  it('User not found', async () => {
+    const req = { body: { email: 'nonexistent@example.com' } };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+    await userForgotPassword(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
+  });
+  it('Error during password reset', async () => {
+    const req = { body: { email: 'user@example.com' } };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+    jest.spyOn(User, 'findOne').mockImplementationOnce(() => { throw new Error('Some error during password reset.'); });
+
+    await userForgotPassword(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
+  });
+
+});
+
+
+/**
+ * Test cases for the resetpassword
+ */
 describe('User Password Reset', () => {
     it('should reset the user password and return a 200 status on success', async () => {
         const req = {
