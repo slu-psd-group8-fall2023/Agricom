@@ -28,9 +28,9 @@ jobs:
         - run:
             name: Install Angular Dependencies
             command: cd ~/project/Frontend && npm install --force
-        # - run:
-        #     name: Run Angular Tests
-        #     command: cd ~/project/Frontend && npm run test
+        - run:
+            name: Run Angular Tests
+            command: cd ~/project/Frontend && npm run test
 workflows:
     backend:
       jobs:
