@@ -92,6 +92,51 @@ describe('userPost', () => {
   });
 });
 
+
+/**
+ * Test cases for the RetrievePost
+ */
+describe('retrievePosts', () => {
+  it('should handle empty posts array', async () => {
+    // Mock Post.find to return an empty array
+    Post.find.mockResolvedValue([]);
+
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await retrievePosts(req, res);
+
+    // Expect a 200 response with an empty posts array
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error'});
+  });
+
+
+  it('should handle invalid post object', async () => {
+    // Mock Post.find to return a post with missing properties
+    const invalidPost = { _id: '1' };
+    Post.find.mockResolvedValue([invalidPost]);
+
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await retrievePosts(req, res);
+
+    // Expect a 500 response
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
+  });
+});
+
+
+
+
 /**
  * Test cases for the UserPost to addcomments
  */
