@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthenticationService } from '../services/authentication.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-feed',
@@ -14,7 +15,7 @@ export class FeedComponent {
 
   authService: any;
   user:any;
-  constructor(private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService) { }
+  constructor(private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { }
 
   isDropdownOpen = false;
   toggleDropdown() {
@@ -30,6 +31,9 @@ export class FeedComponent {
     picture: '',
     description: ''
   }
+  public commentText:string = '';
+  selectedPostId:string='';
+  discussionBox:boolean = false;
 
   //submiting data to backend
   async submitForm() {
@@ -105,6 +109,12 @@ export class FeedComponent {
     }
   }
 
+  toggleDiscussionBox(modal:any, postId:string) {
+    this.discussionBox = ! this.discussionBox;
+    this.selectedPostId = postId
+    this.modalService.open(modal, { scrollable: true });
+  }
+
   handleUpload(event:any) {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -112,5 +122,32 @@ export class FeedComponent {
     reader.onload = () => {
       this.formData.picture = reader.result;
     };
+  }
+
+  async submitComment() {
+    let params = {
+      _id: {_id:this.selectedPostId},
+      username: this.user.username,
+      content: this.commentText,
+      createdAt: Date.now()
+    }
+
+    console.log(JSON.stringify(params))
+
+    try {
+      await this.defaultService.httpPostCall(`${environment.ADD_COMMENT_API}`, params).subscribe(
+        (data: any) => {
+          this.toastr.success("Succesfully posted comment");
+          let response = data['data'];
+          console.log(response);
+        },
+        (err: any) => {
+          this.toastr.error("Error creating post! \n Please try again");
+          console.log(err);
+        }
+      )
+    } catch (e) {
+      this.toastr.error("Error creating post! \n Please try again");
+    }
   }
 }
