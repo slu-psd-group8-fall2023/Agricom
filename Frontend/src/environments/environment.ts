@@ -6,4 +6,6 @@ export const environment = {
     RESET_PASS_API: 'http://127.0.0.1:3000/reset-password',
     CREATE_POST_API: 'http://127.0.0.1:3000/posts',
     FETCH_POSTS_API: 'http://127.0.0.1:3000/retrieveposts',
+    ADD_COMMENT_API: 'http://127.0.0.1:3000/postcomments',
+    GET_COMMENT_API: 'http://127.0.0.1:3000/getpostcomments',
 }

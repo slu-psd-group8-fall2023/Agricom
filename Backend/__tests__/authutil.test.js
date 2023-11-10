@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
-const { userLogin,userSignUp } = require('../authutil');
+const { userLogin,userSignUp,userForgotPassword,userResetPassword} = require('../authutil');
 const User = require('../models/User');
-
 // Mocking the necessary modules
 jest.mock('bcryptjs', () => ({compare: jest.fn(),}));
 jest.mock('../models/transporter', () => ({}));
@@ -155,5 +154,151 @@ describe('userSignUp', () => {
         expect(res.status).toHaveBeenCalledWith(500);
         expect(jsonMock).toHaveBeenCalledWith({ error: 'Internal Server Error' });
     });
+});
+
+
+/**
+ * Test cases for the Forgetpassword
+ */
+describe('userForgotPassword', () => {
+  it('Email not provided', async () => {
+    const req = { body: { } }; // Missing email in the request
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+    await userForgotPassword(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Email is required.' });
+  });
+
+  it('User not found', async () => {
+    const req = { body: { email: 'nonexistent@example.com' } };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+    await userForgotPassword(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
+  });
+  it('Error during password reset', async () => {
+    const req = { body: { email: 'user@example.com' } };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+    jest.spyOn(User, 'findOne').mockImplementationOnce(() => { throw new Error('Some error during password reset.'); });
+
+    await userForgotPassword(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
+  });
+
+});
+
+
+/**
+ * Test cases for the resetpassword
+ */
+describe('User Password Reset', () => {
+    it('should reset the user password and return a 200 status on success', async () => {
+        const req = {
+          params: {
+            token: 'valid-reset-token', // Use a valid reset token
+          },
+          body: {
+            newPassword: 'new-password',
+          },
+        };
+      
+        const res = {
+            status: jest.fn().mockReturnThis(), // Mock the status method
+            json: jest.fn(), // Mock the json method
+          };
+      
+        // Mock the user object with a valid token and expiration date
+        const user = {
+          token: 'valid-reset-token',
+          tokenexpire: new Date(Date.now() + 3600000), // Valid expiration time
+          password: 'existing-password', // Existing hashed password
+          save: jest.fn(), // Mock the save function
+        };
+      
+        // Mock bcrypt.hash to return the hashed password
+        bcrypt.hash.mockResolvedValue('hashed-new-password');
+      
+        // Mock User.findOne to return the user object
+        User.findOne.mockResolvedValue(user);
+      
+        // Call the function with the defined req and res objects
+        await userResetPassword(req, res);
+      
+        // Assertions
+        expect(bcrypt.hash).toHaveBeenCalledWith('new-password', 10);
+        expect(user.password).toBe('hashed-new-password');
+        expect(user.resetPasswordToken).toBeUndefined();
+        expect(user.resetPasswordExpires).toBeUndefined();
+        expect(user.save).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Password reset successful.' });
+      });
+
+
+      it('should return a 400 status with an error message for an invalid token', async () => {
+        // Mock the request and response objects
+        const req = {
+            params: {
+                token: 'invalid-reset-token', // Use an invalid reset token
+            },
+            body: {
+                newPassword: 'new-password', // Define the newPassword property
+            },
+        };
     
+        const res = {
+            status: jest.fn().mockReturnThis(), // Mock the status method
+            json: jest.fn(), // Mock the json method
+        };
+    
+        // Mock User.findOne to return null (no user found with the token)
+        User.findOne.mockResolvedValue(null);
+    
+        // Call the function with the defined req and res objects
+        await userResetPassword(req, res);
+    
+        // Assertions
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({ error: 'Password reset token is invalid or has expired.' });
+    });
+    
+    it('should return a 400 status with an error message for an expired token', async () => {
+        const req = {
+          params: {
+            token: 'invalid-reset-token', // Use an invalid reset token
+          },
+          body: {
+            newPassword: 'new-password', // Define the newPassword property
+          },
+        };
+      
+        const res = {
+          status: jest.fn().mockReturnThis(),
+          json: jest.fn(),
+        };
+      
+        const user = {
+          token: 'expired-reset-token',
+          tokenexpire: new Date(Date.now() - 3600000), // Past expiration time
+          save: jest.fn(), // Mock the save function
+        };
+      
+        // Mock User.findOne to return the user object
+        User.findOne.mockResolvedValue(null);
+      
+        // Call the function
+        await userResetPassword(req, res);
+      
+        // Assertions
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({ error: 'Password reset token is invalid or has expired.' });
+      });
+      
 });

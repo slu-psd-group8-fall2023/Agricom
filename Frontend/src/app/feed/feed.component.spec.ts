@@ -1,13 +1,16 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FeedComponent } from './feed.component';
 import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import HttpClientTestingModule
 import { DefaultService } from '../default.service';
-import { of } from 'rxjs';
-import { ToastrModule } from 'ngx-toastr'
+import { AuthenticationService } from '../services/authentication.service';
+import { of, throwError } from 'rxjs';
+import { ToastrModule, ToastrService } from 'ngx-toastr'
 import { FormsModule } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from 'src/environments/environment';
 
-describe('FeedComponent', () => {
+describe('FeedComponent Post', () => {
   let component: FeedComponent;
   let fixture: ComponentFixture<FeedComponent>;
 
@@ -29,11 +32,9 @@ describe('FeedComponent', () => {
   it('should display the post creation form when the "Post" button is clicked', () => {
     const postButton = fixture.debugElement.query(By.css('#dropdown-button')).nativeElement;
     const dropdownContent = fixture.debugElement.query(By.css('#dropdown-content')).nativeElement;
-
     // Simulate clicking the "Post" button
     postButton.click();
     fixture.detectChanges(); // Trigger change detection
-
     // Check the actual display style property
     const displayStyle = dropdownContent.style.display;
     expect(displayStyle).toBe('block');
@@ -53,30 +54,23 @@ it('should submit the post creation form', () => {
   expect(submitFormSpy).toHaveBeenCalled();
 });
 
-
   it('should load and display posts', () => {
-    // Simulate loading posts
     const mockPosts = [
       {
         title: 'Post 1',
         content: 'Content 1',
-        // Add other properties as needed
       },
       {
         title: 'Post 2',
         content: 'Content 2',
-        // Add other properties as needed
       },
     ];
-  
     // Set the component's data property with mock posts
     component.data = mockPosts;
     fixture.detectChanges();
-  
     // Verify that the posts are displayed on the page
     const postCards = fixture.debugElement.queryAll(By.css('.custom-card'));
     expect(postCards.length).toBe(mockPosts.length);
-  
     // Check that the post titles and content are displayed as expected
     for (let i = 0; i < mockPosts.length; i++) {
       const postTitle = postCards[i].query(By.css('.card-title')).nativeElement.textContent;
@@ -86,5 +80,69 @@ it('should submit the post creation form', () => {
       // Add more expectations for other properties if needed
     }
   });
+
   
+});
+
+describe('FeedComponent Comment', () => {
+  let component: FeedComponent;
+  let fixture: ComponentFixture<FeedComponent>;
+  let modalServiceSpy: jasmine.SpyObj<NgbModal>;
+  let toastr: jasmine.SpyObj<ToastrService>;
+  let defaultServiceSpy: jasmine.SpyObj<DefaultService>;
+
+  const toastrServiceMock = {
+    success: jasmine.createSpy('success'),
+    error: jasmine.createSpy('error')
+  };
+
+  beforeEach(() => {
+    const spy = jasmine.createSpyObj('DefaultService', ['httpPostCall']);
+
+    modalServiceSpy = jasmine.createSpyObj('NgbModal', ['open']);
+    TestBed.configureTestingModule({
+      declarations: [FeedComponent],
+      imports: [HttpClientTestingModule, ToastrModule.forRoot(), FormsModule], 
+      providers: [DefaultService, { provide: NgbModal, useValue: modalServiceSpy }, { provide: ToastrService, useValue: toastrServiceMock }],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(FeedComponent);
+    component = fixture.componentInstance;
+    defaultServiceSpy = TestBed.inject(DefaultService) as jasmine.SpyObj<DefaultService>;
+
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should toggle discussion box', () => {
+    component.toggleDiscussionBox(null, { _id: '1', Comments: [] });
+  
+    // Assert
+    expect(component.discussionBox).toBe(true);
+    expect(component.selectedPostId).toBe('1');
+    expect(component.comments).toEqual([]);
+    expect(component.commentText).toBe('');
+    expect(modalServiceSpy.open).toHaveBeenCalled();
+  });
+
+  it('should handle error when submitting a comment', async () => {
+    // Arrange
+    const mockDefaultService = jasmine.createSpyObj('DefaultService', ['httpPostCall']);
+
+    // Mock the httpPostCall to simulate an error or invalid response
+    mockDefaultService.httpPostCall.and.returnValue(Promise.resolve({ post: { _id: '1' } })); // Invalid response
+    fixture = TestBed.createComponent(FeedComponent);
+    component = fixture.componentInstance;
+
+    // Act
+    await component.submitComment();
+  
+    // Assert
+    expect(toastrServiceMock.error).toHaveBeenCalledWith('Error creating comment! \n Please try again');
+    // Ensure that this.comments is not updated when there's an error in the server response
+    expect(component.comments).toEqual([]);
+    expect(component.commentText).toBe('');
+  });
 });

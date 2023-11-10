@@ -22,8 +22,8 @@ export class DefaultService {
       });
   }
 
-  getData(apiUrl:any): Observable<any> {
+  getData(apiUrl:any, params?:any): Observable<any> {
     // Make an HTTP GET request to fetch data from the API
-    return this.http.get(apiUrl);
+    return this.http.get(apiUrl, params);
   }
 }
