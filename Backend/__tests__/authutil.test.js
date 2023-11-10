@@ -217,7 +217,6 @@ describe('User Password Reset', () => {
       });      
   }); 
 
-
 describe('User Password Reset', () => {
     it('should reset the user password and return a 200 status on success', async () => {
         const req = {

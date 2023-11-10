@@ -194,5 +194,4 @@ module.exports = {
     userResetPassword,
     generateResetToken,
     sendPasswordResetEmail,
-    updateUserResetToken,
 };
