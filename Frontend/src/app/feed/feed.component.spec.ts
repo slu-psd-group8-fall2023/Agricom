@@ -29,11 +29,9 @@ describe('FeedComponent', () => {
   it('should display the post creation form when the "Post" button is clicked', () => {
     const postButton = fixture.debugElement.query(By.css('#dropdown-button')).nativeElement;
     const dropdownContent = fixture.debugElement.query(By.css('#dropdown-content')).nativeElement;
-
     // Simulate clicking the "Post" button
     postButton.click();
     fixture.detectChanges(); // Trigger change detection
-
     // Check the actual display style property
     const displayStyle = dropdownContent.style.display;
     expect(displayStyle).toBe('block');
@@ -53,30 +51,23 @@ it('should submit the post creation form', () => {
   expect(submitFormSpy).toHaveBeenCalled();
 });
 
-
   it('should load and display posts', () => {
-    // Simulate loading posts
     const mockPosts = [
       {
         title: 'Post 1',
         content: 'Content 1',
-        // Add other properties as needed
       },
       {
         title: 'Post 2',
         content: 'Content 2',
-        // Add other properties as needed
       },
     ];
-  
     // Set the component's data property with mock posts
     component.data = mockPosts;
     fixture.detectChanges();
-  
     // Verify that the posts are displayed on the page
     const postCards = fixture.debugElement.queryAll(By.css('.custom-card'));
     expect(postCards.length).toBe(mockPosts.length);
-  
     // Check that the post titles and content are displayed as expected
     for (let i = 0; i < mockPosts.length; i++) {
       const postTitle = postCards[i].query(By.css('.card-title')).nativeElement.textContent;
@@ -86,5 +77,6 @@ it('should submit the post creation form', () => {
       // Add more expectations for other properties if needed
     }
   });
+  
   
 });
