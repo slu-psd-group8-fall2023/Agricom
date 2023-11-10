@@ -31,6 +31,7 @@ export class FeedComponent {
     picture: '',
     description: ''
   }
+  comments: any = [];
   public commentText:string = '';
   selectedPostId:string='';
   discussionBox:boolean = false;
@@ -109,9 +110,10 @@ export class FeedComponent {
     }
   }
 
-  toggleDiscussionBox(modal:any, postId:string) {
+  toggleDiscussionBox(modal:any, postData:any) {
     this.discussionBox = ! this.discussionBox;
-    this.selectedPostId = postId
+    this.selectedPostId = postData
+    this.comments = postData.Comments
     this.modalService.open(modal, { scrollable: true });
   }
 

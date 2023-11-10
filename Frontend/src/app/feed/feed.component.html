@@ -35,7 +35,7 @@
                         <h5 class="card-title">{{ item.title }}</h5>
                         <small class="text-muted">Created By:{{ item.username }}</small>
                         <p class="card-text">{{ item.content }}</p>
-                        <button class="btn btn-primary" (click)="toggleDiscussionBox(myModal, item._id)">Discussion Box</button>
+                        <button class="btn btn-primary" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
                     </div>
                 </div>
         </div>
@@ -48,36 +48,18 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <small class="text-muted">Created By: Creator</small>
-        <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-            Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        </p><hr>
-        <small class="text-muted">Created By: Creator</small>
-        <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet
-            rutrum faucibus dolor auctor.
-        </p><hr>
-    <small class="text-muted">Created By: Creator</small>
-    <p>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.
-        </p><hr>
-    <small class="text-muted">Created By: Creator</small>
-    <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-            Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        </p><hr>
-    <small class="text-muted">Created By: Creator</small>
-    <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet
-            rutrum faucibus dolor auctor.
-        </p><hr>
-    <small class="text-muted">Created By: Creator</small>
-    <p>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.
-        </p>
+        <ng-container *ngFor="let comment of comments">
+            <div class="justify-content-between">
+                <small class="text-muted">Created By: {{comment.username}}</small>
+                <small class="text-muted">Created on: {{comment.createdAt}}</small>
+            </div>
+            <p>
+                {{comment.content}}
+            </p><hr>
+        </ng-container>
+        <ng-container *ngIf="!comments.length">
+            <small class="text-muted">Nothing happened here!. <br> Start the Discussion by adding a comment</small>
+        </ng-container>
     </div>
     <div class="modal-footer justify-content-between">
         <input type="text" class="width-70" id="comment-text" [(ngModel)]="commentText">
