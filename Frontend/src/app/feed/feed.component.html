@@ -19,7 +19,9 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" id="post_submit"
-                            (click)="submitForm()">Submit</button>
+                            (click)="submitForm()" [disabled]="createPostBtnLoader">Submit
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="createPostBtnLoader"></span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -43,12 +45,17 @@
 </div>
 
 <ng-template #myModal let-modal >
-    <div class="modal-dailog" data-backdrop="static" data-keyboard="false">
+    <!-- <div class="modal-dailog"> -->
     <div class="modal-header">
         <h4 class="modal-title">Discussion Box</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
+        <div class="d-flex justify-content-center" *ngIf="commentsLoader">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
         <ng-container *ngFor="let comment of comments">
             <div class="justify-content-between">
                 <small class="text-muted m-1">Created By: {{comment.username}}</small>
@@ -64,7 +71,9 @@
     </div>
     <div class="modal-footer justify-content-between">
         <input type="text" class="width-70" id="comment-text" autocomplete="off" [(ngModel)]="commentText">
-        <button class="button btn btn-primary" (click)="submitComment()">Add comment</button>
+        <button class="button btn btn-primary" (click)="submitComment()" [disabled]="commentsBtnLoader">Add comment 
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="commentsBtnLoader"></span>
+        </button>
     </div>
-</div>
+<!-- </div> -->
 </ng-template>
