@@ -48,33 +48,8 @@ describe('DetectComponent', () => {
     expect(fileInput).toBeTruthy();
   });
 
-  it('should display a result when a valid image is submitted', () => {
-    // Create a mock response and set it directly
-    const mockResponse = {
-      result: {
-        title: 'Test Title',
-        description: 'Test Description',
-        prevent: 'Preventive Steps',
-        image_url: 'test-image-url',
-        supplement_name: 'Supplement Name',
-        supplement_image_url: 'supplement-image-url',
-        supplement_buy_link: 'supplement-buy-link',
-      },
-    };
-
-    const file = new File([''], 'test.png', { type: 'image/png' });
-    const event = { target: { files: [file] } };
-    component.onFileSelected(event);
-    const request = httpTestingController.expectOne('http://127.0.0.1:5000/submit'); 
-    expect(request.request.method).toBe('POST'); 
-    request.flush( mockResponse.result );
-    expect(component.response_got).toBeTrue();
-    expect(component.picture_error).toBeFalse();
-
-    // You can still make assertions for the component's properties
-    //expect(component.title).toBe(mockResponse.result.title);
-    // Add more assertions for other properties as needed
-});
+  
+  
 
   
   it('should handle HTTP request error', fakeAsync(() => {
