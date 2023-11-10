@@ -1,5 +1,6 @@
 const User = require('./models/User');
 const Post = require('./models/Post');
+const Iterator = require('./Iterator');
 
 
 /**
@@ -38,7 +39,18 @@ async function retrievePosts(req, res) {
         // Find all posts and sort by createdAt in descending order
         const posts = await Post.find().sort({ createdAt: 'desc' });
 
-        res.status(200).json({ posts });
+        const postIterator = new Iterator(posts);
+
+        const result = [];
+        let post = postIterator.next();
+        while (!post.done) {
+            result.push(post.value);
+            console.log(post)
+            post = postIterator.next();
+        }
+
+        res.status(200).json({ posts: result });
+
     } catch (error) {
         console.error('Error retrieving posts:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -50,11 +62,11 @@ async function retrievePosts(req, res) {
  */
 async function addCommentToPost(req, res) {
     try {
-      const { _id } = req.params; // Extract the post ID from the URL
-      const { username, content, createdAt } = req.body;
+      // const { _id } = req.params; // Extract the post ID from the URL
+      const { postId, username, content, createdAt } = req.body;
   
       // Find the post by its ID
-      const post = await Post.findOne(_id);
+      const post = await Post.findOne({_id: postId});
   
       if (!post) {
         return res.status(404).json({ message: 'Post not found' });
@@ -67,7 +79,6 @@ async function addCommentToPost(req, res) {
   
       // Add the comment to the post's comments array
       post.Comments.push({ username, content, createdAt });
-  
       // Save the updated post with the new comment
       await post.save();
   
@@ -83,7 +94,7 @@ async function addCommentToPost(req, res) {
  */
 async function getCommentsForPost(req, res) {
     try {
-      const { postId } = req.params; // Extract the post ID from the URL
+      const { postId } = req.body; // Extract the post ID from the URL
   
       // Find the post by its ID
       const post = await Post.findOne(postId);
@@ -94,8 +105,17 @@ async function getCommentsForPost(req, res) {
   
       // Sort the comments by createdAt in descending order
       const sortedComments = post.Comments.sort((a, b) => a.createdAt - b.createdAt);
-  
-      res.status(200).json({ comments: sortedComments });
+      const commentsIterator = new Iterator(sortedComments);
+
+        const result = [];
+        let comment = commentsIterator.next();
+        while (!comment.done) {
+            result.push(comment.value);
+            console.log(comment)
+            comment = commentsIterator.next();
+        }
+
+        res.status(200).json({ comments: result });
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: 'Internal Server Error' });

@@ -92,7 +92,9 @@ describe('userPost', () => {
   });
 });
 
-
+/**
+ * Test cases for the UserPost to addcomments
+ */
 describe('addCommentToPost', () => {
 
   it('should return an error for a non-existing post', async () => {
@@ -104,6 +106,7 @@ describe('addCommentToPost', () => {
     const req = {
       params: { postId },
       body: {
+        postId,
         username: 'testUser',
         content: 'This is a test comment',
       },
@@ -130,6 +133,7 @@ describe('addCommentToPost', () => {
     const req = {
       params: { postId },
       body: {
+        postId,
         username: 'testUser',
         content: 'This is a test comment',
       },
@@ -152,6 +156,7 @@ describe('addCommentToPost', () => {
     const req = {
       params: { _id: 'existing_post_id' },
       body: {
+          postId: 'existing_post_id',
           username: 'john_doe',
           content: 'This is a test comment.',
           createdAt: new Date()
@@ -183,6 +188,7 @@ it('Adding a Comment to a Post with Existing Comments', async () => {
    const req = {
     params: { _id: 'existing_post_id' },
     body: {
+        postId: 'existing_post_id',
         username: 'jane_doe',
         content: 'Another test comment.',
         createdAt: new Date()
@@ -219,6 +225,7 @@ it('Adding a Comment to a Post with Existing Comments', async () => {
 const req = {
     params: { _id: 'existing_post_id' },
     body: {
+        postId: 'existing_post_id',
         username: 'alice_smith',
         content: 'A comment on an empty post.',
         createdAt: new Date()
@@ -250,6 +257,10 @@ expect(post.Comments.length).toBe(1); // Ensure the comment was added
 
 });
 
+
+/**
+ * Test cases for the UserPost to retrieve comments
+ */
 describe('getCommentsForPost', () => {
 
   it('should return an error for a non-existing post', async () => {
@@ -259,7 +270,7 @@ describe('getCommentsForPost', () => {
     Post.findOne.mockResolvedValue(null);
 
     const req = {
-      params: { postId },
+      body: { postId },
     };
 
     const res = {
@@ -281,7 +292,7 @@ describe('getCommentsForPost', () => {
     Post.findOne.mockRejectedValue(new Error('Database error'));
 
     const req = {
-      params: { postId },
+      body: { postId },
     };
 
     const res = {
@@ -295,6 +306,51 @@ describe('getCommentsForPost', () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'Internal Server Error' });
   });
+
+
+  it('should retrieve and sort comments for an existing post', async () => {
+  // Define a valid post ID for an existing post
+  const postId = "existing_post_id";
+
+  // Create a mock post object with comments
+  const mockPost = {
+    _id: postId,
+    Comments: [
+      {
+        username: "user1",
+        content: "This is the first comment.",
+        createdAt: new Date(),
+      },
+      {
+        username: "user2",
+        content: "This is the second comment.",
+        createdAt: new Date(),
+      },
+    ],
+    // Other properties of the post
+  };
+
+  // Mock the Post model's findOne method
+  Post.findOne = jest.fn().mockResolvedValue(mockPost);
+
+  // Create mock request and response objects
+  const req = {
+    body: { postId },
+  };
+
+  const res = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+
+  // Call the getCommentsForPost function
+  await getCommentsForPost(req, res);
+
+  // Assertions
+  expect(res.status).toHaveBeenCalledWith(200);
+  expect(res.json).toHaveBeenCalledWith({ comments: mockPost.Comments });
+});
+  
 });
 
 
