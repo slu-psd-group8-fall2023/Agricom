@@ -18,7 +18,7 @@ import { HeaderComponent } from './header/header.component';
     HomeComponent,
     LoginComponent,
     FeedComponent,
-    DetectComponent
+    DetectComponent,
     HeaderComponent
   ],
   imports: [
