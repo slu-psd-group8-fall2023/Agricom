@@ -49,7 +49,6 @@ describe('DetectComponent', () => {
   });
 
   
-  
 
   
   it('should handle HTTP request error', fakeAsync(() => {

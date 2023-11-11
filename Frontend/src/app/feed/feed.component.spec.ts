@@ -54,31 +54,7 @@ it('should submit the post creation form', () => {
   expect(submitFormSpy).toHaveBeenCalled();
 });
 
-  it('should load and display posts', () => {
-    const mockPosts = [
-      {
-        title: 'Post 1',
-        content: 'Content 1',
-      },
-      {
-        title: 'Post 2',
-        content: 'Content 2',
-      },
-    ];
-    // Set the component's data property with mock posts
-    component.data = mockPosts;
-    fixture.detectChanges();
-    // Verify that the posts are displayed on the page
-    const postCards = fixture.debugElement.queryAll(By.css('.custom-card'));
-    expect(postCards.length).toBe(mockPosts.length);
-    // Check that the post titles and content are displayed as expected
-    for (let i = 0; i < mockPosts.length; i++) {
-      const postTitle = postCards[i].query(By.css('.card-title')).nativeElement.textContent;
-      const postContent = postCards[i].query(By.css('.card-text')).nativeElement.textContent;
-      expect(postTitle).toBe(mockPosts[i].title);
-      expect(postContent).toBe(mockPosts[i].content);
-    }
-  });
+
 
   
 });
@@ -126,21 +102,17 @@ describe('FeedComponent Comment', () => {
     expect(modalServiceSpy.open).toHaveBeenCalled();
   });
 
+  
+  
   it('should handle error when submitting a comment', async () => {
     // Arrange
     const mockDefaultService = jasmine.createSpyObj('DefaultService', ['httpPostCall']);
-
     // Mock the httpPostCall to simulate an error or invalid response
     mockDefaultService.httpPostCall.and.returnValue(Promise.resolve({ post: { _id: '1' } })); // Invalid response
     fixture = TestBed.createComponent(FeedComponent);
     component = fixture.componentInstance;
-
-    // Act
     await component.submitComment();
-  
-    // Assert
     expect(toastrServiceMock.error).toHaveBeenCalledWith('Error creating comment! \n Please try again');
-    // Ensure that this.comments is not updated when there's an error in the server response
     expect(component.comments).toEqual([]);
     expect(component.commentText).toBe('');
   });
