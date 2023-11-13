@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 describe('FeedComponent Post', () => {
   let component: FeedComponent;
   let fixture: ComponentFixture<FeedComponent>;
-
+  
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [FeedComponent],
@@ -41,7 +41,6 @@ describe('FeedComponent Post', () => {
 });
 
 it('should submit the post creation form', () => {
-  // Set values in the form
   component.formData.title = 'Test Title';
   component.formData.description = 'Test Description';
   component.formData.picture = 'test-image-url.jpg';
@@ -54,6 +53,17 @@ it('should submit the post creation form', () => {
   expect(submitFormSpy).toHaveBeenCalled();
 });
 
+it('should display the correct number of cards based on nested loops', () => {
+  component.data = [
+    { title: 'Title 1', username: 'User1', content: 'Content 1' },
+    { title: 'Title 2', username: 'User2', content: 'Content 2' },
+  ];
+
+  fixture.detectChanges();
+  const expectedCardCount = component.data.length * 3;
+  const cardElements = fixture.nativeElement.querySelectorAll('.custom-card');
+  expect(cardElements.length).toBe(expectedCardCount);
+});
 
 
   
