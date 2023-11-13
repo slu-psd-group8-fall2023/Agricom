@@ -137,7 +137,7 @@ export class FeedComponent {
     let params = {
       postId: this.selectedPostId
     }
-    this.defaultService.getData(environment.GET_COMMENT_API, params).subscribe((data: any) => {
+    this.defaultService.httpPostCall(environment.GET_COMMENT_API, params).subscribe((data: any) => {
       this.comments = data.comments;
       this.commentsLoader = false;
     });

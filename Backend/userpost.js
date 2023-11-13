@@ -97,7 +97,7 @@ async function getCommentsForPost(req, res) {
       const { postId } = req.body; // Extract the post ID from the URL
   
       // Find the post by its ID
-      const post = await Post.findOne(postId);
+      const post = await Post.findOne({_id:postId})
   
       if (!post) {
         return res.status(404).json({ message: 'Post not found' });
