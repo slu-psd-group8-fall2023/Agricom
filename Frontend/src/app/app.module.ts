@@ -12,6 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { FeedComponent } from './feed/feed.component';
 import { DetectComponent } from './detect/detect.component';
 import { HeaderComponent } from './header/header.component';
+import { MarketComponent } from './market/market.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,6 +21,7 @@ import { HeaderComponent } from './header/header.component';
     FeedComponent,
     DetectComponent,
     HeaderComponent,
+    MarketComponent,
   ],
   imports: [
     BrowserModule,
