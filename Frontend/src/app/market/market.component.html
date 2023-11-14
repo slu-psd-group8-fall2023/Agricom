@@ -31,7 +31,7 @@
                         <input class="form-control" type="text" id="address" placeholder="CITY"
                             [(ngModel)]="formData.region" name="region" required>
                     </div>
-                   <div class="form-group">
+                  <!--- <div class="form-group">
                         <label for="selectedCountry">Select Country:</label>
                         <select id="address" formControlName="selectedCountry" (change)="onCountryChange()">
                           <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
@@ -43,7 +43,7 @@
                         <select id="address" formControlName="selectedState">
                           <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
                         </select>
-                      </div>
+                      </div>-->
                     <div class="form-group">
                         <textarea class="form-control" id="description" name="description" rows="4"
                             placeholder="Whats in you heart" [(ngModel)]="formData.description" required></textarea>

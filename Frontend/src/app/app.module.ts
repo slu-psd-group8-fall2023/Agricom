@@ -32,6 +32,6 @@ import { MarketComponent } from './market/market.component';
     BrowserAnimationsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent,MarketComponent],
 })
 export class AppModule { }
