@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 /**
  * Marketpost Schema for User Post
- * Which contains the username,title,content,image,createAt,yeat_of_purchase, address,
+ * Which contains the username,title,content,image,createdAt,year_of_purchase, address,
  * city, state, country
  */
 const MarketpostSchema = new mongoose.Schema({

@@ -62,11 +62,11 @@ async function retrievePosts(req, res) {
  */
 async function addCommentToPost(req, res) {
     try {
-      // const { _id } = req.params; // Extract the post ID from the URL
-      const { postId, username, content, createdAt } = req.body;
+      const { _id } = req.params; // Extract the post ID from the URL
+      const { username, content, createdAt } = req.body;
   
       // Find the post by its ID
-      const post = await Post.findOne({_id: postId});
+      const post = await Post.findOne(_id);
   
       if (!post) {
         return res.status(404).json({ message: 'Post not found' });
@@ -79,6 +79,7 @@ async function addCommentToPost(req, res) {
   
       // Add the comment to the post's comments array
       post.Comments.push({ username, content, createdAt });
+  
       // Save the updated post with the new comment
       await post.save();
   
@@ -94,10 +95,10 @@ async function addCommentToPost(req, res) {
  */
 async function getCommentsForPost(req, res) {
     try {
-      const { postId } = req.body; // Extract the post ID from the URL
+      const { postId } = req.params; // Extract the post ID from the URL
   
       // Find the post by its ID
-      const post = await Post.findOne({_id:postId})
+      const post = await Post.findOne(postId);
   
       if (!post) {
         return res.status(404).json({ message: 'Post not found' });
