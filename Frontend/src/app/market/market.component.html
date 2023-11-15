@@ -1,12 +1,51 @@
+<!--filter code-->
+<br><br><br><br>
+<div class="container mt-4">
+    <form [formGroup]="filterForm" class="d-flex">
+  
+      <div class="form-group flex-fill mr-2 border rounded p-2">
+        <label class="mr-2" for="country">Country:</label>
+        <ng-select class="custom-select" [items]="countries" bindLabel="name" formControlName="country" (change)="onCountryChange()">
+          <ng-template ng-label-tmp let-item="item">
+            {{ item.country }}
+          </ng-template>
+        </ng-select>
+      </div>
+  
+      <div class="form-group flex-fill mr-2 border rounded p-2">
+        <label class="mr-2" for="state">State:</label>
+        <ng-select class="custom-select" [items]="states" bindLabel="name" formControlName="state" (change)="onStateChange()">
+          <ng-template ng-label-tmp let-item="item">
+            {{ item.state }}
+          </ng-template>
+        </ng-select>
+      </div>
+  
+      <div class="form-group flex-fill border rounded p-2">
+        <label class="mr-2" for="city">City:</label>
+        <ng-select class="custom-select" [items]="cities" bindLabel="name" formControlName="city">
+          <ng-template ng-label-tmp let-item="item">
+            {{ item.city }}
+          </ng-template>
+        </ng-select>
+      </div>
+  
+    </form>
+  </div>
+  
+  
+  
+  
+<!--placing tool in market-->
 <div>
     <div id="post-bar">
         <div class="dropdown-container">
             <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">Place</button>
             <div class="dropdown-content mt-2" id="dropdown-content"
-                [style.display]="isDropdownOpen ? 'block' : 'none'">
+                [style.display]="isDropdownOpen ? 'block' : 'none'" style="max-height: 400px; overflow-y: auto;">
                 <form>
                     <div class="form-group">
-                        <input class="form-control" type="text" id="name" placeholder="Name"
+                        <input class="form-control" type="text" id="name" placeholder="Name of tool"
                             [(ngModel)]="formData.name" name="name" required>
                     </div>
                     <div class="form-group">
@@ -14,12 +53,12 @@
                             [(ngModel)]="formData.year" name="year" required>
                     </div>
                     <div class="form-group">
-                        <label>Contact Number:</label><input class="form-control" type="tel" id="name" name="contactNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required>
-                        <input class="form-control" type="text" id="name" placeholder="Name"
-                            [(ngModel)]="formData.contact" name="contact" required>
+                        <label>Contact Number:</label>
+                        <input class="form-control" type="tel" id="name" placeholder="Name"
+                            [(ngModel)]="formData.contact" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" name="contact" required>
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="file" id="picture" (change)="handleUpload($event)"
+                        <label>Upload picture of tool</label><input class="form-control" type="file" id="picture" (change)="handleUpload($event)"
                             name="picture" accept="image/*" required>
                     </div>
                     <div class="form-group">
@@ -31,22 +70,18 @@
                         <input class="form-control" type="text" id="address" placeholder="CITY"
                             [(ngModel)]="formData.region" name="region" required>
                     </div>
-                  <!--- <div class="form-group">
-                        <label for="selectedCountry">Select Country:</label>
-                        <select id="address" formControlName="selectedCountry" (change)="onCountryChange()">
-                          <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-                        </select>
-                      </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="address" placeholder="state"
+                            [(ngModel)]="formData.state" name="state" required>
+                    </div>
                       
-                      <div class="form-group">
-                        <label for="selectedState">Select State:</label>
-                        <select id="address" formControlName="selectedState">
-                          <option *ngFor="let state of states" [value]="state.id">{{ state.name }}</option>
-                        </select>
-                      </div>-->
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="address" placeholder="country"
+                            [(ngModel)]="formData.country" name="country" required>
+                    </div>
                     <div class="form-group">
                         <textarea class="form-control" id="description" name="description" rows="4"
-                            placeholder="Whats in you heart" [(ngModel)]="formData.description" required></textarea>
+                            placeholder="About tool" [(ngModel)]="formData.description" required></textarea>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" id="place_submit"
@@ -59,3 +94,4 @@
         </div>
     </div>
 </div>
+
