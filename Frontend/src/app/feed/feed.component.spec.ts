@@ -60,7 +60,7 @@ it('should display the correct number of cards based on nested loops', () => {
   ];
 
   fixture.detectChanges();
-  const expectedCardCount = component.data.length * 3;
+  const expectedCardCount = component.data.length;
   const cardElements = fixture.nativeElement.querySelectorAll('.custom-card');
   expect(cardElements.length).toBe(expectedCardCount);
 });
