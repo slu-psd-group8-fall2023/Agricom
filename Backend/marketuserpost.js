@@ -1,5 +1,6 @@
 const User = require('./models/User');
 const Marketpost = require('./models/Marketpost');
+const Iterator = require('./Iterator');
 
 /**
  * Function for market user posts
@@ -60,16 +61,26 @@ async function marketcreatePost(req, res) {
  */
 async function retrieveMarketPosts(req, res) {
     try {
-        const marketPosts = await Marketpost.find().sort({ createdAt: 'desc' });
+        // Retrieve all market posts from the database
+        const marketPosts = await Marketpost.find();
+
+        // Sort the market posts by createdAt date in descending order
+        marketPosts.sort({ createdAt: 'desc' });
+
+        // Create an iterator for the market posts array
         const marketPostIterator = new Iterator(marketPosts);
+
         const result = [];
+
+        // Iterate through the market posts using the custom iterator
         let marketPost = marketPostIterator.next();
         while (!marketPost.done) {
+            // Push the current market post to the result array
             result.push(marketPost.value);
-            console.log(marketPost);
             marketPost = marketPostIterator.next();
         }
 
+        // Respond with a 200 OK status and the sorted market posts
         res.status(200).json({ marketPosts: result });
 
     } catch (error) {
