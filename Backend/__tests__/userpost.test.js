@@ -151,7 +151,6 @@ describe('addCommentToPost', () => {
     const req = {
       params: { postId },
       body: {
-        postId,
         username: 'testUser',
         content: 'This is a test comment',
       },
@@ -178,7 +177,6 @@ describe('addCommentToPost', () => {
     const req = {
       params: { postId },
       body: {
-        postId,
         username: 'testUser',
         content: 'This is a test comment',
       },
@@ -201,7 +199,6 @@ describe('addCommentToPost', () => {
     const req = {
       params: { _id: 'existing_post_id' },
       body: {
-          postId: 'existing_post_id',
           username: 'john_doe',
           content: 'This is a test comment.',
           createdAt: new Date()
@@ -233,7 +230,6 @@ it('Adding a Comment to a Post with Existing Comments', async () => {
    const req = {
     params: { _id: 'existing_post_id' },
     body: {
-        postId: 'existing_post_id',
         username: 'jane_doe',
         content: 'Another test comment.',
         createdAt: new Date()
@@ -270,7 +266,6 @@ it('Adding a Comment to a Post with Existing Comments', async () => {
 const req = {
     params: { _id: 'existing_post_id' },
     body: {
-        postId: 'existing_post_id',
         username: 'alice_smith',
         content: 'A comment on an empty post.',
         createdAt: new Date()
@@ -315,7 +310,7 @@ describe('getCommentsForPost', () => {
     Post.findOne.mockResolvedValue(null);
 
     const req = {
-      body: { postId },
+      params: { postId },
     };
 
     const res = {
@@ -337,7 +332,7 @@ describe('getCommentsForPost', () => {
     Post.findOne.mockRejectedValue(new Error('Database error'));
 
     const req = {
-      body: { postId },
+      params: { postId },
     };
 
     const res = {
@@ -380,7 +375,7 @@ describe('getCommentsForPost', () => {
 
   // Create mock request and response objects
   const req = {
-    body: { postId },
+    params: { _id: postId },
   };
 
   const res = {
