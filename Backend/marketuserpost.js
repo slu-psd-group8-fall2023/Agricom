@@ -1,5 +1,6 @@
 const User = require('./models/User');
 const Marketpost = require('./models/Marketpost');
+const Iterator = require('./Iterator');
 
 /**
  * Function for market user posts
@@ -54,6 +55,40 @@ async function marketcreatePost(req, res) {
     }
 }
 
+
+/**
+ * Function to retrieve market posts and sort them by createdAt 
+ */
+async function retrieveMarketPosts(req, res) {
+    try {
+        // Retrieve all market posts from the database
+        const marketPosts = await Marketpost.find();
+
+        // Sort the market posts by createdAt date in descending order
+        marketPosts.sort({ createdAt: 'desc' });
+
+        // Create an iterator for the market posts array
+        const marketPostIterator = new Iterator(marketPosts);
+
+        const result = [];
+
+        // Iterate through the market posts using the custom iterator
+        let marketPost = marketPostIterator.next();
+        while (!marketPost.done) {
+            // Push the current market post to the result array
+            result.push(marketPost.value);
+            marketPost = marketPostIterator.next();
+        }
+
+        // Respond with a 200 OK status and the sorted market posts
+        res.status(200).json({ marketPosts: result });
+
+    } catch (error) {
+        console.error('Error retrieving market posts:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 // Function to check if a given date string is a valid date
 function isValidDate(dateString) {
     const date = new Date(dateString);
@@ -68,4 +103,5 @@ function isValidData(data) {
 
 module.exports ={ 
     marketcreatePost,
+    retrieveMarketPosts,
     };

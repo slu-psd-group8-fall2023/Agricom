@@ -32,6 +32,7 @@ app.get('/retrieveposts',api.retrievePosts)
 app.post('/postcomments', api.addCommentToPost);
 app.get('/getpostcomments', api.getCommentsForPost);
 app.post('/marketpost', api.MarketUserPost);
+app.get('/retrievemarketposts', api.retrieveMarketPosts);
 
 // Handle errors
 app.use(handleError);
