@@ -54,6 +54,30 @@ async function marketcreatePost(req, res) {
     }
 }
 
+
+/**
+ * Function to retrieve market posts and sort them by createdAt 
+ */
+async function retrieveMarketPosts(req, res) {
+    try {
+        const marketPosts = await Marketpost.find().sort({ createdAt: 'desc' });
+        const marketPostIterator = new Iterator(marketPosts);
+        const result = [];
+        let marketPost = marketPostIterator.next();
+        while (!marketPost.done) {
+            result.push(marketPost.value);
+            console.log(marketPost);
+            marketPost = marketPostIterator.next();
+        }
+
+        res.status(200).json({ marketPosts: result });
+
+    } catch (error) {
+        console.error('Error retrieving market posts:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 // Function to check if a given date string is a valid date
 function isValidDate(dateString) {
     const date = new Date(dateString);
@@ -68,4 +92,5 @@ function isValidData(data) {
 
 module.exports ={ 
     marketcreatePost,
+    retrieveMarketPosts,
     };

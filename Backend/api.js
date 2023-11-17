@@ -74,6 +74,7 @@ async function addCommentToPost(req, res) {
     return commentres
 }
 
+
 /**
  * handleAddCommentToPost
  * @param {object} req
@@ -94,6 +95,19 @@ async function MarketUserPost(req, res) {
     const postres = await marketpost.marketcreatePost(req, res)
     return postres
 }
+
+
+/**
+ * Handle retrieveMarketPosts
+ * @param {object} req
+ * @param {object} res
+ */
+async function retrieveMarketPosts(req, res) {
+    const retrievepostres = await marketpost.retrieveMarketPosts(req, res);
+    return retrievepostres;
+}
+
+
 module.exports = {
     handleLogin,
     handleSignup,
@@ -104,4 +118,5 @@ module.exports = {
     addCommentToPost,
     getCommentsForPost,
     MarketUserPost,
+    retrieveMarketPosts,
 };
