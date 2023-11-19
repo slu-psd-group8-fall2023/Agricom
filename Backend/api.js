@@ -107,6 +107,15 @@ async function retrieveMarketPosts(req, res) {
     return retrievepostres;
 }
 
+/**
+ * Handle filterMarketPosts
+ * @param {object} req
+ * @param {object} res
+ */
+async function filterMarketPosts(req, res) {
+    const filterpostres = await marketpost.filterMarketPosts(req, res);
+    return filterpostres;
+}
 
 module.exports = {
     handleLogin,
@@ -119,4 +128,5 @@ module.exports = {
     getCommentsForPost,
     MarketUserPost,
     retrieveMarketPosts,
+    filterMarketPosts,
 };

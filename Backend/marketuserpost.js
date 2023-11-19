@@ -89,6 +89,62 @@ async function retrieveMarketPosts(req, res) {
     }
 }
 
+/**
+ * Function to handle city filtering on users post
+ */
+async function filterMarketPosts(req, res) {
+    try {
+        const { city, state } = req.body;
+
+         // If neither city nor state is provided, return a specific message
+        if (!city && !state) {
+            return res.status(200).json({ message: 'No posts found. Please provide city or state parameters.' });
+        }
+
+        let query = {};
+    
+        // Check if the city parameter is provided
+        if (city) {
+          // Use case-insensitive regex for partial matching
+            query.city = new RegExp(city, 'i');
+        }
+    
+        // Check if the state parameter is provided
+        if (state) {
+          // Use case-insensitive regex for partial matching
+            query.state = new RegExp(state, 'i');
+        }
+
+       // Find market posts based on the query
+       let marketPosts = await Marketpost.find(query);
+
+       // Check if any sorting is needed
+       if (marketPosts && marketPosts.sort) {
+           // Sort by createdAt in descending order
+           marketPosts = marketPosts.sort((a, b) => b.createdAt - a.createdAt);
+       }
+
+       if (marketPosts.length === 0) {
+        return res.status(200).json({ message: 'No posts found on the provided criteria.' });
+    }
+
+        const marketPostIterator = new Iterator(marketPosts);
+
+    const result = [];
+    let marketPost = marketPostIterator.next();
+    while (!marketPost.done) {
+        result.push(marketPost.value);
+        marketPost = marketPostIterator.next();
+    }
+
+    res.status(200).json({ marketPosts: result });
+
+    } catch (error) {
+        console.error('Error retrieving market posts:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 // Function to check if a given date string is a valid date
 function isValidDate(dateString) {
     const date = new Date(dateString);

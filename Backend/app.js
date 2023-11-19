@@ -33,6 +33,7 @@ app.post('/postcomments', api.addCommentToPost);
 app.get('/getpostcomments', api.getCommentsForPost);
 app.post('/marketpost', api.MarketUserPost);
 app.get('/retrievemarketposts', api.retrieveMarketPosts);
+app.get('/filtermarketposts', api.filterMarketPosts);
 
 // Handle errors
 app.use(handleError);
