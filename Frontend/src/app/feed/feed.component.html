@@ -31,13 +31,6 @@
     <!-- scrollable-and showing posts on screen -->
     <div class="container mt-5" (scroll)="onScroll()" [ngClass]="{'opacity-75':isDropdownOpen}">
         <div class="col-12">
-
-            <div *ngFor="let item of data" class="card mb-5 custom-card">
-                <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
-                <div class="card-body">
-                    <h5 class="card-title">{{ item.title }}</h5>
-                    <small class="text-muted">Created By:{{ item.username }}</small>
-                    <p class="card-text">{{ item.content }}</p>
                     <!-- <button class="btn btn-primary">Discussion Box</button> -->
                 <div *ngFor="let item of data" class="card mb-4 custom-card">
                     <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
