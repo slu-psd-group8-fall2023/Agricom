@@ -1,5 +1,6 @@
 const authUtil = require('./authutil')
 const userpost = require('./userpost')
+const marketpost = require('./marketuserpost.js')
 
 /**
  * handles login
@@ -73,6 +74,7 @@ async function addCommentToPost(req, res) {
     return commentres
 }
 
+
 /**
  * handleAddCommentToPost
  * @param {object} req
@@ -81,6 +83,28 @@ async function addCommentToPost(req, res) {
 async function getCommentsForPost(req, res) {
     const getres = await userpost.getCommentsForPost(req, res)
     return getres
+}
+
+
+/**
+ * handles MarketUserPost
+ * @param {object} req
+ * @param {object} res
+ */
+async function MarketUserPost(req, res) {
+    const postres = await marketpost.marketcreatePost(req, res)
+    return postres
+}
+
+
+/**
+ * Handle retrieveMarketPosts
+ * @param {object} req
+ * @param {object} res
+ */
+async function retrieveMarketPosts(req, res) {
+    const retrievepostres = await marketpost.retrieveMarketPosts(req, res);
+    return retrievepostres;
 }
 
 
@@ -93,4 +117,6 @@ module.exports = {
     retrievePosts,
     addCommentToPost,
     getCommentsForPost,
+    MarketUserPost,
+    retrieveMarketPosts,
 };
