@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 /**
  * Marketpost Schema for User Post
@@ -6,50 +6,52 @@ const mongoose = require('mongoose');
  * city, state, country
  */
 const MarketpostSchema = new mongoose.Schema({
-username:{
+  username: {
     type: String,
-    required: true
-},
-title:{
+    required: true,
+  },
+  title: {
     type: String,
-    required: true
-},
-content:{
-    type: String,   
-    required: true
-},
-image:[{
-    type: String,   
-    required: false
-}],
-createdAt:{
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  image: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
+  createdAt: {
     type: Number,
-    default: Date.now,  
-    required: true
-},
-year_of_purchase:{
+    default: Date.now,
+    required: true,
+  },
+  year_of_purchase: {
     type: Number,
-    default: Date.now,  
-    required: true
-},
-address: {
+    default: Date.now,
+    required: true,
+  },
+  address: {
     type: String,
-    required: true
-},
-city: {
+    required: true,
+  },
+  city: {
     type: String,
-    required: true
-},
-state: {
+    required: true,
+  },
+  state: {
     type: String,
-    required: true
-},
-country: {
+    required: true,
+  },
+  country: {
     type: String,
-    required: true
-}
+    required: true,
+  },
 });
 
-const Marketpost = mongoose.model('Marketpost', MarketpostSchema);
+const Marketpost = mongoose.model("Marketpost", MarketpostSchema);
 
 module.exports = Marketpost;
