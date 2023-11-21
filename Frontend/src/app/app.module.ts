@@ -40,6 +40,6 @@ import { MarketComponent } from './market/market.component';
     NgSelectModule
   ],
   providers: [],
-  bootstrap: [AppComponent,MarketComponent],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

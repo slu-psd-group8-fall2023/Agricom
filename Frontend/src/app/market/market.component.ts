@@ -1,10 +1,9 @@
-import { Component,OnInit, NgModule   } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule  } from '@angular/forms';
+import { Component,OnInit   } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { UserService } from '../services/user.service';
 import { DefaultService } from "../default.service";
+import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
+import { AuthenticationService } from '../services/authentication.service';
 //import { CountryStateService } from './country-state.service';
 
 @Component({
@@ -19,8 +18,9 @@ export class MarketComponent implements OnInit{
   submittedData: any = {}; 
   posts: any[] = [];
   isLoading = false;
+  user: any;
 
-  constructor(private fb: FormBuilder,private defaultService: DefaultService) {
+  constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService) {
     this.form = this.fb.group({
       country: [''],
       state: [''],
@@ -29,7 +29,8 @@ export class MarketComponent implements OnInit{
   }
 
 ngOnInit(): void {
-    
+    this.user = this.authenticationService.userValue;
+    this.loadPosts();
 }
 
   isDropdownOpen = false;
@@ -41,12 +42,13 @@ ngOnInit(): void {
   picture:any;
   data:any;
   formData: any={
-    name:'',
-    year:'',
-    contact:'',
+    title:'',
+    content:'',
+    image:'',
+    createdAt:'',
+    year_of_purchase:'',
     address:'',
     city:'',
-    description:'',
     state:'',
     country:'',
   }
@@ -56,7 +58,7 @@ ngOnInit(): void {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      this.formData.picture = reader.result;
+      this.formData.image = reader.result;
     }
   }
   submitForm() {
@@ -65,35 +67,23 @@ ngOnInit(): void {
   
 
   
-    onSubmit() {
-      // Assign form values to variables
-      const country = this.form.get('country')?.value;
-      const state = this.form.get('state')?.value;
-      const city = this.form.get('city')?.value;
-  
-      // Store the data in the object
-      this.submittedData = {
-        country: country,
-        state: state,
-        city: city
-      };
-console.log(this.submittedData )
-/*await this.defaultService.httpPostCall(,).subscribe(
-  (data: any) => {
-    this.toastr.success("wait for tools in your region");
-    let response = data['data'];
-    this.loadPosts();
-  },
-  (err: any) => {
-    this.toastr.error("Error in fetching posts! \n Please try again");
-      this.loadingData = false;
+  onSubmit() {
+    try{
+    this.defaultService.httpPostCall(environment.CREATE_MARKET_POSTS_API,{...this.formData, username: this.user.username, createdAt:Date.now()}).subscribe(
+      (data: any) => {
+        this.toastr.success("Tool listed successfully");
+        let response = data['data'];
+        this.loadPosts();
+      },
+      (err: any) => {
+        this.toastr.error("Error in fetching posts! \n Please try again");
+          // this.loadingData = false;
+      }
+    )
+    } catch (e) {
+      this.toastr.error("Error ! \n Please try again");
+    }
   }
-)
-} catch (e) {
-this.toastr.error("Error ! \n Please try again");
-
-  }*/
-}
 
 
 loadPosts() {
