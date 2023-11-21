@@ -48,7 +48,6 @@ async function retrievePosts(req, res) {
     let post = postIterator.next();
     while (!post.done) {
       result.push(post.value);
-      console.log(post);
       post = postIterator.next();
     }
 
@@ -116,7 +115,6 @@ async function getCommentsForPost(req, res) {
     let comment = commentsIterator.next();
     while (!comment.done) {
       result.push(comment.value);
-      console.log(comment);
       comment = commentsIterator.next();
     }
 

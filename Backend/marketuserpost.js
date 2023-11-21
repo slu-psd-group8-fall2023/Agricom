@@ -14,6 +14,7 @@ async function marketcreatePost(req, res) {
       content,
       image,
       createdAt,
+      contact,
       year_of_purchase,
       address,
       city,
@@ -28,6 +29,7 @@ async function marketcreatePost(req, res) {
         title,
         content,
         createdAt,
+        contact,
         year_of_purchase,
         address,
         city,
@@ -65,6 +67,7 @@ async function marketcreatePost(req, res) {
       content,
       image,
       createdAt,
+      contact,
       year_of_purchase,
       address,
       city,
@@ -171,8 +174,7 @@ async function filterMarketPosts(req, res) {
  */
 async function deleteMarketPost(req, res) {
   try {
-    const { postId } = req.params;
-    const { username } = req.body; // Assuming username is in the request body
+    const { username, postId } = req.body;
 
     // Check if postId is provided
     if (!postId) {
