@@ -112,8 +112,8 @@ onScroll() {
 }
 
   onDelete(postIndex: number) {
-    const postIdToDelete = this.posts[postIndex]._id; 
-    this.defaultService.httpPostCall(environment.ADD_COMMENT_API, {postIdToDelete}).subscribe(() => {
+    const postIdToDelete = this.posts[postIndex]._id;
+    this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, {username:this.user.username, postId:postIdToDelete}).subscribe(() => {
       this.posts.splice(postIndex, 1); 
     });
   }
