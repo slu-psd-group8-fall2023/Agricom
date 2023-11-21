@@ -1,9 +1,12 @@
-import { Component,OnInit   } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component,OnInit, NgModule   } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { DefaultService } from "../default.service";
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../services/authentication.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { UserService } from '../services/user.service';
 //import { CountryStateService } from './country-state.service';
 
 @Component({
