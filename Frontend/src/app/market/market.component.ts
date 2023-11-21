@@ -111,12 +111,11 @@ onScroll() {
   }
 }
 
-onDelete(postIndex: number) {
-  /*const postIdToDelete = this.posts[postIndex].id; 
-  this.defaultService.deletePost(postIdToDelete).subscribe(() => {
-    this.posts.splice(postIndex, 1); 
-  });
-}*/
-}
+  onDelete(postIndex: number) {
+    const postIdToDelete = this.posts[postIndex]._id; 
+    this.defaultService.httpPostCall(environment.ADD_COMMENT_API, {postIdToDelete}).subscribe(() => {
+      this.posts.splice(postIndex, 1); 
+    });
+  }
 }
 
