@@ -88,47 +88,47 @@
 
 <!-- <div class="container mt-4"> -->
   <div *ngIf="posts.length > 0; else noDataMessage" >
-  <div *ngFor="let post of posts; let i = index" class="card mb-4">
-    <div class="row no-gutters">
-      <div class="col-md-4">
-        <img [src]="post.picture" class="card-img" alt="Post Image">
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">{{ post.name }}</h5>
-          <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year }}</p>
-          <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
-
-          <div class="row">
-            <div class="col-md-6">
-              <p class="card-text"><strong>Address:</strong> {{ post.address }}</p>
+    <div *ngFor="let post of posts; let i = index" class="card mb-4">
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img [src]="post.image" class="card-img" alt="Post Image">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{ post.name }}</h5>
+            <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year_of_purchase }}</p>
+            <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <p class="card-text"><strong>Address:</strong> {{ post.address }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="card-text"><strong>City:</strong> {{ post.city }}</p>
+                <p class="card-text"><strong>State:</strong> {{ post.state }}</p>
+                <p class="card-text"><strong>Country:</strong> {{ post.country }}</p>
+              </div>
             </div>
-            <div class="col-md-6">
-              <p class="card-text"><strong>Region:</strong> {{ post.region }}</p>
-              <p class="card-text"><strong>State:</strong> {{ post.state }}</p>
-              <p class="card-text"><strong>Country:</strong> {{ post.country }}</p>
-            </div>
+  
+            <p class="card-text">{{ post.content }}</p>
+  
+            <!-- Delete Button -->
+            <button class="btn btn-danger" (click)="onDelete(i)">Delete</button>
           </div>
-
-          <p class="card-text">{{ post.description }}</p>
-
-          <!-- Delete Button -->
-          <button class="btn btn-danger" (click)="onDelete(i)">Delete</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="isLoading" class="text-center mt-3">
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
+  
+    <div *ngIf="isLoading" class="text-center mt-3">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     </div>
-  </div>
-
-  <!-- Infinite Scroll -->
-  <div (scroll)="onScroll()" style="height: 200px; overflow-y: scroll;">
-  </div>
-  </div>
+  
+    <!-- Infinite Scroll -->
+    <div (scroll)="onScroll()" style="height: 200px; overflow-y: scroll;">
+    </div>
+    </div>
   <ng-template #noDataMessage>
     <div class="text-center mt-3">
       <p>No tools are here.</p>

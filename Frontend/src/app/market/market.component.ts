@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../services/authentication.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UserService } from '../services/user.service';
+import { DomSanitizer } from '@angular/platform-browser';
 //import { CountryStateService } from './country-state.service';
 
 @Component({
@@ -23,7 +24,7 @@ export class MarketComponent implements OnInit{
   isLoading = false;
   user: any;
 
-  constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService) {
+  constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService, private _sanitizer: DomSanitizer) {
     this.form = this.fb.group({
       country: [''],
       state: [''],
@@ -72,18 +73,22 @@ ngOnInit(): void {
   
   onSubmit() {
     try{
-    this.defaultService.httpPostCall(environment.CREATE_MARKET_POSTS_API,{...this.formData, username: this.user.username, createdAt:Date.now()}).subscribe(
+      this.createPostBtnLoader = true;
+      this.defaultService.httpPostCall(environment.CREATE_MARKET_POSTS_API,{...this.formData, username: this.user.username, createdAt:Date.now()}).subscribe(
       (data: any) => {
+        this.createPostBtnLoader = false;
         this.toastr.success("Tool listed successfully");
         let response = data['data'];
         this.loadPosts();
       },
       (err: any) => {
         this.toastr.error("Error in fetching posts! \n Please try again");
-          // this.loadingData = false;
+        this.createPostBtnLoader = false;
+      // this.loadingData = false;
       }
     )
     } catch (e) {
+      this.createPostBtnLoader = false;
       this.toastr.error("Error ! \n Please try again");
     }
   }
@@ -91,11 +96,13 @@ ngOnInit(): void {
 
 loadPosts() {
   this.isLoading = true;
-  /*this.defaultService.getPosts().subscribe((data: any[]) => {
-    this.posts = this.posts.concat(data);
+  this.defaultService.getData(environment.FETCH_MARKET_POSTS_API).subscribe((data: any) => {
+    data.marketPosts.forEach((element:any, index:any) => {
+      data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+    });
+    this.posts = this.posts.concat(data['marketPosts']);
     this.isLoading = false;
-    
-  });*/
+  });
 }
 
 onScroll() {
