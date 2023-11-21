@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MarketComponent } from './market.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('MarketComponent', () => {
   let component: MarketComponent;
@@ -12,7 +11,7 @@ describe('MarketComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MarketComponent],
-      imports: [FormsModule,ReactiveFormsModule,NgSelectModule],
+      imports: [FormsModule,ReactiveFormsModule,NgSelectModule,HttpClientTestingModule],
     })
     .compileComponents();
   });

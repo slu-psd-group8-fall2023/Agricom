@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule  } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { UserService } from '../services/user.service';
+import { DefaultService } from "../default.service";
 //import { CountryStateService } from './country-state.service';
 
 @Component({
@@ -13,27 +15,29 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 export class MarketComponent implements OnInit{
   createPostBtnLoader: boolean = false;
-  filterForm!: FormGroup;
-  countries: any[] = [];
-  states: any[] = [];
-  cities: any[] = [];
+  form: FormGroup;
+  submittedData: any = {}; 
+  posts: any[] = [];
+  isLoading = false;
 
-  constructor(private formBuilder: FormBuilder) { 
-    this.filterForm = this.formBuilder.group({
+  constructor(private fb: FormBuilder,private defaultService: DefaultService) {
+    this.form = this.fb.group({
       country: [''],
       state: [''],
       city: ['']
     });
   }
 
-  ngOnInit() {
-    this.initForm();
-    this.loadCountries();
-  }
+ngOnInit(): void {
+    
+}
+
   isDropdownOpen = false;
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
+
+
   picture:any;
   data:any;
   formData: any={
@@ -41,7 +45,7 @@ export class MarketComponent implements OnInit{
     year:'',
     contact:'',
     address:'',
-    region:'',
+    city:'',
     description:'',
     state:'',
     country:'',
@@ -58,38 +62,61 @@ export class MarketComponent implements OnInit{
   submitForm() {
       // Your implementation for submitForm
     }
-    initForm() {
-      this.filterForm = this.formBuilder.group({
-        country: [''],
-        state: [''],
-        city: ['']
-      });
-    }
   
-    loadCountries() {
-      //this.dataService.getCountries().subscribe((data: any[]) => {
-        //this.countries = data;
-      //});
-    }
 
-    onCountryChange() {
-      /*const selectedCountryId = this.filterForm.get('country').value;
-      // Load states based on the selected country
-      this.dataService.getStates(selectedCountryId).subscribe((data: any[]) => {
-        this.states = data;
-        this.filterForm.get('state').setValue(''); // Reset state selection
-        this.filterForm.get('city').setValue(''); // Reset city selection
-      });*/
-    }
   
-    onStateChange() {
-      /*const selectedStateId = this.filterForm.get('state').value;
-      // Load cities based on the selected state
-      this.dataService.getCities(selectedStateId).subscribe((data: any[]) => {
-        this.cities = data;
-        this.filterForm.get('city').setValue(''); // Reset city selection
-      });*/
-    }
-
+    onSubmit() {
+      // Assign form values to variables
+      const country = this.form.get('country')?.value;
+      const state = this.form.get('state')?.value;
+      const city = this.form.get('city')?.value;
+  
+      // Store the data in the object
+      this.submittedData = {
+        country: country,
+        state: state,
+        city: city
+      };
+console.log(this.submittedData )
+/*await this.defaultService.httpPostCall(,).subscribe(
+  (data: any) => {
+    this.toastr.success("wait for tools in your region");
+    let response = data['data'];
+    this.loadPosts();
+  },
+  (err: any) => {
+    this.toastr.error("Error in fetching posts! \n Please try again");
+      this.loadingData = false;
   }
+)
+} catch (e) {
+this.toastr.error("Error ! \n Please try again");
+
+  }*/
+}
+
+
+loadPosts() {
+  this.isLoading = true;
+  /*this.defaultService.getPosts().subscribe((data: any[]) => {
+    this.posts = this.posts.concat(data);
+    this.isLoading = false;
+    
+  });*/
+}
+
+onScroll() {
+  if (!this.isLoading) {
+    this.loadPosts();
+  }
+}
+
+onDelete(postIndex: number) {
+  /*const postIdToDelete = this.posts[postIndex].id; 
+  this.defaultService.deletePost(postIdToDelete).subscribe(() => {
+    this.posts.splice(postIndex, 1); 
+  });
+}*/
+}
+}
 

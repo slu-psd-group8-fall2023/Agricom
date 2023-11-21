@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 /**
  * Post Schema for User Post
@@ -6,45 +6,48 @@ const mongoose = require('mongoose');
  * In Comments contains username,content,CreatedAt
  */
 const postSchema = new mongoose.Schema({
-username:{
+  username: {
     type: String,
-    required: true
-},
-title:{
+    required: true,
+  },
+  title: {
     type: String,
-    required: true
-},
-content:{
-    type: String,   
-    required: true
-},
-image:[{
-    type: String,   
-    required: false
-}],
-createdAt:{
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  image: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
+  createdAt: {
     type: Number,
-    default: Date.now,  
-    required: true
-},
-Comments:[{
-    username: {
+    default: Date.now,
+    required: true,
+  },
+  Comments: [
+    {
+      username: {
         type: String,
-        required: true
-    },
-    content: {
+        required: true,
+      },
+      content: {
         type: String,
-        required: true
-    },
-    createdAt: {
+        required: true,
+      },
+      createdAt: {
         type: Number,
         default: Date.now,
-        required: true
-    }
-
-}]
+        required: true,
+      },
+    },
+  ],
 });
 
-const Post = mongoose.model('Posts', postSchema);
+const Post = mongoose.model("Posts", postSchema);
 
 module.exports = Post;
