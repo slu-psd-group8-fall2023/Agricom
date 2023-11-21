@@ -45,7 +45,7 @@ ngOnInit(): void {
     year:'',
     contact:'',
     address:'',
-    region:'',
+    city:'',
     description:'',
     state:'',
     country:'',
