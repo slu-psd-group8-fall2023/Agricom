@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarketComponent } from './market.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr'
 
 describe('MarketComponent', () => {
   let component: MarketComponent;
@@ -11,7 +12,7 @@ describe('MarketComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MarketComponent],
-      imports: [FormsModule,ReactiveFormsModule,NgSelectModule,HttpClientTestingModule],
+      imports: [FormsModule,ReactiveFormsModule,NgSelectModule, ToastrModule.forRoot(),HttpClientTestingModule],
     })
     .compileComponents();
   });
