@@ -9,5 +9,6 @@ export const environment = {
     ADD_COMMENT_API: 'http://127.0.0.1:3000/postcomments',
     GET_COMMENT_API: 'http://127.0.0.1:3000/getpostcomments',
     FETCH_MARKET_POSTS_API: 'http://127.0.0.1:3000/retrievemarketposts',
-    CREATE_MARKET_POSTS_API: 'http://127.0.0.1:3000/marketpost'
+    CREATE_MARKET_POSTS_API: 'http://127.0.0.1:3000/marketpost',
+    DELETE_MARKET_POSTS_API: 'http://127.0.0.1:3000/deletemarketpost'
 }
