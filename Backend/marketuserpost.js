@@ -14,6 +14,7 @@ async function marketcreatePost(req, res) {
       content,
       image,
       createdAt,
+      contact,
       year_of_purchase,
       address,
       city,
@@ -28,6 +29,7 @@ async function marketcreatePost(req, res) {
         title,
         content,
         createdAt,
+        contact,
         year_of_purchase,
         address,
         city,
@@ -65,6 +67,7 @@ async function marketcreatePost(req, res) {
       content,
       image,
       createdAt,
+      contact,
       year_of_purchase,
       address,
       city,
@@ -91,10 +94,7 @@ async function marketcreatePost(req, res) {
 async function retrieveMarketPosts(req, res) {
   try {
     // Retrieve all market posts from the database
-    const marketPosts = await Marketpost.find();
-
-    // Sort the market posts by createdAt date in descending order
-    marketPosts.sort({ createdAt: "desc" });
+    const marketPosts = await Marketpost.find().sort({ createdAt: -1 });
 
     // Create an iterator for the market posts array
     const marketPostIterator = new Iterator(marketPosts);
@@ -169,6 +169,42 @@ async function filterMarketPosts(req, res) {
   }
 }
 
+/**
+ * Function to handle delete users post
+ */
+async function deleteMarketPost(req, res) {
+  try {
+    const { username, postId } = req.body;
+
+    // Check if postId is provided
+    if (!postId) {
+      return res.status(400).json({ error: "postId parameter is required." });
+    }
+
+    // Find the user post by postId
+    const marketPost = await Marketpost.findById(postId);
+
+    // Check if the user post exists
+    if (!marketPost) {
+      return res.status(404).json({ error: "User post not found." });
+    }
+
+    if (marketPost.username !== username) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized. You do not own this post." });
+    }
+
+    // Delete the user post
+    await Marketpost.findByIdAndDelete(postId);
+
+    res.status(200).json({ message: "User post deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting user post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 // Function to check if a given date string is a valid date
 function isValidDate(dateString) {
   const date = new Date(dateString);
@@ -186,4 +222,5 @@ module.exports = {
   marketcreatePost,
   retrieveMarketPosts,
   filterMarketPosts,
+  deleteMarketPost,
 };

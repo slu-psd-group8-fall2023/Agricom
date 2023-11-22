@@ -37,7 +37,7 @@ app.get("/getpostcomments", api.getCommentsForPost);
 app.post("/marketpost", api.MarketUserPost);
 app.get("/retrievemarketposts", api.retrieveMarketPosts);
 app.get("/filtermarketposts", api.filterMarketPosts);
-app.delete("/deletemarketpost/:postId", api.deleteMarketPosts);
+app.post("/deletemarketpost", api.deleteMarketPosts);
 
 // Handle errors
 app.use(handleError);

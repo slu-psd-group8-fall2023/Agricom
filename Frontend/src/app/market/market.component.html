@@ -1,30 +1,28 @@
 <!--filter code-->
-<br><br><br><br>
-<div class="container mt-4">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="row g-3">
-    <div class="col-md-4 mb-3">
+<div class="container" style="padding-top: 80px;">
+<!-- <br><br><br><br> -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="row g-3 align-items-end">
+    <div class="col-md-3 mb-3">
       <label for="country" class="form-label">Country:</label>
       <input type="text" id="country" formControlName="country" class="form-control">
     </div>
 
-    <div class="col-md-4 mb-3">
+    <div class="col-md-3 mb-3">
       <label for="state" class="form-label">State:</label>
       <input type="text" id="state" formControlName="state" class="form-control">
     </div>
 
-    <div class="col-md-4 mb-3">
+    <div class="col-md-3 mb-3">
       <label for="city" class="form-label">City:</label>
       <input type="text" id="city" formControlName="city" class="form-control">
     </div>
 
-    <div class="col-12 text-center">
+    <div class="col-md-3 mb-3 text-center">
+      <label for="city" class="form-label"></label>
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
   </form>
-</div>
-  
-  
-  
+<!-- </div> -->
   
 <!--placing tool in market-->
 <div>
@@ -33,14 +31,14 @@
             <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">Place</button>
             <div class="dropdown-content mt-2" id="dropdown-content"
                 [style.display]="isDropdownOpen ? 'block' : 'none'" style="max-height: 400px; overflow-y: auto;">
-                <form>
+                <form style="padding: 3% !important;">
                     <div class="form-group">
                         <input class="form-control" type="text" id="name" placeholder="Name of tool"
-                            [(ngModel)]="formData.name" name="name" required>
+                            [(ngModel)]="formData.title" name="name" required>
                     </div>
                     <div class="form-group">
-                        <Label>Year of Parchase:</Label><input class="form-control" type="date" id="name" placeholder="title"
-                            [(ngModel)]="formData.year" name="year" required>
+                        <label>Year of Purchase:</label><input class="form-control" type="number" id="name" placeholder="YYYY"
+                            [(ngModel)]="formData.year_of_purchase" name="year" required>
                     </div>
                     <div class="form-group">
                         <label>Contact Number:</label>
@@ -52,30 +50,30 @@
                             name="picture" accept="image/*" required>
                     </div>
                     <div class="form-group">
-                        <label>D/No & Street:</label><input class="form-control" type="text" id="address" name="address" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="D/No & Street" required>
-                        <input class="form-control" type="text" id="name" placeholder="D/No & Street"
+                        <label>Address:</label><input class="form-control" type="text" id="address" name="address" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Street" required>
+                        <input class="form-control" type="text" id="name" placeholder="Apartment"
                             [(ngModel)]="formData.address" name="address" required>
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="text" id="address" placeholder="CITY"
+                        <input class="form-control" type="text" id="address" placeholder="City"
                             [(ngModel)]="formData.city" name="region" required>
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="text" id="address" placeholder="state"
+                        <input class="form-control" type="text" id="address" placeholder="State"
                             [(ngModel)]="formData.state" name="state" required>
                     </div>
                       
                     <div class="form-group">
-                        <input class="form-control" type="text" id="address" placeholder="country"
+                        <input class="form-control" type="text" id="address" placeholder="Country"
                             [(ngModel)]="formData.country" name="country" required>
                     </div>
                     <div class="form-group">
                         <textarea class="form-control" id="description" name="description" rows="4"
-                            placeholder="About tool" [(ngModel)]="formData.description" required></textarea>
+                            placeholder="Describe about your tool" [(ngModel)]="formData.content" required></textarea>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" id="place_submit"
-                            (click)="submitForm()" [disabled]="createPostBtnLoader">Submit
+                            (click)="onSubmit()" [disabled]="createPostBtnLoader">Submit
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="createPostBtnLoader"></span>
                         </button>
                     </div>
@@ -85,49 +83,49 @@
     </div>
 </div>
 
-<div class="container mt-4">
+<!-- <div class="container mt-4"> -->
   <div *ngIf="posts.length > 0; else noDataMessage" >
-  <div *ngFor="let post of posts; let i = index" class="card mb-4">
-    <div class="row no-gutters">
-      <div class="col-md-4">
-        <img [src]="post.picture" class="card-img" alt="Post Image">
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">{{ post.name }}</h5>
-          <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year }}</p>
-          <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
-
-          <div class="row">
-            <div class="col-md-6">
-              <p class="card-text"><strong>Address:</strong> {{ post.address }}</p>
+    <div *ngFor="let post of posts; let i = index" class="card mb-4">
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img [src]="post.image" class="card-img" alt="Post Image">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{ post.name }}</h5>
+            <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year_of_purchase }}</p>
+            <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <p class="card-text"><strong>Address:</strong> {{ post.address }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="card-text"><strong>City:</strong> {{ post.city }}</p>
+                <p class="card-text"><strong>State:</strong> {{ post.state }}</p>
+                <p class="card-text"><strong>Country:</strong> {{ post.country }}</p>
+              </div>
             </div>
-            <div class="col-md-6">
-              <p class="card-text"><strong>Region:</strong> {{ post.region }}</p>
-              <p class="card-text"><strong>State:</strong> {{ post.state }}</p>
-              <p class="card-text"><strong>Country:</strong> {{ post.country }}</p>
-            </div>
+  
+            <p class="card-text">{{ post.content }}</p>
+  
+            <!-- Delete Button -->
+            <button class="btn btn-danger" *ngIf="post.username==user.username" (click)="onDelete(i)">Delete</button>
           </div>
-
-          <p class="card-text">{{ post.description }}</p>
-
-          <!-- Delete Button -->
-          <button class="btn btn-danger" (click)="onDelete(i)">Delete</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="isLoading" class="text-center mt-3">
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
+  
+    <div *ngIf="isLoading" class="text-center mt-3">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     </div>
-  </div>
-
-  <!-- Infinite Scroll -->
-  <div (scroll)="onScroll()" style="height: 200px; overflow-y: scroll;">
-  </div>
-  </div>
+  
+    <!-- Infinite Scroll -->
+    <div (scroll)="onScroll()" style="height: 200px; overflow-y: scroll;">
+    </div>
+    </div>
   <ng-template #noDataMessage>
     <div class="text-center mt-3">
       <p>No tools are here.</p>
