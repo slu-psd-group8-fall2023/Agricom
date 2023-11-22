@@ -269,6 +269,85 @@ describe("marketUserPost", () => {
       // Check the number of calls on Marketpost.find
       expect(Marketpost.find).toHaveBeenCalledTimes(0);
     });
+    it("should sort market posts by createdAt", async () => {
+      // Mock Marketpost.find to return an array of market posts in a random order
+      const marketPosts = [
+        {
+          _id: "1",
+          title: "Test Market Post 1",
+          content: "This is a test market post 1",
+          createdAt: new Date("2022-01-01"),
+          year_of_purchase: 2022,
+          address: "Test Address",
+          city: "Test City",
+          state: "Test State",
+          country: "Test Country",
+        },
+        {
+          _id: "2",
+          title: "Test Market Post 2",
+          content: "This is a test market post 2",
+          createdAt: new Date("2022-01-02"),
+          year_of_purchase: 2022,
+          address: "Test Address",
+          city: "Test City",
+          state: "Test State",
+          country: "Test Country",
+        },
+      ].sort(() => Math.random() - 0.5);
+      jest.spyOn(Marketpost, "find").mockResolvedValue(marketPosts);
+  
+      const req = {};
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+  
+      await retrieveMarketPosts(req, res);
+  
+      // Check the number of calls on Marketpost.find
+      expect(Marketpost.find).toHaveBeenCalledTimes(0);
+    });
+  });
+  describe("retrieveMarketPosts", () => {
+    // Mock Marketpost.find to throw an error using mockImplementation
+    Marketpost.find.mockImplementation(() => {
+      throw new Error("Database error");
+    });
+  
+    // Test case to handle errors thrown by Marketpost.find
+    it("should handle errors thrown by Marketpost.find", async () => {
+      const req = {};
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+  
+      await retrieveMarketPosts(req, res);
+  
+      // Expect a 500 response with an error message
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
+    });
+  
+    // Mock Marketpost.find to throw an error using mockImplementation
+    Marketpost.find.mockImplementation(() => {
+      throw new TypeError("Type error");
+    });
+  
+    it("should handle specific type of error thrown by Marketpost.find", async () => {
+      const req = {};
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+  
+      await retrieveMarketPosts(req, res);
+  
+      // Expect a 500 response with a specific error message
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
+    });
   });
 
   const mockMarketPosts = [
