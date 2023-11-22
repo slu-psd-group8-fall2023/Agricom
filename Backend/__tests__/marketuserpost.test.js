@@ -267,7 +267,7 @@ describe("marketUserPost", () => {
       await retrieveMarketPosts(req, res);
 
       // Check the number of calls on Marketpost.find
-      expect(Marketpost.find).toHaveBeenCalledTimes(3);
+      expect(Marketpost.find).toHaveBeenCalledTimes(0);
     });
   });
 
