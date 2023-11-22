@@ -93,8 +93,15 @@ async function marketcreatePost(req, res) {
  */
 async function retrieveMarketPosts(req, res) {
   try {
+    const { username } = req.body; 
+
+        let query = {};
+
+        if (username) {
+            query = { username };
+        }
     // Retrieve all market posts from the database
-    const marketPosts = await Marketpost.find().sort({ createdAt: -1 });
+    const marketPosts = await Marketpost.find(query).sort({ createdAt: -1 });
 
     // Create an iterator for the market posts array
     const marketPostIterator = new Iterator(marketPosts);
