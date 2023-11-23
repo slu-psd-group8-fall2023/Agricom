@@ -100,13 +100,6 @@ async function marketcreatePost(req, res) {
 async function retrieveMarketPosts(req, res) {
   try {
 
-    const { username } = req.body; 
-
-        let query = {};
-
-        if (username) {
-            query = { username };
-        }
     const { username } = req.body;
 
     let query = {};
