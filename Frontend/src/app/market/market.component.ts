@@ -21,8 +21,9 @@ export class MarketComponent implements OnInit{
   form: FormGroup;
   submittedData: any = {}; 
   posts: any[] = [];
-  isLoading = false;
+  postLoader = false;
   user: any;
+  filterParams: any = {}
 
   constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService, private _sanitizer: DomSanitizer) {
     this.form = this.fb.group({
@@ -93,20 +94,51 @@ ngOnInit(): void {
     }
   }
 
-
-loadPosts() {
-  this.isLoading = true;
-  this.defaultService.getData(environment.FETCH_MARKET_POSTS_API).subscribe((data: any) => {
-    data.marketPosts.forEach((element:any, index:any) => {
-      data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
-    });
-    this.posts = this.posts.concat(data['marketPosts']);
-    this.isLoading = false;
-  });
-}
+  loadPosts() {
+    this.postLoader = true;
+    this.resetFilters();
+    try {
+      this.defaultService.getData(environment.FETCH_MARKET_POSTS_API).subscribe((data: any) => {
+        data.marketPosts.forEach((element:any, index:any) => {
+          data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+        });
+        this.posts = this.posts.concat(data['marketPosts']);
+        this.postLoader = false;
+      });
+    } catch (error) {
+      this.postLoader = false;
+      this.toastr.error("Error fetching posts");
+    }
+  }
+  
+  resetFilters() {
+    this.filterParams = {
+      country:'',
+      state:'',
+      city:'',
+      isApplied:false
+    }
+  }
+  
+  filterPosts() {
+    try {
+      this.filterParams.isApplied = true;
+      this.postLoader = true;
+      this.defaultService.httpPostCall(environment.FILTER_MARKET_POSTS_API, {...this.filterParams}).subscribe((data: any) => {
+        data.marketPosts.forEach((element:any, index:any) => {
+          data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+        });
+        this.posts = data['marketPosts'];
+        this.postLoader = false;
+      });
+    } catch(e) {
+      this.postLoader = false;
+      this.toastr.error("Error filtering posts");
+    }
+  }
 
 onScroll() {
-  if (!this.isLoading) {
+  if (!this.postLoader && ! this.filterParams.isApplied) {
     this.loadPosts();
   }
 }
