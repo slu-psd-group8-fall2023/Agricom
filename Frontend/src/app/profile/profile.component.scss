@@ -1,0 +1,40 @@
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 10px;
+    right: 10px; 
+  }
+  
+  .profile-picture {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .profile-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+
+  .center-text-container {
+    display: flex;
+    font-style:inherit;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    align-items: center;
+    justify-content: center;
+    height: 5vh; /* Adjust the height based on your preference */
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    color: #333;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px #aaa;
+  }

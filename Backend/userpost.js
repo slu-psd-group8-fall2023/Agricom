@@ -39,6 +39,7 @@ async function userPost(req, res) {
  */
 async function retrievePosts(req, res) {
   try {
+
     const { username } = req.body; 
 
         let query = {};
@@ -48,6 +49,15 @@ async function retrievePosts(req, res) {
         }
     // Find all posts and sort by createdAt in descending order
     const posts = await Post.find(query).sort({ createdAt: "desc" });
+    const { username } = req.body;
+
+    let query = {};
+
+    if (username) {
+      query = { username };
+    }
+    // Find all posts and sort by createdAt in descending order
+    const posts = await Post.find(query).sort({ createdAt: -1 });
 
     const postIterator = new Iterator(posts);
 

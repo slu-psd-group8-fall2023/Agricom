@@ -81,4 +81,4 @@ Agricom offers the following key features:
 3.API endpoints to support user interactions with posts and comments.
 
 Feel free to explore Agricom and enhance your agricultural knowledge and practices.
-Happy farming with Agricom! ????
+Happy farming with Agricom! 🌱🚜
