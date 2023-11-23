@@ -39,6 +39,7 @@ async function userPost(req, res) {
  */
 async function retrievePosts(req, res) {
   try {
+
     const { username } = req.body;
 
     let query = {};

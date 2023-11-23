@@ -1,10 +1,13 @@
 import { Component,OnInit, NgModule   } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule  } from '@angular/forms';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { DefaultService } from "../default.service";
+import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
+import { AuthenticationService } from '../services/authentication.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UserService } from '../services/user.service';
-import { DefaultService } from "../default.service";
+import { DomSanitizer } from '@angular/platform-browser';
 //import { CountryStateService } from './country-state.service';
 
 @Component({
@@ -18,9 +21,11 @@ export class MarketComponent implements OnInit{
   form: FormGroup;
   submittedData: any = {}; 
   posts: any[] = [];
-  isLoading = false;
+  postLoader = false;
+  user: any;
+  filterParams: any = {}
 
-  constructor(private fb: FormBuilder,private defaultService: DefaultService) {
+  constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService, private _sanitizer: DomSanitizer) {
     this.form = this.fb.group({
       country: [''],
       state: [''],
@@ -29,7 +34,8 @@ export class MarketComponent implements OnInit{
   }
 
 ngOnInit(): void {
-    
+    this.user = this.authenticationService.userValue;
+    this.loadPosts();
 }
 
   isDropdownOpen = false;
@@ -41,12 +47,13 @@ ngOnInit(): void {
   picture:any;
   data:any;
   formData: any={
-    name:'',
-    year:'',
-    contact:'',
+    title:'',
+    content:'',
+    image:'',
+    createdAt:'',
+    year_of_purchase:'',
     address:'',
     city:'',
-    description:'',
     state:'',
     country:'',
   }
@@ -56,7 +63,7 @@ ngOnInit(): void {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      this.formData.picture = reader.result;
+      this.formData.image = reader.result;
     }
   }
   submitForm() {
@@ -65,58 +72,85 @@ ngOnInit(): void {
   
 
   
-    onSubmit() {
-      // Assign form values to variables
-      const country = this.form.get('country')?.value;
-      const state = this.form.get('state')?.value;
-      const city = this.form.get('city')?.value;
-  
-      // Store the data in the object
-      this.submittedData = {
-        country: country,
-        state: state,
-        city: city
-      };
-console.log(this.submittedData )
-/*await this.defaultService.httpPostCall(,).subscribe(
-  (data: any) => {
-    this.toastr.success("wait for tools in your region");
-    let response = data['data'];
-    this.loadPosts();
-  },
-  (err: any) => {
-    this.toastr.error("Error in fetching posts! \n Please try again");
-      this.loadingData = false;
+  onSubmit() {
+    try{
+      this.createPostBtnLoader = true;
+      this.defaultService.httpPostCall(environment.CREATE_MARKET_POSTS_API,{...this.formData, username: this.user.username, createdAt:Date.now()}).subscribe(
+      (data: any) => {
+        this.createPostBtnLoader = false;
+        this.toastr.success("Tool listed successfully");
+        let response = data['data'];
+        this.loadPosts();
+      },
+      (err: any) => {
+        this.toastr.error("Error in fetching posts! \n Please try again");
+        this.createPostBtnLoader = false;
+      // this.loadingData = false;
+      }
+    )
+    } catch (e) {
+      this.createPostBtnLoader = false;
+      this.toastr.error("Error ! \n Please try again");
+    }
   }
-)
-} catch (e) {
-this.toastr.error("Error ! \n Please try again");
 
-  }*/
-}
-
-
-loadPosts() {
-  this.isLoading = true;
-  /*this.defaultService.getPosts().subscribe((data: any[]) => {
-    this.posts = this.posts.concat(data);
-    this.isLoading = false;
-    
-  });*/
-}
+  loadPosts() {
+    this.postLoader = true;
+    this.resetFilters();
+    try {
+      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API,'').subscribe((data: any) => {
+        data.marketPosts.forEach((element:any, index:any) => {
+          data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+        });
+        this.posts = this.posts.concat(data['marketPosts']);
+        this.postLoader = false;
+      });
+    } catch (error) {
+      this.postLoader = false;
+      this.toastr.error("Error fetching posts");
+    }
+  }
+  
+  resetFilters() {
+    this.filterParams = {
+      country:'',
+      state:'',
+      city:'',
+      isApplied:false
+    }
+    this.posts = []
+  }
+  
+  filterPosts() {
+    try {
+      this.filterParams.isApplied = true;
+      this.postLoader = true;
+      this.defaultService.httpPostCall(environment.FILTER_MARKET_POSTS_API, {...this.filterParams}).subscribe((data: any) => {
+        if(data.marketPosts.length) {
+          data.marketPosts.forEach((element:any, index:any) => {
+            data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+          });
+          this.posts = data['marketPosts'];
+        }
+        this.postLoader = false;
+      });
+    } catch(e) {
+      this.postLoader = false;
+      this.toastr.error("Error filtering posts");
+    }
+  }
 
 onScroll() {
-  if (!this.isLoading) {
+  if (!this.postLoader && ! this.filterParams.isApplied) {
     this.loadPosts();
   }
 }
 
-onDelete(postIndex: number) {
-  /*const postIdToDelete = this.posts[postIndex].id; 
-  this.defaultService.deletePost(postIdToDelete).subscribe(() => {
-    this.posts.splice(postIndex, 1); 
-  });
-}*/
-}
+  onDelete(postIndex: number) {
+    const postIdToDelete = this.posts[postIndex]._id;
+    this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, {username:this.user.username, postId:postIdToDelete}).subscribe(() => {
+      this.posts.splice(postIndex, 1); 
+    });
+  }
 }
 

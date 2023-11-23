@@ -15,7 +15,7 @@ import { FeedComponent } from './feed/feed.component';
 import { DetectComponent } from './detect/detect.component';
 import { HeaderComponent } from './header/header.component';
 import { MarketComponent } from './market/market.component';
-//import { ProfileComponent } from './profile/profile.component';
+import { ProfileComponent } from './profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +25,7 @@ import { MarketComponent } from './market/market.component';
     DetectComponent,
     HeaderComponent,
     MarketComponent,
-    //ProfileComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +40,6 @@ import { MarketComponent } from './market/market.component';
     NgSelectModule
   ],
   providers: [],
-  bootstrap: [AppComponent,MarketComponent],
+  bootstrap: [AppComponent, MarketComponent],
 })
 export class AppModule { }
