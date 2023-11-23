@@ -98,7 +98,7 @@ ngOnInit(): void {
     this.postLoader = true;
     this.resetFilters();
     try {
-      this.defaultService.getData(environment.FETCH_MARKET_POSTS_API).subscribe((data: any) => {
+      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API,'').subscribe((data: any) => {
         data.marketPosts.forEach((element:any, index:any) => {
           data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
         });
@@ -118,6 +118,7 @@ ngOnInit(): void {
       city:'',
       isApplied:false
     }
+    this.posts = []
   }
   
   filterPosts() {
@@ -125,10 +126,12 @@ ngOnInit(): void {
       this.filterParams.isApplied = true;
       this.postLoader = true;
       this.defaultService.httpPostCall(environment.FILTER_MARKET_POSTS_API, {...this.filterParams}).subscribe((data: any) => {
-        data.marketPosts.forEach((element:any, index:any) => {
-          data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
-        });
-        this.posts = data['marketPosts'];
+        if(data.marketPosts.length) {
+          data.marketPosts.forEach((element:any, index:any) => {
+            data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+          });
+          this.posts = data['marketPosts'];
+        }
         this.postLoader = false;
       });
     } catch(e) {
