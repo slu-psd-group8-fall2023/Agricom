@@ -26,7 +26,6 @@ workflows:
             resource_class: large 
             app-dir: ~/project/Backend 
             npm-run: test
-            parallelism: 4
 
         - angular-test
   
