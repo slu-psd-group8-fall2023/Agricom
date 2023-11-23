@@ -31,12 +31,12 @@ app.post("/signup", api.handleSignup);
 app.post("/forgot-password", api.handleForgotPassword);
 app.post("/reset-password/:token", api.handleResetPassword);
 app.post("/posts", api.userPost);
-app.get("/retrieveposts", api.retrievePosts);
+app.post("/retrieveposts", api.retrievePosts);
 app.post("/postcomments", api.addCommentToPost);
 app.get("/getpostcomments", api.getCommentsForPost);
 app.post("/marketpost", api.MarketUserPost);
-app.get("/retrievemarketposts", api.retrieveMarketPosts);
-app.get("/filtermarketposts", api.filterMarketPosts);
+app.post("/retrievemarketposts", api.retrieveMarketPosts);
+app.post("/filtermarketposts", api.filterMarketPosts);
 app.post("/deletemarketpost", api.deleteMarketPosts);
 
 // Handle errors

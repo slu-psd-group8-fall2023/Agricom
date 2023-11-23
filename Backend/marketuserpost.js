@@ -42,6 +42,12 @@ async function marketcreatePost(req, res) {
         .json({ error: "Invalid data. Please provide valid data in fields." });
     }
 
+    if (!isValidPhoneNumber(contact)) {
+      return res.status(400).json({
+        error: "Invalid data. Please provide 10 digits in the contact field.",
+      });
+    }
+
     // Validate the format of the provided date
     if (!isValidDate(createdAt)) {
       return res.status(400).json({
@@ -93,8 +99,15 @@ async function marketcreatePost(req, res) {
  */
 async function retrieveMarketPosts(req, res) {
   try {
+    const { username } = req.body;
+
+    let query = {};
+
+    if (username) {
+      query = { username };
+    }
     // Retrieve all market posts from the database
-    const marketPosts = await Marketpost.find().sort({ createdAt: -1 });
+    const marketPosts = await Marketpost.find(query).sort({ createdAt: -1 });
 
     // Create an iterator for the market posts array
     const marketPostIterator = new Iterator(marketPosts);
@@ -216,6 +229,12 @@ function isValidData(data) {
   return Object.values(data).every(
     (value) => value !== undefined && value !== ""
   );
+}
+
+// Function to check if a given contact is a valid data or not
+function isValidPhoneNumber(contact) {
+  const numericPhoneNumber = String(contact).replace(/\D/g, "");
+  return numericPhoneNumber.length === 10;
 }
 
 module.exports = {
