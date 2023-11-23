@@ -39,8 +39,15 @@ async function userPost(req, res) {
  */
 async function retrievePosts(req, res) {
   try {
+    const { username } = req.body; 
+
+        let query = {};
+
+        if (username) {
+            query = { username };
+        }
     // Find all posts and sort by createdAt in descending order
-    const posts = await Post.find().sort({ createdAt: "desc" });
+    const posts = await Post.find(query).sort({ createdAt: "desc" });
 
     const postIterator = new Iterator(posts);
 
@@ -48,7 +55,6 @@ async function retrievePosts(req, res) {
     let post = postIterator.next();
     while (!post.done) {
       result.push(post.value);
-      console.log(post);
       post = postIterator.next();
     }
 
@@ -116,7 +122,6 @@ async function getCommentsForPost(req, res) {
     let comment = commentsIterator.next();
     while (!comment.done) {
       result.push(comment.value);
-      console.log(comment);
       comment = commentsIterator.next();
     }
 

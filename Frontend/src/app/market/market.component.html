@@ -110,7 +110,7 @@
             <p class="card-text">{{ post.content }}</p>
   
             <!-- Delete Button -->
-            <button class="btn btn-danger" (click)="onDelete(i)">Delete</button>
+            <button class="btn btn-danger" *ngIf="post.username==user.username" (click)="onDelete(i)">Delete</button>
           </div>
         </div>
       </div>

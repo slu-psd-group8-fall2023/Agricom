@@ -111,12 +111,11 @@ onScroll() {
   }
 }
 
-onDelete(postIndex: number) {
-  /*const postIdToDelete = this.posts[postIndex].id; 
-  this.defaultService.deletePost(postIdToDelete).subscribe(() => {
-    this.posts.splice(postIndex, 1); 
-  });
-}*/
-}
+  onDelete(postIndex: number) {
+    const postIdToDelete = this.posts[postIndex]._id;
+    this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, {username:this.user.username, postId:postIdToDelete}).subscribe(() => {
+      this.posts.splice(postIndex, 1); 
+    });
+  }
 }
 

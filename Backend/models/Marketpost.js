@@ -29,6 +29,10 @@ const MarketpostSchema = new mongoose.Schema({
     default: Date.now,
     required: true,
   },
+  contact: {
+    type: Number,
+    required: true,
+  },
   year_of_purchase: {
     type: Number,
     default: Date.now,
