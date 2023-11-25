@@ -4,7 +4,7 @@ Agricom
 
 ## Overview
 
-Welcome to Agricom, an innovative agricultural platform designed to empower farmers by creating a centralized hub for sharing, exchanging, and enhancing crop-yielding techniques and knowledge. Our primary goal is to facilitate collaboration and knowledge sharing among farmers, enabling them to maximize yields, especially for specialized crops in their region, and effectively combat crop diseases.
+Agricom is a groundbreaking agricultural platform crafted to empower farmers by establishing a central hub for the exchange, sharing, and enhancement of crop-yielding techniques and knowledge. Our primary objective is to facilitate collaboration among farmers, enabling them to optimize yields, especially for specialized crops in their regions, and effectively combat crop diseases. Agricom stands as an innovative force, bringing together technology and agriculture to create a platform that cultivates a thriving and knowledgeable agricultural community.
 
 ## Installation
 
