@@ -182,7 +182,7 @@ describe("marketUserPost", () => {
       error: "Invalid data. Please provide valid data in fields.",
     });
   });
-  test("should return 400 for missing year_of_purchase field", async () => {
+  it("should return 400 for missing year_of_purchase field", async () => {
     const req = {
       body: {
         username: "testUser",
@@ -209,10 +209,7 @@ describe("marketUserPost", () => {
       error: "Invalid data. Please provide valid data in fields.",
     });
   });
-});
-
-describe("marketUserPost", () => {
-  test("should return 400 for an invalid phone number (more than 10 digits)", async () => {
+  it("should return 400 for an invalid phone number (more than 10 digits)", async () => {
     User.findOne.mockResolvedValue({ username: "testUser" });
 
     const req = {
@@ -237,8 +234,108 @@ describe("marketUserPost", () => {
     };
 
     await marketcreatePost(req, res);
-
   });
+
+  it("should create a new market post with a valid 10-digit phone number", async () => {
+    User.findOne.mockResolvedValue({ username: "testUser" });
+
+    const req = {
+      body: {
+        username: "testUser",
+        title: "Test Post",
+        content: "This is a test post",
+        createdAt: "2023-01-01T12:00:00Z", // A valid date format
+        contact: "1234567890",
+        year_of_purchase: 2022,
+        address: "123 Test Street",
+        city: "Test City",
+        state: "TS",
+        country: "Test Country",
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await marketcreatePost(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Market Post created successfully",
+      newMarketPost: expect.any(Object),
+    });
+  });
+
+  it("should return error for a invalid phone number", async () => {
+    User.findOne.mockResolvedValue({ username: "testUser" });
+
+    const req = {
+      body: {
+        username: "testUser",
+        title: "Test Post",
+        content: "This is a test post",
+        createdAt: "2023-01-01T12:00:00Z", // A valid date format
+        contact: "123467890",
+        year_of_purchase: 2022,
+        address: "123 Test Street",
+        city: "Test City",
+        state: "TS",
+        country: "Test Country",
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await marketcreatePost(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Invalid data. Please provide 10 digits in the contact field.",
+    });
+  });
+
+  it("should return 400 for missing title field", async () => {
+    User.findOne.mockResolvedValue({ username: "testUser" });
+
+    const req = {
+      body: {
+        username: "testUser",
+        content: "This is a test post",
+        createdAt: "2023-01-01T12:00:00Z",
+        contact: "1234567890",
+        year_of_purchase: 2022,
+        address: "123 Test Street",
+        city: "Test City",
+        state: "TS",
+        country: "Test Country",
+      },
+    };
+
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await marketcreatePost(req, res);
+
+    // Assertions
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Invalid data. Please provide valid data in fields.",
+    });
+  });
+});
+
+/**
+ * Test cases for retrieveMarketPosts function
+ */
+describe("retrieveMarketPosts", () => {
   it("should return a list of market posts when posts are available", async () => {
     // Mock Marketpost.find to return an array of valid market posts
     const validMarketPosts = [
@@ -319,146 +416,47 @@ describe("marketUserPost", () => {
     expect(Marketpost.find).toHaveBeenCalledTimes(0);
   });
 });
-  describe("retrieveMarketPosts", () => {
-    // Mock Marketpost.find to throw an error using mockImplementation
-    Marketpost.find.mockImplementation(() => {
-      throw new Error("Database error");
-    });
-  
-    // Test case to handle errors thrown by Marketpost.find
-    it("should handle errors thrown by Marketpost.find", async () => {
-      const req = {};
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      };
-  
-      await retrieveMarketPosts(req, res);
-  
-      // Expect a 500 response with an error message
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
-    });
-  
-    // Mock Marketpost.find to throw an error using mockImplementation
-    Marketpost.find.mockImplementation(() => {
-      throw new TypeError("Type error");
-    });
-  
-    it("should handle specific type of error thrown by Marketpost.find", async () => {
-      const req = {};
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      };
-  
-      await retrieveMarketPosts(req, res);
-  
-      // Expect a 500 response with a specific error message
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
-    
+describe("retrieveMarketPosts", () => {
+  // Mock Marketpost.find to throw an error using mockImplementation
+  Marketpost.find.mockImplementation(() => {
+    throw new Error("Database error");
   });
 
-  test("should create a new market post with a valid 10-digit phone number", async () => {
-    User.findOne.mockResolvedValue({ username: "testUser" });
-
-    const req = {
-      body: {
-        username: "testUser",
-        title: "Test Post",
-        content: "This is a test post",
-        createdAt: "2023-01-01T12:00:00Z", // A valid date format
-        contact: "1234567890",
-        year_of_purchase: 2022,
-        address: "123 Test Street",
-        city: "Test City",
-        state: "TS",
-        country: "Test Country",
-      },
-    };
-
+  // Test case to handle errors thrown by Marketpost.find
+  it("should handle errors thrown by Marketpost.find", async () => {
+    const req = {};
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
-    await marketcreatePost(req, res);
+    await retrieveMarketPosts(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith({
-      message: "Market Post created successfully",
-      newMarketPost: expect.any(Object),
-    });
+    // Expect a 500 response with an error message
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
   });
 
-  test("should return error for a invalid phone number", async () => {
-    User.findOne.mockResolvedValue({ username: "testUser" });
+  // Mock Marketpost.find to throw an error using mockImplementation
+  Marketpost.find.mockImplementation(() => {
+    throw new TypeError("Type error");
+  });
 
-    const req = {
-      body: {
-        username: "testUser",
-        title: "Test Post",
-        content: "This is a test post",
-        createdAt: "2023-01-01T12:00:00Z", // A valid date format
-        contact: "123467890",
-        year_of_purchase: 2022,
-        address: "123 Test Street",
-        city: "Test City",
-        state: "TS",
-        country: "Test Country",
-      },
-    };
-
+  it("should handle specific type of error thrown by Marketpost.find", async () => {
+    const req = {};
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
-    await marketcreatePost(req, res);
+    await retrieveMarketPosts(req, res);
 
-    // Assertions
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      error: "Invalid data. Please provide 10 digits in the contact field.",
-    });
-  });
-
-  test("should return 400 for missing title field", async () => {
-    User.findOne.mockResolvedValue({ username: "testUser" });
-
-    const req = {
-      body: {
-        username: "testUser",
-        content: "This is a test post",
-        createdAt: "2023-01-01T12:00:00Z",
-        contact: "1234567890",
-        year_of_purchase: 2022,
-        address: "123 Test Street",
-        city: "Test City",
-        state: "TS",
-        country: "Test Country",
-      },
-    };
-
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-
-    await marketcreatePost(req, res);
-
-    // Assertions
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      error: "Invalid data. Please provide valid data in fields.",
-    });
+    // Expect a 500 response with a specific error message
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
   });
 });
 
-/**
- * Test cases for retrieveMarketPosts function
- */
 describe("retrieveMarketPosts", () => {
   it("should handle empty market posts array", async () => {
     // Mock Marketpost.find to return an empty array
