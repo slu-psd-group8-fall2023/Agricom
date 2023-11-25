@@ -167,7 +167,8 @@ export class FeedComponent {
       await this.defaultService.httpPostCall(`${environment.ADD_COMMENT_API}`, params).subscribe(
         (data: any) => {
           this.toastr.success("Succesfully posted comment");
-          this.comments = data.post.Comments
+          // this.comments = data.post.Comments
+          this.getPostComments();
           this.commentText = '';
           console.log(data.post._id);
           this.scrollToBottom()
