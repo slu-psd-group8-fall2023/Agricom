@@ -236,7 +236,7 @@ describe("marketUserPost", () => {
     await marketcreatePost(req, res);
   });
 
-  test("should create a new market post with a valid 10-digit phone number", async () => {
+  it("should create a new market post with a valid 10-digit phone number", async () => {
     User.findOne.mockResolvedValue({ username: "testUser" });
 
     const req = {
@@ -268,7 +268,7 @@ describe("marketUserPost", () => {
     });
   });
 
-  test("should return error for a invalid phone number", async () => {
+  it("should return error for a invalid phone number", async () => {
     User.findOne.mockResolvedValue({ username: "testUser" });
 
     const req = {
@@ -300,7 +300,7 @@ describe("marketUserPost", () => {
     });
   });
 
-  test("should return 400 for missing title field", async () => {
+  it("should return 400 for missing title field", async () => {
     User.findOne.mockResolvedValue({ username: "testUser" });
 
     const req = {
@@ -335,7 +335,7 @@ describe("marketUserPost", () => {
 /**
  * Test cases for retrieveMarketPosts function
  */
-describe("marketUserPost", () => {
+describe("retrieveMarketPosts", () => {
   it("should return a list of market posts when posts are available", async () => {
     // Mock Marketpost.find to return an array of valid market posts
     const validMarketPosts = [
