@@ -28,13 +28,13 @@ jobs:
             version: 19.03.13
         - run:
             name: Build Docker Image
-            command: docker build -t $DOCKERHUB_USERNAME/testcom:${CIRCLE_SHA1} .
+            command: cd ~/project && docker build -t $DOCKERHUB_USERNAME/testcom:${CIRCLE_SHA1} .
         - run:
             name: Authenticate with Docker Hub
-            command: echo "$DOCKERHUB_PASS" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+            command: cd ~/project && echo "$DOCKERHUB_PASS" | docker login --username $DOCKERHUB_USERNAME --password-stdin
         - run:
             name: Push Docker Image to Docker Hub
-            command: docker push $DOCKERHUB_USERNAME/testcom:${CIRCLE_SHA1}
+            command: cd ~/project && docker push $DOCKERHUB_USERNAME/testcom:${CIRCLE_SHA1}
 
 workflows:
     Testcases:
