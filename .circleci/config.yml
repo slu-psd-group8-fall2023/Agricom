@@ -21,7 +21,7 @@ jobs:
     
     build_and_push:
       docker:
-        - image: node:14
+        - image: circleci/node:latest-browsers
       steps:
         - checkout
         - setup_remote_docker:
