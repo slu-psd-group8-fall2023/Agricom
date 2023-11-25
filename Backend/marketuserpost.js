@@ -203,7 +203,7 @@ async function deleteMarketPost(req, res) {
       return res.status(404).json({ error: "User post not found." });
     }
 
-    if (marketPost.username !== username) {
+    if (marketPost.username.toLowerCase() !== username.toLowerCase()) {
       return res
         .status(403)
         .json({ error: "Unauthorized. You do not own this post." });
