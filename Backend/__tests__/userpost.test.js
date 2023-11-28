@@ -316,7 +316,7 @@ describe("getCommentsForPost", () => {
     Post.findOne.mockResolvedValue(null);
 
     const req = {
-      params: { postId },
+      body: { postId },
     };
 
     const res = {
@@ -338,7 +338,7 @@ describe("getCommentsForPost", () => {
     Post.findOne.mockRejectedValue(new Error("Database error"));
 
     const req = {
-      params: { postId },
+      body: {  },
     };
 
     const res = {
@@ -380,7 +380,7 @@ describe("getCommentsForPost", () => {
 
     // Create mock request and response objects
     const req = {
-      params: { _id: postId },
+      body: { postId },
     };
 
     const res = {

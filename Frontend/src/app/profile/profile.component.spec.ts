@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { DefaultService } from '../default.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -14,7 +15,7 @@ describe('ProfileComponent', () => {
     waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ProfileComponent],
-      imports: [HttpClientTestingModule, NgSelectModule, ReactiveFormsModule],
+      imports: [HttpClientTestingModule, NgSelectModule, ReactiveFormsModule, ToastrModule.forRoot()],
       providers:[DefaultService]
     }).compileComponents();
   })
