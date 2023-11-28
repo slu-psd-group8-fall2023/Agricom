@@ -92,7 +92,7 @@ export class FeedComponent {
 
   loadInitialUserData() {
     this.isLoading = true;
-    this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
+    this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{}).subscribe((data: any) => {
       data.posts.forEach((element:any, index:any) => {
         data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
       });
@@ -104,7 +104,7 @@ export class FeedComponent {
   loadMoreUserData() {
     if (!this.isLoading) {
       this.isLoading = true;
-      this.defaultService.getData(environment.FETCH_POSTS_API).subscribe((data: any) => {
+      this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{}).subscribe((data: any) => {
         if(data.posts[data.posts.length-1]._id!=this.data[this.data.length-1]._id) {
           this.data = this.data.concat(data.posts);
           this.isLoading = false;
@@ -167,7 +167,8 @@ export class FeedComponent {
       await this.defaultService.httpPostCall(`${environment.ADD_COMMENT_API}`, params).subscribe(
         (data: any) => {
           this.toastr.success("Succesfully posted comment");
-          this.comments = data.post.Comments
+          // this.comments = data.post.Comments
+          this.getPostComments();
           this.commentText = '';
           console.log(data.post._id);
           this.scrollToBottom()

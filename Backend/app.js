@@ -33,7 +33,7 @@ app.post("/reset-password/:token", api.handleResetPassword);
 app.post("/posts", api.userPost);
 app.post("/retrieveposts", api.retrievePosts);
 app.post("/postcomments", api.addCommentToPost);
-app.get("/getpostcomments", api.getCommentsForPost);
+app.post("/getpostcomments", api.getCommentsForPost);
 app.post("/marketpost", api.MarketUserPost);
 app.post("/retrievemarketposts", api.retrieveMarketPosts);
 app.post("/filtermarketposts", api.filterMarketPosts);
