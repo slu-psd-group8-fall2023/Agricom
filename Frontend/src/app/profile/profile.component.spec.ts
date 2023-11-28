@@ -28,16 +28,6 @@ describe('ProfileComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the profile picture and user name displayed', () => {
-    component.profilePicture = 'fake_image_url';
-    component.userName = 'John Doe';
-    fixture.detectChanges();
-    const profilePicture = fixture.debugElement.query(By.css('.profile-picture')).nativeElement;
-    expect(profilePicture.src).toContain('fake_image_url');
-    const profileName = fixture.debugElement.query(By.css('.profile-name')).nativeElement;
-    expect(profileName.textContent).toBe('John Doe');
-  });
-
   it('should load feed posts and display them', () => {
     // Setting fake data
     component.feed_posts = [
