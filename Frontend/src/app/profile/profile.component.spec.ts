@@ -11,16 +11,12 @@ describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ProfileComponent],
       imports: [HttpClientTestingModule, NgSelectModule, ReactiveFormsModule, ToastrModule.forRoot()],
       providers:[DefaultService]
-    }).compileComponents();
-  })
-  );
-  beforeEach(() => {
+    });
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
