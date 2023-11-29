@@ -18,6 +18,24 @@ jobs:
         - run: 
             name: Run Frontend Testcases
             command: cd ~/project/Frontend && npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
+
+    build_and_push:
+      docker:
+        - image: circleci/node:latest-browsers
+      steps:
+        - checkout
+        - setup_remote_docker:
+            version: 19.03.13
+        - run:
+            name: Build Docker Image
+            command: cd ~/project && docker build -t $DOCKERHUB_USERNAME/agrifrontend:${CIRCLE_SHA1} .
+        - run:
+            name: Authenticate with Docker Hub
+            command: cd ~/project && echo "$DOCKERHUB_PASS" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+        - run:
+            name: Push Docker Image to Docker Hub
+            command: cd ~/project && docker push $DOCKERHUB_USERNAME/agrifrontend:${CIRCLE_SHA1}
+    
 workflows:
     Testcases:
       jobs:
@@ -28,4 +46,6 @@ workflows:
             npm-run: test
 
         - angular-test
-  
+    build_and_deply:
+      jobs:
+        - build_and_push
