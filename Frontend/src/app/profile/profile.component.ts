@@ -20,7 +20,7 @@ constructor(private defaultService: DefaultService, private toastr: ToastrServic
 }
 profilePicture:any;
 userName:any;
-isLoading:Boolean=false;
+marketListingLoader:Boolean=false;
 feedimage:any;
 marketimage:any;
 feed_posts:any[]=[];
@@ -33,6 +33,7 @@ commentsLoader:boolean = false;
 commentText:string = '';
 comments: any = [];
 commentsBtnLoader:boolean = false;
+deleteBtnLoader:boolean = false;
 
 market_posts:any={
   name:"",
@@ -54,7 +55,7 @@ ngOnInit(): void {
 
 loadMarketListings() {
   try {
-    this.postLoader = true;
+    this.marketListingLoader = true;
     this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API, {username:this.userName}).subscribe((data: any) => {
       if(data.marketPosts.length) {
         data.marketPosts.forEach((element:any, index:any) => {
@@ -62,22 +63,22 @@ loadMarketListings() {
         });
         this.marketPosts = data['marketPosts'];
       }
-      this.postLoader = false;
+      this.marketListingLoader = false;
     });
   } catch(e) {
-    this.postLoader = false;
+    this.marketListingLoader = false;
     this.toastr.error("Error filtering posts");
   }
 }
 
 loadFeedData() {
-  this.isLoading = true;
+  this.postLoader = true;
   this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{username:this.userName}).subscribe((data: any) => {
     data.posts.forEach((element:any, index:any) => {
       data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
     });
     this.feed_posts = data.posts;
-    this.isLoading = false;
+    this.postLoader = false;
   });
 }
   
@@ -143,9 +144,11 @@ onDelete_feed(id:any){
 
 }
 onDelete_market(postIndex:any){
+  this.deleteBtnLoader = true;
   const postIdToDelete = this.marketPosts[postIndex]._id;
   this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, {username:this.userName, postId:postIdToDelete}).subscribe(() => {
-    this.marketPosts.splice(postIndex, 1); 
+    this.marketPosts.splice(postIndex, 1);
+    this.deleteBtnLoader = false; 
   });
 }
 

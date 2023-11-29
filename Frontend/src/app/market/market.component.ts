@@ -41,6 +41,17 @@ ngOnInit(): void {
   isDropdownOpen = false;
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
+    this.formData={
+      title:'',
+      content:'',
+      image:'',
+      createdAt:'',
+      year_of_purchase:'',
+      address:'',
+      city:'',
+      state:'',
+      country:'',
+    }
   }
 
 
@@ -81,9 +92,10 @@ ngOnInit(): void {
         this.toastr.success("Tool listed successfully");
         let response = data['data'];
         this.loadPosts();
+        this.toggleDropdown();
       },
       (err: any) => {
-        this.toastr.error("Error in fetching posts! \n Please try again");
+        this.toastr.error("Error listing your tool! \n Please try again");
         this.createPostBtnLoader = false;
       // this.loadingData = false;
       }
@@ -126,11 +138,13 @@ ngOnInit(): void {
       this.filterParams.isApplied = true;
       this.postLoader = true;
       this.defaultService.httpPostCall(environment.FILTER_MARKET_POSTS_API, {...this.filterParams}).subscribe((data: any) => {
-        if(data.marketPosts.length) {
+        if(data.marketPosts && data.marketPosts.length) {
           data.marketPosts.forEach((element:any, index:any) => {
             data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
           });
           this.posts = data['marketPosts'];
+        } else {
+          this.filterParams.isApplied = false;
         }
         this.postLoader = false;
       });

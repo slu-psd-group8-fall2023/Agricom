@@ -27,11 +27,11 @@
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 300px; /* Increase the min-width to make it wider */
+    min-width: 500px; /* Increase the min-width to make it wider */
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     right: 0;
     border-radius: 1cm;
-    background-color: rgb(247, 244, 243);
+    background-color: rgb(255 255 255 / 92%);
 }
 #name,#picture,#address,#description{
     width: 100%;
@@ -80,3 +80,10 @@ margin-left: 100px;
     background-color: rgb(211, 235, 233);
 }
 
+.filter-form {
+    width: 70%;
+}
+
+.filter-params {
+    height: 2rem;
+}

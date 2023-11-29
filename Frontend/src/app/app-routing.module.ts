@@ -11,8 +11,8 @@ import { ProfileComponent } from './profile/profile.component';
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'market', component: MarketComponent },
-  { path : 'profile', component: ProfileComponent},
+  { path: 'market', component: MarketComponent, canActivate: [AuthGuard]  },
+  { path : 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'feed', component: FeedComponent, canActivate: [AuthGuard] },
   { path: 'detect', component: DetectComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: 'feed' }

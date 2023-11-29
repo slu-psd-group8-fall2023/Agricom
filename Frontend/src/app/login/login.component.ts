@@ -36,6 +36,7 @@ export class LoginComponent {
       password: '',
       newPassword: '',
       confirmNewPassword: '',
+      confirmPassword: '',
       token: '',
       passwordNoMatch: false,
       errorMessage: ''
@@ -67,6 +68,14 @@ export class LoginComponent {
       username: this.authCtrl.email,
       password: this.authCtrl.password
     };
+    if(!this.validateEmail(this.authCtrl.email)) {
+      this.toastr.error("Invalid email", "Form validation error");
+      return;
+    }
+    if(!this.authCtrl.password) {
+      this.toastr.error("Please enter password", "Form validation error");
+      return;
+    }
     try {
       this.authenticationService.login(params.username, params.password)
             .pipe(first())
@@ -77,7 +86,7 @@ export class LoginComponent {
                     this.router.navigate([returnUrl]);
                 },
                 error: error => {
-                  this.authCtrl.errorMessage = error;
+                  this.authCtrl.errorMessage = error.error.error;
                 }
             });
     } catch(e) {
@@ -91,13 +100,35 @@ export class LoginComponent {
       username: this.authCtrl.email,
       password: this.authCtrl.password
     };
+    if(this.authCtrl.password != this.authCtrl.confirmPassword) {
+      this.toastr.error("Passwords didn't match", "Form validation error");
+      return;
+    }
+    if(!this.authCtrl.name) {
+      this.toastr.error("Please enter Name", "Form validation error");
+      return;
+    }
+    if(!this.validateEmail(this.authCtrl.email)) {
+      this.toastr.error("Invalid email", "Form validation error");
+      return;
+    }
+    if(!this.authCtrl.password) {
+      this.toastr.error("Please enter password", "Form validation error");
+      return;
+    }
+    
     try {
       this.defaultService.httpPostCall(environment.SIGNUP_API, params).subscribe(
         data => {
-          this.toastr.success("You can now continue to login", "Signup Successful");
-          this.showLogin();
+          if(data.error) {
+            this.toastr.error(data.error);
+          } else {
+            this.toastr.success("You can now continue to login", "Signup Successful");
+            this.showLogin();
+          }
         },
         err => {
+          this.authCtrl.errorMessage = err.error.error;
           console.log(err);
         }
       )
@@ -106,10 +137,18 @@ export class LoginComponent {
     }
   }
 
+  checkEmail() {
+
+  }
+
   async forgotPasssword() {
     let params = {
       email: this.authCtrl.email
     };
+    if(!this.validateEmail(this.authCtrl.email)) {
+      this.toastr.error("Invalid email", "Form validation error");
+      return;
+    }
     try {
       this.defaultService.httpPostCall(environment.FORGOT_PASS_API, params).subscribe(
         data => {
@@ -118,6 +157,7 @@ export class LoginComponent {
           this.showResetPassword();
         },
         err => {
+          this.toastr.error("Please enter a valid email", "User doesn't exist");
           console.log(err);
         }
       )
@@ -128,7 +168,16 @@ export class LoginComponent {
 
   async resetPasssword() {
     if(this.authCtrl.newPassword != this.authCtrl.confirmNewPassword) {
+      this.toastr.error("Passwords do not match", "Form validation error");
       this.authCtrl.errorMessage = 'Passwords do not match';
+      return;
+    }
+    if(!this.authCtrl.token) {
+      this.toastr.error("Please enter a valid token", "Form validation error");
+      return;
+    }
+    if(!this.authCtrl.newPassword) {
+      this.toastr.error("Please enter password", "Form validation error");
       return;
     }
     let params = {
@@ -144,6 +193,8 @@ export class LoginComponent {
           this.showLogin();
         },
         err => {
+          // this.authCtrl.errorMessage = err.error.error;
+          this.toastr.error(err.error.error, "Request Error");
           console.log(err);
         }
       )
@@ -151,4 +202,12 @@ export class LoginComponent {
       this.authCtrl.errorMessage = e;
     }
   }
+
+  validateEmail(email:string){
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 }
