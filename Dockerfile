@@ -9,8 +9,8 @@ COPY Frontend/. /usr/src/app/Frontend/
 COPY start.sh/. /usr/src/app/
 COPY package.json/. /usr/src/app/
 
-CMD ["cd", "~"]
-RUN sudo npm install -f
+# CMD ["cd", "~"]
+# RUN sudo npm install -f
 # CMD ["npm", "install", "-f"]
 EXPOSE 4200
 CMD ["sh","./start.sh"]
