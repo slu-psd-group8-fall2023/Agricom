@@ -50,5 +50,4 @@ workflows:
     build_and_deploy:
       jobs:
         - build_and_push
-            app-dir: ~/project/Backend 
 
