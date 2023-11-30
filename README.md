@@ -1,3 +1,5 @@
+## Build : [![Agricom](https://circleci.com/gh/slu-psd-group8-fall2023/Agricom.svg?style=svg)](https://circleci.com/gh/slu-psd-group8-fall2023/Agricom)
+
 # ProjectName
 Agricom
 
