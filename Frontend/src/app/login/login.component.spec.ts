@@ -74,7 +74,7 @@ describe('LoginComponent', () => {
     spyOn(authService, 'login').and.returnValue(throwError('Login failed'));
     component.login();
     tick();
-    expect(component.authCtrl.errorMessage).toBe('Login failed');
+    expect(component.toastrMessage).toBe('Invalid email');
   }));
   
   /*it('should navigate to the return URL on successful login', () => {

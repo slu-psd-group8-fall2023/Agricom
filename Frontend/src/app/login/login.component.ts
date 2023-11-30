@@ -14,6 +14,7 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class LoginComponent {
   authCtrl:any;
+  toastrMessage:any;
   constructor(private defaultService:DefaultService,
     private authenticationService: AuthenticationService,
     private router: Router,
@@ -69,11 +70,13 @@ export class LoginComponent {
       password: this.authCtrl.password
     };
     if(!this.validateEmail(this.authCtrl.email)) {
-      this.toastr.error("Invalid email", "Form validation error");
+      this.toastrMessage = "Invalid email"
+      this.toastr.error(this.toastrMessage, "Form validation error");
       return;
     }
     if(!this.authCtrl.password) {
-      this.toastr.error("Please enter password", "Form validation error");
+      this.toastrMessage = "Please enter password";
+      this.toastr.error(this.toastrMessage, "Form validation error");
       return;
     }
     try {
@@ -193,7 +196,7 @@ export class LoginComponent {
           this.showLogin();
         },
         err => {
-          // this.authCtrl.errorMessage = err.error.error;
+          this.authCtrl.errorMessage = err.error.error;
           this.toastr.error(err.error.error, "Request Error");
           console.log(err);
         }
