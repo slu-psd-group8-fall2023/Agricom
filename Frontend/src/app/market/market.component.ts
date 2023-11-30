@@ -143,7 +143,9 @@ ngOnInit(): void {
             data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
           });
           this.posts = data['marketPosts'];
+          this.filterParams.isApplied = true;
         } else {
+          this.posts = [];
           this.filterParams.isApplied = false;
         }
         this.postLoader = false;
