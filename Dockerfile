@@ -4,10 +4,10 @@ WORKDIR /usr/src/app
 
 RUN sudo npm install -g @angular/cli 
 
-COPY Backend/. /usr/src/app/Backend/
-COPY Frontend/. /usr/src/app/Frontend/
-COPY start.sh/. /usr/src/app/
-COPY package.json/. /usr/src/app/
+COPY Backend/. ~/Backend/
+COPY Frontend/. ~/Frontend/
+COPY start.sh/. ~
+COPY package.json/. ~
 
 # CMD ["cd", "~"]
 # RUN sudo npm install -f
