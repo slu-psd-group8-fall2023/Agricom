@@ -24,6 +24,11 @@ export class FeedComponent {
   isDropdownOpen = false;
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
+    this.formData = {
+      title: '',
+      picture: '',
+      description: ''
+    }
   }
   // app.ts
   data: any;
@@ -67,6 +72,7 @@ export class FeedComponent {
           this.loadInitialUserData();
           console.log(response);
           this.createPostBtnLoader = false;
+          this.toggleDropdown();
         },
         (err: any) => {
           this.toastr.error("Error creating post! \n Please try again");
