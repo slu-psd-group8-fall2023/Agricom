@@ -16,18 +16,29 @@
       <div *ngIf="feed_posts.length > 0; else noDataMessage">
         <!-- <button class="btn btn-primary">Discussion Box</button> -->
         <div *ngFor="let item of feed_posts" class="card mb-4 custom-card">
-          <img class="card-img-top" [src]="item.image" *ngIf="feedimage" alt="">
-          <div class="card-body">
-            <h5 class="card-title">{{ item.title }}</h5>
-            <p class="card-text">{{ item.content }}</p>
-            <button class="btn btn-primary m-1" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
-            <button class="btn btn-danger" (click)="onDelete_feed(item.id)">Delete</button>
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              <img class="card-img" [src]="item.image" alt="" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ item.title }}</h5>
+                <p class="card-text">{{ item.content }}</p>
+                <button class="btn btn-primary m-1" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
+                <button class="btn btn-secondary" disabled>Edit</button>
 
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <div *ngIf="postLoader" style="height: 300px;" class="text-center mt-3">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
       <ng-template #noDataMessage>
-        <div class="text-center mt-3">
+        <div class="text-center mt-3" *ngIf="!postLoader">
           <h3>No posts found</h3>
         </div>
       </ng-template>
@@ -73,39 +84,42 @@
       <h1>Tools you Listed</h1>
     </div>
 
-    <div class="container mt-4" style="max-height: 300; overflow-y: scroll;">
+    <div class="container mt-4" style="max-height: 300px; overflow-y: scroll;">
       <div *ngIf="marketPosts.length > 0; else noData2Message">
         <div *ngFor="let post of marketPosts; let i = index" class="card mb-4">
           <div class="row no-gutters">
             <div class="col-md-4">
-              <img [src]="post.image" class="card-img" alt="Post Image">
+              <img [src]="post.image" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-title">{{ post.name }}</h5>
+                <h5 class="card-title">{{ post.title }}</h5>
                 <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year_of_purchase }}</p>
                 <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
                 <p class="card-text">{{ post.content }}</p>
 
                 <!-- Delete Button -->
-                <button class="btn btn-danger" (click)="onDelete_market(post.id)">Delete</button>
+                <div style="justify-content: space-between;">
+                  <button class="btn btn-secondary" disabled title="Coming soon...">Edit</button>
+                  <button class="btn btn-danger" style="margin-left: 2%;" [disabled]="deleteBtnLoader" (click)="onDelete_market(i)">Delete <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="deleteBtnLoader"></span></button>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div *ngIf="isLoading" class="text-center mt-3">
-          <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        </div>
-
+        
         <!-- Infinite Scroll -->
         <!-- <div (scroll)="onScroll()" style="height: 200px; overflow-y: scroll;">
         </div> -->
       </div>
+      <div *ngIf="marketListingLoader" style="height: 300px;" class="text-center mt-3">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
       <ng-template #noData2Message>
-        <div class="text-center mt-3">
+        <div class="text-center mt-3" *ngId="!marketListingLoader">
           <h3>No market listings found.</h3>
         </div>
       </ng-template>

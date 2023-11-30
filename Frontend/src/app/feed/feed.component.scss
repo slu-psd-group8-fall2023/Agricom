@@ -45,11 +45,13 @@ form {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 300px; /* Increase the min-width to make it wider */
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    min-width: 500px; /* Increase the min-width to make it wider */
+    box-shadow: -3px 10px 20px 2px rgb(0 0 0 / 81%);
     right: 0;
     border-radius: 1cm;
-    background-color: rgb(247, 244, 243);
+    // background-color: rgb(247, 244, 243);
+    background-color: rgb(86 176 81 / 21%);
+    backdrop-filter: blur(10px);
 }
 #title,#picture,#description{
     width: 100%;
@@ -94,7 +96,7 @@ margin-left: 100px;
     display: flex;
     flex-direction: column;
     width: 100%; /* Card will take the full width of the container */
-    max-width: 400px; /* Adjust the maximum width as needed */
+    max-width: 600px; /* Adjust the maximum width as needed */
     margin: 0 auto; /* Center the card horizontally */
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -119,4 +121,20 @@ margin-left: 100px;
 
 .pb-10 {
     padding-bottom: 10px;
+}
+
+// #dropdown-button:hover {
+//     back
+// }
+
+@media screen and (max-width: 600px) {
+    .custom-card {
+      width: 80% !important; /* The width is 100%, when the viewport is 800px or smaller */
+    }
+    #dropdown-button {
+        width: auto !important;
+    }
+    #dropdown-content {
+        min-width: 300px;
+    }
 }

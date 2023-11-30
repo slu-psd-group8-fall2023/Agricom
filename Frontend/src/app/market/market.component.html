@@ -1,29 +1,29 @@
 <!--filter code-->
 <div class="container" style="padding-top: 80px;">
 <!-- <br><br><br><br> -->
-<form [formGroup]="form" class="row g-3 align-items-end">
+<form [formGroup]="form" class="row g-3 align-items-end filter-form">
   <div class="col-md-3 mb-3">
     <label for="country" class="form-label">Country:</label>
-    <input type="text" id="country" formControlName="country" [(ngModel)]="filterParams.country" class="form-control">
+    <input type="text" id="country" formControlName="country" [(ngModel)]="filterParams.country" class="form-control filter-params">
   </div>
 
   <div class="col-md-3 mb-3">
     <label for="state" class="form-label">State:</label>
-    <input type="text" id="state" formControlName="state" [(ngModel)]="filterParams.state" class="form-control">
+    <input type="text" id="state" formControlName="state" [(ngModel)]="filterParams.state" class="form-control filter-params">
   </div>
 
   <div class="col-md-3 mb-3">
     <label for="city" class="form-label">City:</label>
-    <input type="text" id="city" formControlName="city" [(ngModel)]="filterParams.city" class="form-control">
+    <input type="text" id="city" formControlName="city" [(ngModel)]="filterParams.city" class="form-control filter-params">
   </div>
 
   <div class="col-md-3 mb-3 row text-center">
     <!-- <label for="city" class="form-label"></label> -->
     <div class="col-md-6">
-      <button type="submit" class="btn btn-primary" (click)="filterPosts()">Submit</button>
+      <button type="submit" class="btn btn-primary btn-sm" (click)="filterPosts()">Filter</button>
     </div>
     <div class="col-md-6">
-      <button type="submit" [disabled]="!filterParams.isApplied" (click)="loadPosts()" class="btn">Clear</button>
+      <button type="submit" [disabled]="!filterParams.isApplied" (click)="loadPosts()" class="btn btn-sm btn-secondary">Clear</button>
     </div>
   </div>
 </form>
@@ -33,7 +33,7 @@
 <div>
     <div id="post-bar">
         <div class="dropdown-container">
-            <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">Place</button>
+            <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">List tool</button>
             <div class="dropdown-content mt-2" id="dropdown-content"
                 [style.display]="isDropdownOpen ? 'block' : 'none'" style="max-height: 400px; overflow-y: auto;">
                 <form style="padding: 3% !important;">
@@ -98,11 +98,12 @@
     <div *ngFor="let post of posts; let i = index" class="card mb-4">
       <div class="row no-gutters">
         <div class="col-md-4">
-          <img [src]="post.image" class="card-img" alt="Post Image">
+          <img [src]="post.image" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
         </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title">{{ post.name }}</h5>
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text"><strong>Created By:</strong> {{ post.username }}</p>
             <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year_of_purchase }}</p>
             <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
   
@@ -111,8 +112,8 @@
                 <p class="card-text"><strong>Address:</strong> {{ post.address }}</p>
               </div>
               <div class="col-md-6">
-                <p class="card-text"><strong>City:</strong> {{ post.city }}</p>
-                <p class="card-text"><strong>State:</strong> {{ post.state }}</p>
+                <p class="card-text" style="margin-bottom: 0 !important;"><strong>City:</strong> {{ post.city }}</p>
+                <p class="card-text" style="margin-bottom: 0 !important;"><strong>State:</strong> {{ post.state }}</p>
                 <p class="card-text"><strong>Country:</strong> {{ post.country }}</p>
               </div>
             </div>
@@ -120,7 +121,7 @@
             <p class="card-text">{{ post.content }}</p>
   
             <!-- Delete Button -->
-            <button class="btn btn-danger" *ngIf="post.username==user.username" (click)="onDelete(i)">Delete</button>
+            <!-- <button class="btn btn-danger" *ngIf="post.username==user.username" (click)="onDelete(i)">Delete</button> -->
           </div>
         </div>
       </div>
