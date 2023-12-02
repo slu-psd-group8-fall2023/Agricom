@@ -83,6 +83,16 @@ async function getCommentsForPost(req, res) {
 }
 
 /**
+ * Handle deleteUserPosts
+ * @param {object} req
+ * @param {object} res
+ */
+async function deleteUserPosts(req, res) {
+  const deletepostres = await userpost.deleteUserPost(req, res);
+  return deletepostres;
+}
+
+/**
  * handles MarketUserPost
  * @param {object} req
  * @param {object} res
@@ -131,6 +141,7 @@ module.exports = {
   retrievePosts,
   addCommentToPost,
   getCommentsForPost,
+  deleteUserPosts,
   MarketUserPost,
   retrieveMarketPosts,
   filterMarketPosts,

@@ -30,12 +30,12 @@ describe("userLogin", () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      error: "Username and password are required.",
+      error: "Email and password are required.",
     });
   });
 
   it("should return 404 User not found if the user is not in the database", async () => {
-    const req = { body: { username: "nonexistent", password: "password" } };
+    const req = { body: { email: "nonexistent", password: "password" } };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -50,13 +50,13 @@ describe("userLogin", () => {
   });
 
   it("should return 401 Unauthorized if the password is incorrect", async () => {
-    const req = { body: { username: "existing", password: "password" } };
+    const req = { body: { email: "existing", password: "password" } };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
-    const user = { username: "existing", password: "hashedPassword" };
+    const user = { email: "existing", password: "hashedPassword" };
     User.findOne.mockResolvedValue(user);
     bcrypt.compare.mockResolvedValue(false);
 
@@ -67,13 +67,13 @@ describe("userLogin", () => {
   });
 
   it("should return 200 Login successful for a valid user", async () => {
-    const req = { body: { username: "existing", password: "password" } };
+    const req = { body: { email: "existing", password: "password" } };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
-    const user = { username: "existing", password: "hashedPassword" };
+    const user = { email: "existing", password: "hashedPassword" };
     User.findOne.mockResolvedValue(user);
     bcrypt.compare.mockResolvedValue(true);
 
@@ -99,15 +99,15 @@ describe("userSignUp", () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
-      error: "Name, Username, and password are required.",
+      error: "email, Username, and password are required.",
     });
   });
 
   it("should create a new user when valid data is provided", async () => {
     const req = {
       body: {
-        name: "John Doe",
-        username: "johndoe",
+        username: "John Doe",
+        email: "johndoe@gmail.com",
         password: "password",
       },
     };
@@ -120,7 +120,7 @@ describe("userSignUp", () => {
 
     await userSignUp(req, res);
 
-    const createdUser = await User.findOne({ username: "johndoe" });
+    const createdUser = await User.findOne({ username: "johndoe@gmail.com" });
     expect(createdUser).not.toBeNull();
   });
 
@@ -130,8 +130,8 @@ describe("userSignUp", () => {
 
     const req = {
       body: {
-        name: "John Doe",
-        username: "johndoe@example.com",
+        username: "John Doe",
+        email: "johndoe@example.com",
         password: "password",
       },
     };
@@ -144,7 +144,7 @@ describe("userSignUp", () => {
     await userSignUp(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(jsonMock).toHaveBeenCalledWith({
-      error: "User already exists on this mail.",
+      error: "Username already used.",
     });
   });
 
@@ -153,7 +153,7 @@ describe("userSignUp", () => {
     User.findOne.mockRejectedValue(new Error("Some server error"));
 
     const req = {
-      body: { name: "John Doe", username: "******", password: "*****" },
+      body: { username: "John Doe", email: "******", password: "*****" },
     };
     const jsonMock = jest.fn();
     const res = {

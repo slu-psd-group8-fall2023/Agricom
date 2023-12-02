@@ -7,17 +7,17 @@ const User = require("./models/User");
  */
 async function userLogin(req, res) {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     //Not provided then send Respond with a 400 Bad Request if data is missing
-    if (!username || !password) {
+    if (!email || !password) {
       return res
         .status(400)
-        .json({ error: "Username and password are required." });
+        .json({ error: "Email and password are required." });
     }
 
     // Find the user by the provided username
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ error: "User not found." });
@@ -42,19 +42,22 @@ async function userLogin(req, res) {
  */
 async function userSignUp(req, res) {
   try {
-    const { name, username, password } = req.body;
+    const { username, email, password } = req.body;
 
     // Check if name, username, and password are provided
-    if (!name || !username || !password) {
+    if (!email || !username || !password) {
       return res
         .status(400)
-        .json({ error: "Name, Username, and password are required." });
+        .json({ error: "email, Username, and password are required." });
     }
 
     // Find the user by the provided username
     const user = await User.findOne({ username });
+    const emailId = await User.findOne({ email });
 
     if (user) {
+      return res.status(200).json({ error: "Username already used." });
+    } else if (emailId) {
       return res
         .status(200)
         .json({ error: "User already exists on this mail." });
@@ -65,8 +68,8 @@ async function userSignUp(req, res) {
 
     // Create a new user with the hashed password
     const newUser = new User({
-      name,
       username,
+      email,
       password: hashedPassword,
     });
 
