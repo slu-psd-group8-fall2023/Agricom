@@ -1,13 +1,16 @@
-FROM node:14-slim
+FROM circleci/node:latest-browsers
 
 WORKDIR /usr/src/app
 
-COPY Backend/package*.json ./
+RUN sudo npm install -g @angular/cli 
 
-RUN npm install
+COPY Backend/. ~/Backend/
+COPY Frontend/. ~/Frontend/
+COPY start.sh/. ~
+COPY package.json/. ~
 
-COPY Backend/. /usr/src/app/Backend/
-
-EXPOSE 3000
-
-CMD [ "node", "Backend/app.js" ]
+# CMD ["cd", "~"]
+# RUN sudo npm install -f
+# CMD ["npm", "install", "-f"]
+EXPOSE 4200
+CMD ["sh","./start.sh"]
