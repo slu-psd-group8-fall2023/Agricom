@@ -71,11 +71,11 @@ async function retrievePosts(req, res) {
  */
 async function addCommentToPost(req, res) {
   try {
-    const { _id } = req.params; // Extract the post ID from the URL
-    const { username, content, createdAt, postId } = req.body;
+    const { postId } = req.params; // Extract the post ID from the URL
+    const { username, content, createdAt } = req.body;
 
     // Find the post by its ID
-    const post = await Post.findOne({_id: _id??postId});
+    const post = await Post.findOne({ postId });
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -104,10 +104,10 @@ async function addCommentToPost(req, res) {
  */
 async function getCommentsForPost(req, res) {
   try {
-    const { postId } = req.body; // Extract the post ID from the URL
+    const { postId } = req.params; // Extract the post ID from the URL
 
     // Find the post by its ID
-    const post = await Post.findOne({_id: postId});
+    const post = await Post.findOne({ postId });
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -133,9 +133,46 @@ async function getCommentsForPost(req, res) {
   }
 }
 
+/**
+ * Function to handle delete users post
+ */
+async function deleteUserPost(req, res) {
+  try {
+    const { username, postId } = req.body;
+
+    // Check if postId is provided
+    if (!postId) {
+      return res.status(400).json({ error: "postId parameter is required." });
+    }
+
+    // Find the user post by postId
+    const marketPost = await Post.findById(postId);
+
+    // Check if the user post exists
+    if (!marketPost) {
+      return res.status(404).json({ error: "User post not found." });
+    }
+
+    if (marketPost.username.toLowerCase() !== username.toLowerCase()) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized. You do not own this post." });
+    }
+
+    // Delete the user post
+    await Post.findByIdAndDelete(postId);
+
+    res.status(200).json({ message: "User post deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting user post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   userPost,
   retrievePosts,
   addCommentToPost,
   getCommentsForPost,
+  deleteUserPost,
 };

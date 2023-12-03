@@ -34,6 +34,7 @@ app.post("/posts", api.userPost);
 app.post("/retrieveposts", api.retrievePosts);
 app.post("/postcomments", api.addCommentToPost);
 app.post("/getpostcomments", api.getCommentsForPost);
+app.post("/deleteuserpost", api.deleteUserPosts);
 app.post("/marketpost", api.MarketUserPost);
 app.post("/retrievemarketposts", api.retrieveMarketPosts);
 app.post("/filtermarketposts", api.filterMarketPosts);

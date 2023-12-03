@@ -3,6 +3,7 @@ const {
   retrievePosts,
   addCommentToPost,
   getCommentsForPost,
+  deleteUserPost,
 } = require("../userpost");
 const User = require("../models/User");
 const Post = require("../models/Post");
@@ -316,7 +317,7 @@ describe("getCommentsForPost", () => {
     Post.findOne.mockResolvedValue(null);
 
     const req = {
-      body: { postId },
+      params: { postId },
     };
 
     const res = {
@@ -338,7 +339,7 @@ describe("getCommentsForPost", () => {
     Post.findOne.mockRejectedValue(new Error("Database error"));
 
     const req = {
-      body: {  },
+      params: {},
     };
 
     const res = {
@@ -380,7 +381,7 @@ describe("getCommentsForPost", () => {
 
     // Create mock request and response objects
     const req = {
-      body: { postId },
+      params: { postId },
     };
 
     const res = {
@@ -394,5 +395,278 @@ describe("getCommentsForPost", () => {
     // Assertions
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ comments: mockPost.Comments });
+  });
+});
+
+/**
+ * Test cases for deleteUserPosts function
+ */
+describe("deleteUserPost function", () => {
+  it("should delete a market post and return success message", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({ _id: postId, username });
+
+    // Mock Post.findByIdAndDelete to simulate successful deletion
+    Post.findByIdAndDelete.mockResolvedValueOnce({});
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "User post deleted successfully.",
+    });
+  });
+
+  it("should return an error if the post does not exist", async () => {
+    const postId = "nonexistent-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return null, simulating post not found
+    Post.findById.mockResolvedValueOnce(null);
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "User post not found." });
+  });
+
+  it("should return an error if the username is incorrect", async () => {
+    const postId = "valid-post-id";
+    const username = "incorrect-username";
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({
+      _id: postId,
+      username: "valid-username",
+    });
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Unauthorized. You do not own this post.",
+    });
+  });
+
+  it("should return an error if postId is missing", async () => {
+    const username = "valid-username";
+
+    const req = { body: { username } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "postId parameter is required.",
+    });
+  });
+
+  it("should return an error if username is missing", async () => {
+    const postId = "valid-post-id";
+
+    const req = { body: { postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "User post not found." });
+  });
+
+  it("should return an error if the user does not own the post", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return a mock post with a different username
+    Post.findById.mockResolvedValueOnce({
+      _id: postId,
+      username: "other-username",
+    });
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Unauthorized. You do not own this post.",
+    });
+  });
+
+  it("should return an error if there is an internal server error during deletion", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({ _id: postId, username });
+
+    // Mock Post.findByIdAndDelete to simulate an internal server error
+    Post.findByIdAndDelete.mockRejectedValueOnce(
+      new Error("Internal Server Error")
+    );
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
+  });
+
+  it("should return an error if there is a database connection failure", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({ _id: postId, username });
+
+    // Mock Post.findByIdAndDelete to simulate a database connection failure
+    Post.findByIdAndDelete.mockRejectedValueOnce(
+      new Error("Database Connection Failure")
+    );
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
+  });
+  it("should delete a market post with valid input and ignore extra fields", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({ _id: postId, username });
+
+    // Mock Post.findByIdAndDelete to simulate successful deletion
+    Post.findByIdAndDelete.mockResolvedValueOnce({});
+
+    const req = { body: { username, postId, extraField: "extraValue" } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "User post deleted successfully.",
+    });
+  });
+
+  it("should return an error for invalid postId format", async () => {
+    const postId = "invalid-post-id!@#";
+    const username = "valid-username";
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "User post not found." });
+  });
+  it("should delete a market post with case-insensitive username", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({ _id: postId, username });
+
+    // Mock Post.findByIdAndDelete to simulate successful deletion
+    Post.findByIdAndDelete.mockResolvedValueOnce({});
+
+    const req = { body: { username: "valid-Username", postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "User post deleted successfully.",
+    });
+  });
+  it("should return an error if the user is not authorized to delete the post", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({
+      _id: postId,
+      username: "valid-username1",
+    });
+
+    const req = { body: { username, postId } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await deleteUserPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Unauthorized. You do not own this post.",
+    });
   });
 });
