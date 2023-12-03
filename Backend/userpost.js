@@ -39,13 +39,21 @@ async function userPost(req, res) {
  */
 async function retrievePosts(req, res) {
   try {
-
     const { username } = req.body;
+
+    // Check if the user exists
+    if (
+      !(await User.findOne({
+        username,
+      }))
+    ) {
+      return res.status(400).json({ error: "User not found." });
+    }
 
     let query = {};
 
     if (username) {
-      query = { username };
+      query = { username: username.toLowerCase() };
     }
     // Find all posts and sort by createdAt in descending order
     const posts = await Post.find(query).sort({ createdAt: -1 });
