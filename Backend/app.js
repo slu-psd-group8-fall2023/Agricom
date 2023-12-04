@@ -3,8 +3,12 @@ const bodyParser = require("body-parser");
 const db = require("./database/db");
 const { cors, handleError } = require("./middleware");
 const api = require("./api");
+const http = require("http");
+const socketIo = require("socket.io");
 
 const app = express();
+const server = http.createServer(app); // Create an HTTP server
+const io = socketIo(server); // Attach WebSocket server to the HTTP server
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json({ limit: "50mb", extended: true }));
@@ -44,6 +48,33 @@ app.post("/editmarketpost", api.editMarketPosts);
 
 // Handle errors
 app.use(handleError);
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  // Example: Broadcasting a message when a post is created
+  socket.on("newFeedPost", (postData) => {
+    console.log("Received new post data from client:", postData);
+    io.emit("newFeedPost", postData); // Broadcast the new post data to all connected clients
+  });
+
+  // Example: Broadcasting a message when a new comment is add to a post
+  socket.on("newComment", (postData) => {
+    console.log("Received commenton the post from client:", postData);
+    io.emit("newComment", postData); // Broadcast the deleted post ID to all connected clients
+  });
+
+  // Example: Broadcasting a message when a new market post is created
+  socket.on("newMarketPost", (postData) => {
+    console.log("Received new post data from client:", postData);
+    io.emit("newMarketPost", postData); // Broadcast the new post data to all connected clients
+  });
+
+  // Handle disconnect event
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
