@@ -100,23 +100,20 @@ async function marketcreatePost(req, res) {
 async function retrieveMarketPosts(req, res) {
   try {
     const { username } = req.body;
+    let query = {};
+    let marketPosts = null;
 
     // Check if the user exists
-    if (
-      !(await User.findOne({
-        username,
-      }))
-    ) {
-      return res.status(400).json({ error: "User not found." });
-    }
-
-    let query = {};
-
     if (username) {
       query = { username: username.toLowerCase() };
+      if (!(await User.findOne({ username }))) {
+        return res.status(400).json({ error: "User not found." });
+      } else {
+        marketPosts = await Marketpost.find(query).sort({ createdAt: -1 });
+      }
+    } else {
+      marketPosts = await Marketpost.find().sort({ createdAt: -1 });
     }
-    // Retrieve all market posts from the database
-    const marketPosts = await Marketpost.find(query).sort({ createdAt: -1 });
 
     // Create an iterator for the market posts array
     const marketPostIterator = new Iterator(marketPosts);
@@ -227,6 +224,85 @@ async function deleteMarketPost(req, res) {
   }
 }
 
+/**
+ * Function to edit a market post
+ */
+async function editMarketPost(req, res) {
+  try {
+    const {
+      postId,
+      username,
+      title,
+      content,
+      image,
+      createdAt,
+      contact,
+      year_of_purchase,
+      address,
+      city,
+      state,
+      country,
+    } = req.body;
+
+    // Checking the individual fields
+    if (
+      !isValidData({
+        username,
+        title,
+        content,
+        createdAt,
+        contact,
+        year_of_purchase,
+        address,
+        city,
+        state,
+        country,
+      })
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Invalid data. Please provide valid data in fields." });
+    }
+
+    // Find the market post by its ID
+    const marketPost = await Marketpost.findById(postId);
+
+    // Check if the market post exists
+    if (!marketPost) {
+      return res.status(404).json({ message: "Market post not found" });
+    }
+
+    // Check if the user is authorized to edit the post
+    if (marketPost.username.toLowerCase() !== username.toLowerCase()) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized. You do not own this market post." });
+    }
+
+    // Update the market post fields
+    marketPost.title = title;
+    marketPost.content = content;
+    marketPost.image = image;
+    marketPost.createdAt = createdAt;
+    marketPost.contact = contact;
+    marketPost.year_of_purchase = year_of_purchase;
+    marketPost.address = address;
+    marketPost.city = city;
+    marketPost.state = state;
+    marketPost.country = country;
+
+    // Save the updated market post
+    await marketPost.save();
+
+    res
+      .status(200)
+      .json({ message: "Market post updated successfully", marketPost });
+  } catch (error) {
+    console.error("Error editing market post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 // Function to check if a given date string is a valid date
 function isValidDate(dateString) {
   const date = new Date(dateString);
@@ -251,4 +327,5 @@ module.exports = {
   retrieveMarketPosts,
   filterMarketPosts,
   deleteMarketPost,
+  editMarketPost,
 };

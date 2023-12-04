@@ -1,4 +1,8 @@
-const { filterMarketPosts, deleteMarketPost } = require("../marketuserpost");
+const {
+  filterMarketPosts,
+  deleteMarketPost,
+  editMarketPost,
+} = require("../marketuserpost");
 const Marketpost = require("../models/Marketpost");
 const Iterator = require("../Iterator");
 
@@ -681,5 +685,246 @@ describe("deleteMarketPost function", () => {
     expect(res.json).toHaveBeenCalledWith({
       error: "Unauthorized. You do not own this post.",
     });
+  });
+});
+
+/**
+ * Testcases for EditmarketPosts
+ */
+describe("editMarketPost Function", () => {
+  it("should edit a post successfully", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+    const req = {
+      body: {
+        postId,
+        username,
+        title: "Updated Title",
+        content: "Updated Content",
+        image: ["new-image-url"],
+        createdAt: Date.now(),
+        contact: 1234567890,
+        year_of_purchase: 2022,
+        address: "Updated Address",
+        city: "Updated City",
+        state: "Updated State",
+        country: "Updated Country",
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Post.findById to return a mock post
+    Marketpost.findById.mockResolvedValueOnce({
+      _id: postId,
+      username,
+      title: "Updated Title",
+      content: "Updated Content",
+      image: ["new-image-url"],
+      createdAt: Date.now(),
+      contact: 1234567890,
+      year_of_purchase: 2022,
+      address: "Updated Address",
+      city: "Updated City",
+      state: "Updated State",
+      country: "Updated Country",
+      save: jest.fn().mockResolvedValueOnce({
+        _id: postId,
+        username,
+        title: "Updated Title",
+        content: "Updated Content",
+        image: ["new-image-url"],
+        createdAt: Date.now(),
+        contact: 1234567890,
+        year_of_purchase: 2022,
+        address: "Updated Address",
+        city: "Updated City",
+        state: "Updated State",
+        country: "Updated Country",
+      }),
+    });
+
+    await editMarketPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it("should return 404 if the market post is not found", async () => {
+    const req = {
+      body: {
+        postId: "non-existent-post-id",
+        username: "valid-username",
+        title: "Updated Title",
+        content: "Updated Content",
+        image: ["new-image-url"],
+        createdAt: Date.now(),
+        contact: 1234567890,
+        year_of_purchase: 2022,
+        address: "Updated Address",
+        city: "Updated City",
+        state: "Updated State",
+        country: "Updated Country",
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Marketpost.findById to return null, simulating a market post not found
+    Marketpost.findById.mockResolvedValueOnce(null);
+
+    await editMarketPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Market post not found" });
+
+    // Ensure that save method is not called on a non-existent market post
+    expect(Marketpost.prototype.save).not.toHaveBeenCalled();
+  });
+  it("should return 403 if the user is not authorized to edit the market post", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    const req = {
+      body: {
+        postId,
+        username: "different-username",
+        title: "Updated Title",
+        content: "Updated Content",
+        image: ["new-image-url"],
+        createdAt: Date.now(),
+        contact: 1234567890,
+        year_of_purchase: 2022,
+        address: "Updated Address",
+        city: "Updated City",
+        state: "Updated State",
+        country: "Updated Country",
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Marketpost.findById to return a mock market post
+    Marketpost.findById.mockResolvedValueOnce({
+      _id: postId,
+      username: "valid-username1",
+      title: "Original Title",
+      content: "Original Content",
+      image: ["original-image-url"],
+      createdAt: Date.now(),
+      contact: 9876543210,
+      year_of_purchase: 2021,
+      address: "Original Address",
+      city: "Original City",
+      state: "Original State",
+      country: "Original Country",
+    });
+
+    await editMarketPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Unauthorized. You do not own this market post.",
+    });
+
+    // Ensure that save method is not called when the user is not authorized
+    expect(Marketpost.prototype.save).not.toHaveBeenCalled();
+  });
+
+  it("should handle internal server error", async () => {
+    const req = {
+      body: {
+        postId: "valid-post-id",
+        username: "valid-username",
+        title: "Updated Title",
+        content: "Updated Content",
+        image: ["new-image-url"],
+        createdAt: Date.now(),
+        contact: 1234567890,
+        year_of_purchase: 2022,
+        address: "Updated Address",
+        city: "Updated City",
+        state: "Updated State",
+        country: "Updated Country",
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Marketpost.findById to throw an error, simulating an internal server error
+    Marketpost.findById.mockRejectedValueOnce(new Error("Some internal error"));
+
+    await editMarketPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
+
+    // Ensure that save method is not called when an error occurs
+    expect(Marketpost.prototype.save).not.toHaveBeenCalled();
+  });
+  it("should return 400 for invalid data in marketcreatePost", async () => {
+    const req = {
+      body: {
+        // Missing 'title' field
+        username: "valid-username",
+        content: "Sample Content",
+        createdAt: Date.now(),
+        contact: 1234567890,
+        year_of_purchase: 2022,
+        address: "Sample Address",
+        city: "Sample City",
+        state: "Sample State",
+        country: "Sample Country",
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await editMarketPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Invalid data. Please provide valid data in fields.",
+    });
+
+    // Ensure that save method is not called when there is invalid data
+    expect(Marketpost.prototype.save).not.toHaveBeenCalled();
+  });
+
+  it("should return 400 for invalid data in marketcreatePost", async () => {
+    const req = {
+      body: {
+        // Missing all fields
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await editMarketPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Invalid data. Please provide valid data in fields.",
+    });
+
+    // Ensure that save method is not called when there is invalid data
+    expect(Marketpost.prototype.save).not.toHaveBeenCalled();
   });
 });

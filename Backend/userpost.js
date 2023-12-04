@@ -40,23 +40,20 @@ async function userPost(req, res) {
 async function retrievePosts(req, res) {
   try {
     const { username } = req.body;
+    let query = {};
+    let posts = null;
 
     // Check if the user exists
-    if (
-      !(await User.findOne({
-        username,
-      }))
-    ) {
-      return res.status(400).json({ error: "User not found." });
-    }
-
-    let query = {};
-
     if (username) {
       query = { username: username.toLowerCase() };
+      if (!(await User.findOne({ username }))) {
+        return res.status(400).json({ error: "User not found." });
+      } else {
+        posts = await Post.find(query).sort({ createdAt: -1 });
+      }
+    } else {
+      posts = await Post.find().sort({ createdAt: -1 });
     }
-    // Find all posts and sort by createdAt in descending order
-    const posts = await Post.find(query).sort({ createdAt: -1 });
 
     const postIterator = new Iterator(posts);
 
@@ -177,10 +174,68 @@ async function deleteUserPost(req, res) {
   }
 }
 
+/**
+ * Function to edit a post
+ */
+async function editPost(req, res) {
+  try {
+    const { postId, username, title, content, image, createdAt } = req.body;
+
+    if (
+      !isValidData({
+        postId,
+        username,
+        title,
+        content,
+        image,
+        createdAt,
+      })
+    ) {
+      return res
+        .status(404)
+        .json({ error: "Invalid data. Please provide valid data in fields." });
+    }
+
+    // Find the post by its ID
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.username.toLowerCase() !== username.toLowerCase()) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized. You do not own this post." });
+    }
+
+    // Update the post fields
+    post.title = title;
+    post.content = content;
+    post.image = image;
+    post.createdAt = createdAt;
+
+    // Save the updated post
+    await post.save();
+
+    res.status(200).json({ message: "Post updated successfully", post });
+  } catch (error) {
+    console.error("Error editing post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+function isValidData(data) {
+  return Object.values(data).every(
+    (value) => value !== undefined && value !== ""
+  );
+}
+
 module.exports = {
   userPost,
   retrievePosts,
   addCommentToPost,
   getCommentsForPost,
   deleteUserPost,
+  editPost,
 };
