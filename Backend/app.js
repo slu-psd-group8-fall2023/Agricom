@@ -35,10 +35,12 @@ app.post("/retrieveposts", api.retrievePosts);
 app.post("/postcomments", api.addCommentToPost);
 app.post("/getpostcomments", api.getCommentsForPost);
 app.post("/deleteuserpost", api.deleteUserPosts);
+app.post("/edituserpost", api.editUserPosts);
 app.post("/marketpost", api.MarketUserPost);
 app.post("/retrievemarketposts", api.retrieveMarketPosts);
 app.post("/filtermarketposts", api.filterMarketPosts);
 app.post("/deletemarketpost", api.deleteMarketPosts);
+app.post("/editmarketpost", api.editMarketPosts);
 
 // Handle errors
 app.use(handleError);

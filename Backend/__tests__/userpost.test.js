@@ -4,6 +4,7 @@ const {
   addCommentToPost,
   getCommentsForPost,
   deleteUserPost,
+  editPost,
 } = require("../userpost");
 const User = require("../models/User");
 const Post = require("../models/Post");
@@ -668,5 +669,198 @@ describe("deleteUserPost function", () => {
     expect(res.json).toHaveBeenCalledWith({
       error: "Unauthorized. You do not own this post.",
     });
+  });
+});
+
+/**
+ * Test cases for editUserPosts function
+ */
+describe("editPost Function", () => {
+  it("should edit a post successfully", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+    const req = {
+      body: {
+        postId,
+        username,
+        title: "Updated Title",
+        content: "Updated Content",
+        image: "new-image-url",
+        createdAt: new Date(),
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({
+      _id: postId,
+      username,
+      title: "Current Title",
+      content: "Current Content",
+      image: "current-image-url",
+      createdAt: new Date(),
+      save: jest.fn().mockResolvedValueOnce({
+        _id: postId,
+        username,
+        title: "Updated Title",
+        content: "Updated Content",
+        image: "new-image-url",
+        createdAt: new Date(),
+      }),
+    });
+
+    await editPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it("should return 404 if the post is not found", async () => {
+    const req = {
+      body: {
+        postId: "non-existent-post-id",
+        username: "valid-username",
+        title: "New Title",
+        content: "Updated Content",
+        image: "new-image-url",
+        createdAt: new Date(),
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Post.findById to return null, simulating a post not found
+    Post.findById.mockResolvedValueOnce(null);
+
+    await editPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
+  });
+
+  it("should return 403 if the user is not authorized to edit the post", async () => {
+    const postId = "valid-post-id";
+    const username = "valid-username";
+
+    const req = {
+      body: {
+        postId,
+        username: "different-username",
+        title: "New Title",
+        content: "Updated Content",
+        image: "new-image-url",
+        createdAt: new Date(),
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Post.findById to return a mock post
+    Post.findById.mockResolvedValueOnce({ _id: postId, username });
+
+    await editPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Unauthorized. You do not own this post.",
+    });
+  });
+
+  it("should handle internal server error", async () => {
+    const req = {
+      body: {
+        postId: "valid-post-id",
+        username: "valid-username",
+        title: "New Title",
+        content: "Updated Content",
+        image: "new-image-url",
+        createdAt: new Date(),
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    // Mock Post.findById to throw an error, simulating an internal server error
+    Post.findById.mockRejectedValueOnce(new Error("Some internal error"));
+
+    await editPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Internal Server Error" });
+  });
+  it("should handle missing or invalid input fields", async () => {
+    const req = {
+      body: {
+        // Missing postId or other required fields
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await editPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
+  });
+
+  it("should handle invalid date format", async () => {
+    const req = {
+      body: {
+        postId: "valid-post-id",
+        username: "valid-username",
+        title: "New Title",
+        content: "Updated Content",
+        image: "new-image-url",
+        createdAt: "",
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await editPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
+  });
+
+  it("should handle editing post with empty content or title", async () => {
+    const req = {
+      body: {
+        postId: "valid-post-id",
+        username: "valid-username",
+        title: "",
+        content: "Updated Content",
+        image: "new-image-url",
+        createdAt: new Date(),
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    await editPost(req, res);
+
+    // Expectations
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
   });
 });
