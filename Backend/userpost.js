@@ -181,6 +181,21 @@ async function editPost(req, res) {
   try {
     const { postId, username, title, content, image, createdAt } = req.body;
 
+    if (
+      !isValidData({
+        postId,
+        username,
+        title,
+        content,
+        image,
+        createdAt,
+      })
+    ) {
+      return res
+        .status(404)
+        .json({ error: "Invalid data. Please provide valid data in fields." });
+    }
+
     // Find the post by its ID
     const post = await Post.findById(postId);
 
@@ -208,6 +223,12 @@ async function editPost(req, res) {
     console.error("Error editing post:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+}
+
+function isValidData(data) {
+  return Object.values(data).every(
+    (value) => value !== undefined && value !== ""
+  );
 }
 
 module.exports = {

@@ -815,7 +815,9 @@ describe("editPost Function", () => {
 
     // Expectations
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Invalid data. Please provide valid data in fields.",
+    });
   });
 
   it("should handle invalid date format", async () => {
@@ -838,7 +840,9 @@ describe("editPost Function", () => {
 
     // Expectations
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Invalid data. Please provide valid data in fields.",
+    });
   });
 
   it("should handle editing post with empty content or title", async () => {
@@ -861,6 +865,8 @@ describe("editPost Function", () => {
 
     // Expectations
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: "Post not found" });
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Invalid data. Please provide valid data in fields.",
+    });
   });
 });
