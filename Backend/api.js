@@ -93,6 +93,16 @@ async function deleteUserPosts(req, res) {
 }
 
 /**
+ * Handle editUserPosts
+ * @param {object} req
+ * @param {object} res
+ */
+async function editUserPosts(req, res) {
+  const editpostres = await userpost.editPost(req, res);
+  return editpostres;
+}
+
+/**
  * handles MarketUserPost
  * @param {object} req
  * @param {object} res
@@ -132,6 +142,16 @@ async function deleteMarketPosts(req, res) {
   return deletepostres;
 }
 
+/**
+ * Handle marketUserPosts
+ * @param {object} req
+ * @param {object} res
+ */
+async function editMarketPosts(req, res) {
+  const editmarketres = await marketpost.editMarketPost(req, res);
+  return editmarketres;
+}
+
 module.exports = {
   handleLogin,
   handleSignup,
@@ -142,8 +162,10 @@ module.exports = {
   addCommentToPost,
   getCommentsForPost,
   deleteUserPosts,
+  editUserPosts,
   MarketUserPost,
   retrieveMarketPosts,
   filterMarketPosts,
   deleteMarketPosts,
+  editMarketPosts,
 };
