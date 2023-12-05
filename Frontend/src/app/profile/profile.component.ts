@@ -122,6 +122,9 @@ async submitComment() {
       (data: any) => {
         this.toastr.success("Succesfully posted comment");
         this.comments = data.post.Comments
+        this.comments.forEach((element:any, index:number)=>{
+          element.createdAt = new Date(element.createdAt).toLocaleDateString()
+        })
         this.commentText = '';
         console.log(data.post._id);
         this.scrollToBottom()

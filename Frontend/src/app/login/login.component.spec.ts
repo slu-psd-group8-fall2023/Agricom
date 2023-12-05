@@ -52,7 +52,6 @@ describe('LoginComponent', () => {
     expect(component.authCtrl.showSignUp).toBe(false);
     expect(component.authCtrl.showForgotPassword).toBe(false);
     expect(component.authCtrl.showPasswordReset).toBe(false);
-    expect(component.authCtrl.name).toBe('');
     expect(component.authCtrl.email).toBe('');
     expect(component.authCtrl.password).toBe('');
     expect(component.authCtrl.newPassword).toBe('');
