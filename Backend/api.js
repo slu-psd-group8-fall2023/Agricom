@@ -1,7 +1,7 @@
 const authUtil = require("./authutil");
 const userpost = require("./userpost");
 const marketpost = require("./marketuserpost.js");
-
+const { io } = require("./app")
 /**
  * handles login
  * @param {object} req
@@ -49,7 +49,7 @@ async function handleResetPassword(req, res) {
  */
 async function userPost(req, res) {
   const postres = await userpost.userPost(req, res);
-  io.emit("newFeedPost", { message: "A new post has been created!" });
+  // io.emit("newFeedPost", { message: "A new post has been created!" });
   return postres;
 }
 
@@ -70,7 +70,7 @@ async function retrievePosts(req, res) {
  */
 async function addCommentToPost(req, res) {
   const commentres = await userpost.addCommentToPost(req, res);
-  io.emit("newcomment", { message: "A new post has been created!" });
+  // io.emit("newcomment", { message: "A new post has been created!" });
   return commentres;
 }
 
@@ -111,7 +111,7 @@ async function editUserPosts(req, res) {
  */
 async function MarketUserPost(req, res) {
   const postres = await marketpost.marketcreatePost(req, res);
-  io.emit("newMarketPost", { message: "A new tools post has been created!" });
+  // io.emit("newMarketPost", { message: "A new tools post has been created!" });
   return postres;
 }
 

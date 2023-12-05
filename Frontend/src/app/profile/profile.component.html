@@ -39,7 +39,7 @@
       </div>
       <ng-template #noDataMessage>
         <div class="text-center mt-3" *ngIf="!postLoader">
-          <h3>No posts found</h3>
+          <h5>No posts found</h5>
         </div>
       </ng-template>
     </div>
@@ -64,7 +64,7 @@
             {{comment.content}}
         </p><hr>
     </ng-container>
-    <ng-container *ngIf="!comments.length">
+    <ng-container *ngIf="!comments.length && !commentsLoader ">
         <small class="text-muted">Nothing happened here!. <br> Start the Discussion by adding a comment</small>
     </ng-container>
   </div>
@@ -119,8 +119,8 @@
         </div>
       </div>
       <ng-template #noData2Message>
-        <div class="text-center mt-3" *ngId="!marketListingLoader">
-          <h3>No market listings found.</h3>
+        <div class="text-center mt-3" *ngIf="!marketListingLoader">
+          <h5>No market listings found.</h5>
         </div>
       </ng-template>
     </div>

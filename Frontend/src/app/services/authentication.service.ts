@@ -26,12 +26,12 @@ export class AuthenticationService {
 
     login(email: string, password: string) {
         return this.http.post<any>(`${environment.LOGIN_API}`, { username:email , email, password })
-            .pipe(map(user => {
+            .pipe(map(userResp => {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
-                user.authdata = window.btoa(email + ':' + password);
-                localStorage.setItem('user', JSON.stringify({...user, email}));
-                this.userSubject.next({...user, email});
-                return user;
+                userResp.authdata = window.btoa(email + ':' + password);
+                localStorage.setItem('user', JSON.stringify({...userResp, email, ...userResp.user}));
+                this.userSubject.next({...userResp, email, ...userResp.user});
+                return userResp;
             }));
     }
 

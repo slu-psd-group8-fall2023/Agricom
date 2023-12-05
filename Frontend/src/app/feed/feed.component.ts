@@ -145,6 +145,9 @@ export class FeedComponent {
     }
     this.defaultService.httpPostCall(environment.GET_COMMENT_API, params).subscribe((data: any) => {
       this.comments = data.comments;
+      this.comments.forEach((element:any, index:number)=>{
+        element.createdAt = new Date(element.createdAt).toLocaleDateString()
+      })
       this.commentsLoader = false;
     });
 

@@ -79,7 +79,7 @@
                 {{comment.content}}
             </p><hr>
         </ng-container>
-        <ng-container *ngIf="!comments.length">
+        <ng-container *ngIf="!comments.length && !commentsLoader">
             <small class="text-muted">Nothing happened here!. <br> Start the Discussion by adding a comment</small>
         </ng-container>
     </div>

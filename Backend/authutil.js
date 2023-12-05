@@ -30,7 +30,7 @@ async function userLogin(req, res) {
       return res.status(401).json({ error: "Invalid password." });
     }
     // Respond with a success message if login is successful
-    res.status(200).json({ message: "Login successful." });
+    res.status(200).json({ message: "Login successful.", user });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ error: "Internal Server Error" });
