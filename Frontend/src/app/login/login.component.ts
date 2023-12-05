@@ -32,7 +32,7 @@ export class LoginComponent {
       showSignUp:false,
       showPasswordReset:false,
       showForgotPassword:false,
-      name: '',
+      username: '',
       email: '',
       password: '',
       newPassword: '',
@@ -66,7 +66,7 @@ export class LoginComponent {
 
   async login() {
     let params = {
-      username: this.authCtrl.email,
+      email: this.authCtrl.email,
       password: this.authCtrl.password
     };
     if(!this.validateEmail(this.authCtrl.email)) {
@@ -80,7 +80,7 @@ export class LoginComponent {
       return;
     }
     try {
-      this.authenticationService.login(params.username, params.password)
+      this.authenticationService.login(params.email, params.password)
             .pipe(first())
             .subscribe({
                 next: () => {
@@ -99,16 +99,16 @@ export class LoginComponent {
 
   async signup() {
     let params = {
-      name: this.authCtrl.name,
-      username: this.authCtrl.email,
+      email: this.authCtrl.email,
+      username: this.authCtrl.username,
       password: this.authCtrl.password
     };
     if(this.authCtrl.password != this.authCtrl.confirmPassword) {
       this.toastr.error("Passwords didn't match", "Form validation error");
       return;
     }
-    if(!this.authCtrl.name) {
-      this.toastr.error("Please enter Name", "Form validation error");
+    if(!this.authCtrl.username) {
+      this.toastr.error("Please enter Username", "Form validation error");
       return;
     }
     if(!this.validateEmail(this.authCtrl.email)) {
