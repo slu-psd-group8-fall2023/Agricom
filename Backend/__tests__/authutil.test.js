@@ -80,7 +80,7 @@ describe("userLogin", () => {
     await userLogin(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ message: "Login successful." });
+    expect(res.json).toHaveBeenCalledWith({ message: "Login successful.", user });
   });
 });
 
