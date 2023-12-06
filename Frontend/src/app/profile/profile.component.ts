@@ -34,7 +34,7 @@ commentText:string = '';
 comments: any = [];
 commentsBtnLoader:boolean = false;
 deleteBtnLoader:boolean = false;
-
+editPostBtnLoader:boolean = false;
 market_posts:any={
   name:"",
   year:"",
@@ -75,11 +75,65 @@ loadFeedData() {
   this.postLoader = true;
   this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{username:this.userName}).subscribe((data: any) => {
     data.posts.forEach((element:any, index:any) => {
+      data.posts[index].imageUri = JSON.parse(JSON.stringify(data.posts[index].image));
       data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
+      data.posts[index].isEditing = false;
     });
     this.feed_posts = data.posts;
     this.postLoader = false;
   });
+}
+
+editPost(postData:any) {
+  postData.isEditing = true;
+}
+
+async savePostEdit(postData:any) {
+  
+  this.editPostBtnLoader = true;
+  console.log("Submitting")
+  
+  try {
+    let params = {
+      postId: {_id:postData._id},
+      username: postData.username,
+      title: postData.title,
+      content: postData.content,
+      image: [postData.tempImage??postData.imageUri[0]],
+      createdAt: postData.createdAt
+    }
+    await this.defaultService.httpPostCall(environment.EDIT_POST_API, params).subscribe(
+      (data: any) => {
+        this.toastr.success("Succesfully created post");
+        this.editPostBtnLoader = false;
+        postData.isEditing = false;
+        postData.image = JSON.parse(JSON.stringify(postData.tempImage));
+        delete postData.tempImage;       
+      },
+      (err: any) => {
+        this.toastr.error("Error creating post! \n Please try again");
+        console.log(err);
+        this.editPostBtnLoader = false
+      }
+    )
+  } catch (e) {
+    this.toastr.error("Error creating post! \n Please try again");
+    this.editPostBtnLoader = false
+  }
+}
+
+cancelPostEdit(postData:any) {
+  postData.isEditing = false;
+  delete postData.tempImage;
+}
+
+handleUpload(event:any, postIndex:any) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    this.feed_posts[postIndex].tempImage = reader.result;
+  };
 }
   
 onScroll(){
