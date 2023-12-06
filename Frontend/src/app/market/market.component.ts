@@ -23,7 +23,9 @@ export class MarketComponent implements OnInit{
   posts: any[] = [];
   postLoader = false;
   user: any;
-  filterParams: any = {}
+  filterParams: any = {};
+  searchTerm: string = '';
+  searchResults: string[] = [];
 
   constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService, private _sanitizer: DomSanitizer) {
     this.form = this.fb.group({
@@ -167,6 +169,11 @@ onScroll() {
     this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, {username:this.user.username, postId:postIdToDelete}).subscribe(() => {
       this.posts.splice(postIndex, 1); 
     });
+  }
+
+
+  onSearch() {
+  
   }
 }
 

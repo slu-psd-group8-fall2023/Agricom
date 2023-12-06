@@ -29,6 +29,8 @@
             </div>
         </div>
     </div>
+
+
     <!-- <br><br><br> -->
     <!-- scrollable-and showing posts on screen -->
     <div class="container" style="padding-top: 80px;" (scroll)="onScroll()" [ngClass]="{'opacity-75':isDropdownOpen}">
@@ -44,6 +46,15 @@
                     <span class="sr-only">Loading...</span>
                 </div>
               </div>
+ <!-- search-box.component.html -->
+ <div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="input-group mb-4">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Type to search...">
+            
+        </div>
+    </div>
+</div>
                     <!-- <button class="btn btn-primary">Discussion Box</button> -->
                 <div *ngFor="let item of data" class="card mb-4 custom-card">
                     <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
