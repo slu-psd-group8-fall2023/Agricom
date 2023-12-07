@@ -47,7 +47,7 @@
                 </div>
               </div>
  <!-- search-box.component.html -->
- <div class="row justify-content-center">
+ <div class="row justify-content-center" *ngIf="!isLoading">
     <div class="col-md-8">
         <div class="input-group mb-4">
             <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Type to search...">

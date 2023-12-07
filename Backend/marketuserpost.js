@@ -99,12 +99,15 @@ async function marketcreatePost(req, res) {
  */
 async function retrieveMarketPosts(req, res) {
   try {
-    const { username } = req.body;
+    const { username, isSearch } = req.body;
     let query = {};
     let marketPosts = null;
 
+    if(isSearch) {
+      marketPosts = await Marketpost.find({username:{"$regex": username}}).sort({ createdAt: -1 });
+    }
     // Check if the user exists
-    if (username) {
+    else if (username) {
       query = { username: username.toLowerCase() };
       if (!(await User.findOne({ username }))) {
         return res.status(400).json({ error: "User not found." });

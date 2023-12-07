@@ -173,7 +173,23 @@ onScroll() {
 
 
   onSearch() {
-  
+    this.postLoader = true;
+    this.resetFilters();
+    try {
+      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API,{username:this.searchTerm, isSearch:true}).subscribe((data: any) => {
+        data.marketPosts.forEach((element:any, index:any) => {
+          data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+        });
+        this.posts = this.posts.concat(data['marketPosts']);
+        this.postLoader = false;
+      }, (error:any)=> {
+        this.postLoader = false;
+        this.toastr.error("Error fetching posts");
+      });
+    } catch (error) {
+      this.postLoader = false;
+      this.toastr.error("Error fetching posts");
+    }
   }
 }
 
