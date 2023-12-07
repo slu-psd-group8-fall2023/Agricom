@@ -66,7 +66,7 @@ class CNN(nn.Module):
 
         return out
 
-
+#indexing all the diseases
 idx_to_classes = {0: 'Apple___Apple_scab',
                   1: 'Apple___Black_rot',
                   2: 'Apple___Cedar_apple_rust',

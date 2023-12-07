@@ -8,7 +8,6 @@ import numpy as np
 import torch
 import pandas as pd
 
-# Load disease and supplement info
 
 
 
@@ -34,7 +33,7 @@ class prediction_data:
         self._pred=pred
         self._disease_info = pd.read_csv('disease_info.csv', encoding='cp1252')
         self._supplement_info = pd.read_csv('supplement_info.csv', encoding='cp1252')
-    def return_disease_data(self):
+    def return_disease_data(self): #gets information about disease of crop
         result = {
             'title': self._disease_info['disease_name'][self._pred],
             'description': self._disease_info['description'][self._pred],
@@ -42,7 +41,7 @@ class prediction_data:
             'image_url': self._disease_info['image_url'][self._pred],
         }
         return result
-    def return_supplement_data(self):
+    def return_supplement_data(self):  #gets infromation about fertilizers
         result = {
             'supplement_name' : self._supplement_info['supplement name'][self._pred],
             'supplement_image_url' : self._supplement_info['supplement image'][self._pred],
@@ -50,6 +49,7 @@ class prediction_data:
         }
         return result
 
+#decorator design pattern
 class decorator(prediction_data):
     def __init__(self,prediction):
         self._prediction=prediction
@@ -73,7 +73,7 @@ class total_data():
 
 app = Flask(__name__)
 CORS(app)
-
+#oncalling api this funtion starts working and provivde information according to request
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
     if 'image' not in request.files:
