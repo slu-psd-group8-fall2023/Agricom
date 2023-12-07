@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AuthenticationService } from '../services/authentication.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
+
 @Component({
   selector: 'app-feed',
   templateUrl: './feed.component.html',
@@ -22,6 +23,9 @@ export class FeedComponent {
   }
 
   isDropdownOpen = false;
+  searchTerm: string = '';
+  searchResults: string[] = [];
+
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
     this.formData = {
@@ -202,5 +206,13 @@ export class FeedComponent {
       modalContentElement.scrollTop = modalContentElement.scrollHeight;
     } catch(err) { }                 
 }
+
+//here is search funtion
+
+onSearch() {
+
+}
+
+
 
 }
