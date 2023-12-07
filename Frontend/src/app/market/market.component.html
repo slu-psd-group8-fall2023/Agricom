@@ -1,7 +1,8 @@
 <!--filter code-->
 <div class="container" style="padding-top: 80px;">
 <!-- <br><br><br><br> -->
-<form [formGroup]="form" class="row g-3 align-items-end filter-form">
+<div class="row justify-content-center mt-0">
+<form [formGroup]="form" class="row align-items-end justify-content-center filter-form ">
   <div class="col-md-3 mb-3">
     <label for="country" class="form-label">Country:</label>
     <input type="text" id="country" formControlName="country" [(ngModel)]="filterParams.country" class="form-control filter-params">
@@ -27,6 +28,7 @@
     </div>
   </div>
 </form>
+</div>
 <!-- </div> -->
   
 <!--placing tool in market-->

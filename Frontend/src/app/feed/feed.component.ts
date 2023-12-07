@@ -210,7 +210,17 @@ export class FeedComponent {
 //here is search funtion
 
 onSearch() {
-
+  this.isLoading = true;
+  this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{username:this.searchTerm, isSearch:true}).subscribe((data: any) => {
+    data.posts.forEach((element:any, index:any) => {
+      data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
+    });
+    this.data = data.posts;
+    this.isLoading = false;
+  }, (error:any)=> {
+    this.isLoading = false;
+    this.toastr.error("Error fetching posts");
+  });
 }
 
 
