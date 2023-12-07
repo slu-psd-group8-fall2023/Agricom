@@ -1,23 +1,28 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { DefaultService } from "../default.service";
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthenticationService } from '../services/authentication.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-
+// import { Socket } from 'ngx-socket-io';
+import { io } from 'socket.io-client';
+import { SocketioService } from "../socket.service";
 
 @Component({
   selector: 'app-feed',
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
 })
-export class FeedComponent {
+export class FeedComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') modalContent!: ElementRef;
 
   authService: any;
   user:any;
-  constructor(config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { 
+  constructor(
+    // private socket: Socket,
+    private socketService: SocketioService,
+    config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { 
     config.backdrop = 'static';
 		config.keyboard = false;
   }
@@ -94,10 +99,24 @@ export class FeedComponent {
   users: any[] = [];
   isLoading = false;
 
-
+  socket:any;
   ngOnInit(): void {
+    this.socket = io("http://localhost:3000");
     this.loadInitialUserData();
+
     this.user = this.authenticationService.userValue;
+    this.socket.on('newFeedPost', (data:any) => {
+      console.log("Socket data");
+      console.log(data)
+      data.forEach((element:any, index:any) => {
+        data[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
+      });
+      this.data = data;
+    });
+  }
+
+  ngOnDestroy() {
+    this.socket.disconnect();
   }
 
   loadInitialUserData() {

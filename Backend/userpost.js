@@ -1,7 +1,7 @@
 const User = require("./models/User");
 const Post = require("./models/Post");
 const Iterator = require("./Iterator");
-
+const { emitMessage } = require("./socketConnection")
 /**
  * Function for user posts
  */
@@ -26,6 +26,9 @@ async function userPost(req, res) {
     });
 
     await newPost.save();
+    
+    const result = await fetchPosts(false, false);
+    emitMessage("newFeedPost", result);
 
     res.status(201).json({ message: "Post created successfully", newPost });
   } catch (error) {
@@ -40,38 +43,43 @@ async function userPost(req, res) {
 async function retrievePosts(req, res) {
   try {
     const { username, isSearch } = req.body;
-    let query = {};
-    let posts = null;
-
-    if(isSearch) {
-      posts = await Post.find({username:{"$regex": username}}).sort({ createdAt: -1 });
-    }
-    // Check if the user exists
-    else if (username) {
-      query = { username: username.toLowerCase() };
-      if (!(await User.findOne({ username }))) {
-        return res.status(400).json({ error: "User not found." });
-      } else {
-        posts = await Post.find(query).sort({ createdAt: -1 });
-      }
-    } else {
-      posts = await Post.find().sort({ createdAt: -1 });
-    }
-
-    const postIterator = new Iterator(posts);
-
-    const result = [];
-    let post = postIterator.next();
-    while (!post.done) {
-      result.push(post.value);
-      post = postIterator.next();
-    }
-
+    
+    const result = await fetchPosts(username, isSearch);
     res.status(200).json({ posts: result });
   } catch (error) {
     console.error("Error retrieving posts:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+}
+
+async function fetchPosts(username, isSearch) {
+  let query = {};
+  let posts = null;
+
+  if(isSearch) {
+    posts = await Post.find({username:{"$regex": username}}).sort({ createdAt: -1 });
+  }
+  // Check if the user exists
+  else if (username) {
+    query = { username: username.toLowerCase() };
+    if (!(await User.findOne({ username }))) {
+      return res.status(400).json({ error: "User not found." });
+    } else {
+      posts = await Post.find(query).sort({ createdAt: -1 });
+    }
+  } else {
+    posts = await Post.find().sort({ createdAt: -1 });
+  }
+
+  const postIterator = new Iterator(posts);
+
+  const result = [];
+  let post = postIterator.next();
+  while (!post.done) {
+    result.push(post.value);
+    post = postIterator.next();
+  }
+  return result
 }
 
 /**
