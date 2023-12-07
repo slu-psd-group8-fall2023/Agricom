@@ -35,9 +35,9 @@ export class DetectComponent {
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('image', this.selectedFile);
-      this.http.post<any>('http://127.0.0.1:5000/submit', formData).subscribe(
+      this.http.post<any>('http://127.0.0.1:5000/submit', formData).subscribe(  //calls api to get iforamtion
         (response:any) => {
-          this.result = response.result;
+          this.result = response.result;// it assigns all the information to local variables
           this.picture_error = false;
           this.response_got=true;
           console.log(this.result)
@@ -49,7 +49,6 @@ export class DetectComponent {
       this.supplement_image_url = this.result.supplement_image_url;
       this.supplement_buy_link = this.result.supplement_buy_link;
 
-      // Now you can use these variables as needed in your component
       
         },
         (error:any) => {
@@ -57,7 +56,7 @@ export class DetectComponent {
           this.response_got=false;
           setTimeout(() => {
             this.result = 'please upload the picture of crop leaf';
-          }, 2000);
+          }, 2000);//it there is no data within 2 seconds it will tell that upload picture, because if provided picture is not leaf of existing disease it will send error after some time.
         }
       );
        

@@ -31,7 +31,7 @@
 </div>
 <!-- </div> -->
   
-<!--placing tool in market-->
+<!--placing tool in market, it is just form to submit all the reqired infomation-->
 <div>
     <div id="post-bar">
         <div class="dropdown-container">
@@ -89,7 +89,7 @@
         </div>
     </div>
 </div>
-
+<!--search bar-->
 <div class="row justify-content-center">
   <div class="col-md-8">
       <div class="input-group mb-4">
@@ -98,7 +98,7 @@
       </div>
   </div>
 </div>
-
+<!--shows information that we got from api call on scrolling-->
 <!-- <div class="container mt-4"> -->
   <div class="d-flex justify-content-center" *ngIf="postLoader">
     <div class="spinner-border m-5" role="status">
@@ -106,7 +106,7 @@
     </div>
   </div>
   <div *ngIf="posts.length > 0; else noDataMessage" >
-    <div *ngFor="let post of posts; let i = index" class="card mb-4">
+    <div *ngFor="let post of posts; let i = index" class="card mb-4"><!--shows information present in posts list-->
       <div class="row no-gutters">
         <div class="col-md-4">
           <img [src]="post.image" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
@@ -138,7 +138,7 @@
       </div>
     </div>
   
-  <div *ngIf="postLoader" class="text-center mt-3">
+  <div *ngIf="postLoader" class="text-center mt-3"><!--it shows loading view when data is loading-->
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>

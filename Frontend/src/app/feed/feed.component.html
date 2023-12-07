@@ -1,5 +1,5 @@
 <div>
-    <div id="post-bar">
+    <div id="post-bar"><!---just normal form which takes information from user and works on dropdown by clicking on post button-->
         <div class="dropdown-container">
             <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">Post</button>
             <div class="dropdown-content mt-2" id="dropdown-content"
@@ -56,7 +56,7 @@
     </div>
 </div>
                     <!-- <button class="btn btn-primary">Discussion Box</button> -->
-                <div *ngFor="let item of data" class="card mb-4 custom-card">
+                <div *ngFor="let item of data" class="card mb-4 custom-card"><!--it displays according to data got from backend on scrollling it calls scrolling funtion for more data-->
                     <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.title }}</h5>
@@ -68,12 +68,12 @@
         </div>
     </div>
 </div>
-
+<!--- this is to show templet on screan if user want to use discussion box-->
 <ng-template #myModal let-modal >
     <!-- <div class="modal-dailog"> -->
     <div class="modal-header">
         <h4 class="modal-title">Discussion Box</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button><!--it works on click y showing templete on screen-->
     </div>
     <div class="modal-body">
         <div class="d-flex justify-content-center" *ngIf="commentsLoader">

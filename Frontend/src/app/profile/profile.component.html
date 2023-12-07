@@ -45,14 +45,14 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <ng-template #noDataMessage>
+      <ng-template #noDataMessage><!-- if there is no objects in posts list it will shows this templete on screen-->
         <div class="text-center mt-3" *ngIf="!postLoader">
           <h5>No posts found</h5>
         </div>
       </ng-template>
     </div>
 
-<ng-template #myModal let-modal >
+<ng-template #myModal let-modal ><!--here too show discussion box and discussion occurred on that particular post-->
   <div class="modal-header">
     <h4 class="modal-title">Discussion Box</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -137,7 +137,7 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <ng-template #noData2Message>
+      <ng-template #noData2Message><!--if there is no market list it shows this templete-->
         <div class="text-center mt-3" *ngIf="!marketListingLoader">
           <h5>No market listings found.</h5>
         </div>

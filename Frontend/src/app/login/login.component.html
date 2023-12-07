@@ -6,6 +6,7 @@
 </head>
 
 <body>
+  <!---login templete -->
   <div class="container form_container">
     <div class="row justify-content-center">
       <div class="col-md-6 mt-5">
@@ -27,7 +28,7 @@
               data-target="#forgotPasswordModal">Reset Password</a></p>
         </div>
 
-        <div class="form" [hidden]="!authCtrl.showSignUp">
+        <div class="form" [hidden]="!authCtrl.showSignUp"><!--it hides and provide showsignup enables onclicking signup-->
           <h2>Sign Up</h2>
           <form>
             <div class="form-group">
@@ -50,7 +51,7 @@
           <p (click)="showLogin()">Already have an account? <a>Sign In</a></p>
         </div>
 
-        <div class="form" [hidden]="!authCtrl.showForgotPassword">
+        <div class="form" [hidden]="!authCtrl.showForgotPassword"><!--it hides and provide forgot password enables onclicking forgot password-->
           <h2>Password Reset</h2>
           <form>
             <div class="form-group">
