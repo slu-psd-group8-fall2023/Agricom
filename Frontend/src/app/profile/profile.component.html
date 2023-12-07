@@ -97,19 +97,30 @@
         <div *ngFor="let post of marketPosts; let i = index" class="card mb-4">
           <div class="row no-gutters">
             <div class="col-md-4">
-              <img [src]="post.image" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <img [src]="post.image" *ngIf="!post.tempImage" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <img class="card-img" *ngIf="post.tempImage" [src]="post.tempImage" alt="" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <input *ngIf="post.isEditing" type="file" (change)="handleMarketPostUpload($event, i)" >
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-title">{{ post.title }}</h5>
-                <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year_of_purchase }}</p>
-                <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
-                <p class="card-text">{{ post.content }}</p>
+                <h5 class="card-title" [attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #marketTitle (input)="post.title = marketTitle.innerText">{{ post.title }}</h5>
+                <p class="card-text"><strong>Year of Purchase:</strong>
+                   <span [attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #yop (input)="post.year_of_purchase = yop.innerText"> {{ post.year_of_purchase }}</span>
+                </p>
+                <p class="card-text"><strong>Contact Number:</strong>
+                  <span [attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #contact (input)="post.contact = contact.innerText"> {{ post.contact }}</span>
+                </p>
+                <p class="card-text"[attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #listingDesc (input)="post.content = listingDesc.innerText">{{ post.content }}</p>
 
                 <!-- Delete Button -->
                 <div style="justify-content: space-between;">
-                  <button class="btn btn-secondary" disabled title="Coming soon...">Edit</button>
-                  <button class="btn btn-danger" style="margin-left: 2%;" [disabled]="deleteBtnLoader" (click)="onDelete_market(i)">Delete <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="deleteBtnLoader"></span></button>
+                  <button *ngIf="!post.isEditing" class="btn btn-secondary m-1" (click)="editMarketPost(post)">Edit</button>
+                  <button *ngIf="!post.isEditing" class="btn btn-danger" [disabled]="deleteBtnLoader" (click)="onDelete_market(i)">Delete <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="deleteBtnLoader"></span></button>
+                  <button *ngIf="post.isEditing" class="btn btn-success m-1" (click)="saveMarketPostEdit(post)">Save 
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="editMarketBtnLoader"></span>
+                  </button>
+                  <button *ngIf="post.isEditing" class="btn btn-danger" (click)="cancelMarketPostEdit(post)">Cancel</button>
+        
                 </div>
               </div>
             </div>

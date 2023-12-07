@@ -35,6 +35,7 @@ comments: any = [];
 commentsBtnLoader:boolean = false;
 deleteBtnLoader:boolean = false;
 editPostBtnLoader:boolean = false;
+editMarketBtnLoader:boolean = false;
 market_posts:any={
   name:"",
   year:"",
@@ -59,7 +60,9 @@ loadMarketListings() {
     this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API, {username:this.userName}).subscribe((data: any) => {
       if(data.marketPosts.length) {
         data.marketPosts.forEach((element:any, index:any) => {
+          data.marketPosts[index].imageUri = JSON.parse(JSON.stringify(data.marketPosts[index].image));
           data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+          data.marketPosts[index].isEditing = false;
         });
         this.marketPosts = data['marketPosts'];
       }
@@ -69,6 +72,64 @@ loadMarketListings() {
     this.marketListingLoader = false;
     this.toastr.error("Error filtering posts");
   }
+}
+
+editMarketPost(marketPostsData:any) {
+  marketPostsData.isEditing = true;
+}
+
+async saveMarketPostEdit(marketPostsData:any) {
+  
+  this.editMarketBtnLoader = true;
+  console.log("Submitting")
+  
+  try {
+    let params = {
+      postId: {_id:marketPostsData._id},
+      username: marketPostsData.username,
+      title: marketPostsData.title,
+      content: marketPostsData.content,
+      image: [marketPostsData.tempImage??marketPostsData.imageUri[0]],
+      createdAt: marketPostsData.createdAt,
+      contact: marketPostsData.contact,
+      year_of_purchase: marketPostsData.year_of_purchase,
+      address: marketPostsData.address,
+      city: marketPostsData.city,
+      state: marketPostsData.state,
+      country: marketPostsData.country
+    }
+    await this.defaultService.httpPostCall(environment.EDIT_MARKET_POSTS_API, params).subscribe(
+      (data: any) => {
+        this.toastr.success("Succesfully edited post");
+        this.editMarketBtnLoader = false;
+        marketPostsData.isEditing = false;
+        marketPostsData.image = JSON.parse(JSON.stringify(marketPostsData.tempImage));
+        delete marketPostsData.tempImage;       
+      },
+      (err: any) => {
+        this.toastr.error("Error editing post! \n Please try again");
+        console.log(err);
+        this.editMarketBtnLoader = false
+      }
+    )
+  } catch (e) {
+    this.toastr.error("Error editing post! \n Please try again");
+    this.editMarketBtnLoader = false
+  }
+}
+
+cancelMarketPostEdit(postData:any) {
+  postData.isEditing = false;
+  delete postData.tempImage;
+}
+
+handleMarketPostUpload(event:any, postIndex:any) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    this.marketPosts[postIndex].tempImage = reader.result;
+  };
 }
 
 loadFeedData() {
@@ -104,20 +165,20 @@ async savePostEdit(postData:any) {
     }
     await this.defaultService.httpPostCall(environment.EDIT_POST_API, params).subscribe(
       (data: any) => {
-        this.toastr.success("Succesfully created post");
+        this.toastr.success("Succesfully editing post");
         this.editPostBtnLoader = false;
         postData.isEditing = false;
         postData.image = JSON.parse(JSON.stringify(postData.tempImage));
         delete postData.tempImage;       
       },
       (err: any) => {
-        this.toastr.error("Error creating post! \n Please try again");
+        this.toastr.error("Error editing post! \n Please try again");
         console.log(err);
         this.editPostBtnLoader = false
       }
     )
   } catch (e) {
-    this.toastr.error("Error creating post! \n Please try again");
+    this.toastr.error("Error editing post! \n Please try again");
     this.editPostBtnLoader = false
   }
 }
