@@ -11,6 +11,7 @@ COPY ./package.json .
 
 CMD ["cd", "~"]
 RUN sudo npm install -f
+RUN sudo npm install socket.io --save --force
 # CMD ["npm", "install", "-f"]
 EXPOSE 4200
 CMD ["sh","./start.sh"]
