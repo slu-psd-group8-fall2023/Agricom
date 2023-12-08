@@ -70,7 +70,7 @@ describe("userPost", () => {
 
     await userPost(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({ error: "User not found." });
   });
 
@@ -318,7 +318,7 @@ describe("getCommentsForPost", () => {
     Post.findOne.mockResolvedValue(null);
 
     const req = {
-      body: { postId },
+      params: { postId },
     };
 
     const res = {
@@ -340,7 +340,7 @@ describe("getCommentsForPost", () => {
     Post.findOne.mockRejectedValue(new Error("Database error"));
 
     const req = {
-      body: {},
+      params: {},
     };
 
     const res = {
@@ -382,7 +382,7 @@ describe("getCommentsForPost", () => {
 
     // Create mock request and response objects
     const req = {
-      body: { postId },
+      params: { postId },
     };
 
     const res = {

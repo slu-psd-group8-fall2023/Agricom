@@ -64,7 +64,7 @@ async function marketcreatePost(req, res) {
 
     // Check if the user exists
     if (!user) {
-      return res.status(400).json({ error: "User not found." });
+      return res.status(404).json({ error: "User not found." });
     }
 
     // Create a new market post instance with the provided data

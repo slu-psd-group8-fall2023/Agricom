@@ -1,0 +1,982 @@
+{
+	"info": {
+		"_postman_id": "833fddda-f826-4e74-9bcb-8f79a7e54b0c",
+		"name": "Agricom",
+		"description": "Welcome to the Agricom API documentation! Agricom is an innovative agricultural platform designed to empower farmers through collaborative knowledge sharing and efficient interaction. The API provides endpoints for user authentication, password management, and various interactions within the agricultural community.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29778315"
+	},
+	"item": [
+		{
+			"name": "SignUp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"balamurali\",\r\n    \"email\": \"baalu0505@gmail.com\",\r\n    \"password\": \"balu123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"signup"
+					]
+				},
+				"description": "Users can create an account by providing their information. Use the following endpoint to sign up."
+			},
+			"response": [{
+				"200 OK":[
+				{
+					"message": "User created successfully."
+				},
+				{
+					"error": "Username already used."
+				},
+				{
+					"error": "User already exists on this mail."
+				}],
+				"400 Bad Request":
+				{
+					"error": "email, Username, and password are required."
+				}
+				,
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"baalu0505@gmail.com\",\r\n    \"password\" : \"balu123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				},
+				"description": "Registered users can log in to their accounts using their email and password. Use the following endpoint for login."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "Login successful."
+				},
+				"400 Bad Request":
+				{
+					"error": "Email and password are required."
+				},
+				"401 Unauthorized":
+				{
+					"error": "Invalid password."
+				},
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "forgot password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"baalu0505@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/forgot-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"forgot-password"
+					]
+				},
+				"description": "In case a user forgets their password, they can reset it by providing their email address. Use the following endpoint for resetting the password."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "Password reset email sent."
+				},
+				"400 Bad Request":
+				{
+					"error": "Email is required."
+				},
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "reset-password/ newpassword",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"newPassword\" : \"balu1233\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/reset-password/:token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"reset-password",
+						":token"
+					],
+					"variable": [
+						{
+							"key": "token",
+							"value": "xgkSxojm8inZqMcHLEhu7MnVSeljurcE"
+						}
+					]
+				},
+				"description": "After sending the reset token the user gamil, user need to enter the enter the resettoken into the related field and enter the new password."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "Password reset successful."
+				},
+				"400 Bad Request":
+				{
+					"error": "Password reset token is invalid or has expired."
+				}
+		}]
+		},
+		{
+			"name": "posts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"udkr1996@gmail.com\",\r\n    \"title\":\"Farmers are back bone\",\r\n    \"content\":\"Farmers are backbone of the world\",\r\n    \"image\":[\"edfghjhgfty\",\"iytrdshjhgf\"],\r\n    \"createdAt\":1697408297\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"posts"
+					]
+				},
+				"description": "Allows the Users to post there thought or tips or ideas on the Agricom platform."
+			},
+			"response": [{
+				"201 Created":
+				{
+					"message": "Post created successfully"
+				},
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "retrievePosts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/retrieveposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"retrieveposts"
+					]
+				},
+				"description": "Retrieves a list of posts from the agricultural community on Agricom."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"posts": []
+				},
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "retrievePosts by username",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"balamurali\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/retrieveposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"retrieveposts"
+					]
+				},
+				"description": "Retrieves a list of posts by the using the username from the agricultural community on Agricom."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"posts": [{"username": "balamurali"}]
+				},
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "UserSearch",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"balu\",\r\n    \"isSearch\" : \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/retrieveposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"retrieveposts"
+					]
+				},
+				"description": "Users are allowed to search the other users post by using username."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"posts": [{"username": "balu"}]
+				},
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "AddCommentstoPost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"madhan\",\r\n    \"content\": \"Results are looking pretty good\",\r\n    \"createdAt\": 1697408329\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/postcomments?postId=652db8e78dd24353141fbe84",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"postcomments"
+					],
+					"query": [
+						{
+							"key": "postId",
+							"value": "652db8e78dd24353141fbe84"
+						}
+					]
+				},
+				"description": "Enables users to contribute to discussions by adding comments to a post."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "Comment added successfully"
+				},
+				"404 Not Found":
+				{
+					"error": "Post not found"
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "getpostcomments",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/getpostcomments?postId=656b78cd60f8e90230a681a1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"getpostcomments"
+					],
+					"query": [
+						{
+							"key": "postId",
+							"value": "656b78cd60f8e90230a681a1"
+						}
+					]
+				},
+				"description": "Retrieves comments associated with a specific post identified by `:postId`"
+			},
+			"response": [{
+				"404 Not Found":
+				{
+					"error": "Post not found"
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "DeleteUserpost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"balamurali\",\r\n    \"postId\": \"656b78cd60f8e90230a681a1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/deleteuserpost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"deleteuserpost"
+					]
+				},
+				"description": "Allows users should able to delete there posts from there Account."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "User post deleted successfully."
+				},
+				"400 Bad Request":
+				{
+					"error":"postId parameter is required."
+				},
+				"403 Forbidden":{
+					"error": "Unauthorized. You do not own this post." 
+				},
+				"404 Not Found":
+				{
+					"error": "User post not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "EditUserpost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"balamurali\",\r\n    \"postId\": \"656b78cd60f8e90230a681a1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/edituserpost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"edituserpost"
+					]
+				},
+				"description": "Allows users should able to edit there posts from there Account."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "Post updated successfully"
+				},
+				"403 Forbidden":{
+					"error": "Unauthorized. You do not own this post." 
+				},
+				"404 Not Found":[
+				{
+					"error": "Invalid data. Please provide valid data in fields."
+				},
+				{
+					"error" : "Post not found"
+				}
+				],
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Marketpost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"balamurali\",\r\n    \"title\":\"Tractor\",\r\n    \"content\":\"Good Condition\",\r\n    \"image\":[\"iytrdshjhgf\"],\r\n    \"createdAt\":1697409786,\r\n    \"contact\":987656,\r\n    \"year_of_purchase\":2021,\r\n    \"address\":\"A2 317\",\r\n    \"city\":\"Los Angels\",\r\n    \"state\":\"california\",\r\n    \"country\":\"USA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/marketpost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"marketpost"
+					]
+				},
+				"description": "Allows users to create and share market posts containing information about agricultural products."
+			},
+			"response": [{
+				"201 Created":
+				{
+					"message": "Market Post created successfully"
+				},
+				"400 Bad Request":[
+				{
+					"error":"Invalid data. Please provide valid data in fields."
+				},
+				{
+					"error":"Invalid data. Please provide 10 digits in the contact field."
+				},
+				{
+					"error":"Invalid date. Please provide a valid date in the createdAt field."
+				}
+				],
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "retrievemarketposts on username",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"baalu0505@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/retrievemarketposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"retrievemarketposts"
+					]
+				},
+				"description": "Retrieves a list of market posts based on the username."
+			},
+			"response": [{
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "retrievemarketposts all",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/retrievemarketposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"retrievemarketposts"
+					]
+				},
+				"description": "Retrieves a list of market posts for users to explore and engage with product offerings."
+			},
+			"response": [{
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "MarketPost UserSearch",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"bal\",\r\n    \"isSearch\" : \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/retrievemarketposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"retrievemarketposts"
+					]
+				},
+				"description": "Users are allowed to search the other users marketspost by using username."
+			},
+			"response": [{
+				"404 Not Found":
+				{
+					"error": "User not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Filtermarketposts by city",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"city\":\"Dallas\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/filtermarketposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"filtermarketposts"
+					]
+				},
+				"description": "Allows users to filter market posts based on specific criteria such as city."
+			},
+			"response":  [{
+				"200 OK":[
+				{
+					"Posts":[]
+				},
+				{
+					"message": "No posts found. Please provide city, state, or country parameters."
+				},{
+					"message": "No posts found on the provided criteria."
+				}],
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Filtermarketposts by state",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"state\":\"california\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/filtermarketposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"filtermarketposts"
+					]
+				},
+				"description": "Allows users to filter market posts based on specific criteria such as state."
+			},
+			"response": [{
+				"200 OK":[
+				{
+					"Posts":[]
+				},
+				{
+					"message": "No posts found. Please provide city, state, or country parameters."
+				},{
+					"message": "No posts found on the provided criteria."
+				}],
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Filtermarketposts by country",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"country\":\"USA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/filtermarketposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"filtermarketposts"
+					]
+				},
+				"description": "Allows users to filter market posts based on specific criteria such as country."
+			},
+			"response": [{
+				"200 OK":[
+				{
+					"Posts":[]
+				},
+				{
+					"message": "No posts found. Please provide city, state, or country parameters."
+				},{
+					"message": "No posts found on the provided criteria."
+				}],
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Filtermarketposts by city ,state and country",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"city\":\"Dallas\",\r\n    \"state\":\"Texas\",\r\n    \"country\":\"USA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/filtermarketposts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"filtermarketposts"
+					]
+				},
+				"description": "Allows users to filter market posts based on specific criteria such as city, state, or country."
+			},
+			"response": [{
+				"200 OK":[
+				{
+					"Posts":[]
+				},
+				{
+					"message": "No posts found. Please provide city, state, or country parameters."
+				},{
+					"message": "No posts found on the provided criteria."
+				}],
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Deletemarketpost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"balamurali\",\r\n    \"postId\": \"656b7cb2bd5fd8ad2bbfee46\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/deletemarketpost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"deletemarketpost"
+					]
+				},
+				"description": "Allows users to delete the market posts after they sold the tools."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "User post deleted successfully."
+				},
+				"400 Bad Request":
+				{
+					"error":"postId parameter is required."
+				},
+				"403 Forbidden":{
+					"error": "Unauthorized. You do not own this post." 
+				},
+				"404 Not Found":
+				{
+					"error": "User post not found."
+				},
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		},
+		{
+			"name": "Editmarketpost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"balu\",\r\n    \"title\":\"Tractor\",\r\n    \"content\":\"Good Condition\",\r\n    \"image\":[\"iytrdshjhgf\"],\r\n    \"createdAt\":1697409786,\r\n    \"contact\":9876565674,\r\n    \"year_of_purchase\":2021,\r\n    \"address\":\"A2 317\",\r\n    \"city\":\"Los Angels\",\r\n    \"state\":\"california\",\r\n    \"country\":\"USA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/editmarketpost",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"editmarketpost"
+					]
+				},
+				"description": "Allows users to edit their market posts."
+			},
+			"response": [{
+				"200 OK":
+				{
+					"message": "Market post updated successfully"
+				},
+				"403 Forbidden":{
+					"error": "Unauthorized. You do not own this market post." 
+				},
+				"404 Not Found":[
+				{
+					"error": "Invalid data. Please provide valid data in fields."
+				},
+				{
+					"error" : "Market post not found"
+				}
+				],
+				"500 Internal Server Error":
+				{
+					"error": "Internal Server Error"
+				}
+		}]
+		}
+	]
+}

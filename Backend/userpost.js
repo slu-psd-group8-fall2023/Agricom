@@ -14,7 +14,7 @@ async function userPost(req, res) {
     });
 
     if (!user) {
-      return res.status(400).json({ error: "User not found." });
+      return res.status(404).json({ error: "User not found." });
     }
 
     const newPost = new Post({
@@ -64,7 +64,7 @@ async function fetchPosts(username, isSearch) {
   else if (username) {
     query = { username: username.toLowerCase() };
     if (!(await User.findOne({ username }))) {
-      return res.status(400).json({ error: "User not found." });
+        return res.status(404).json({ error: "User not found." });
     } else {
       posts = await Post.find(query).sort({ createdAt: -1 });
     }
@@ -88,11 +88,11 @@ async function fetchPosts(username, isSearch) {
  */
 async function addCommentToPost(req, res) {
   try {
-    const { _id } = req.params; // Extract the post ID from the URL
-    const { username, content, createdAt, postId } = req.body;
+    const { postId } = req.params; // Extract the post ID from the URL
+    const { username, content, createdAt } = req.body;
 
     // Find the post by its ID
-    const post = await Post.findOne({ _id: _id??postId });
+    const post = await Post.findOne({ postId });
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -121,10 +121,10 @@ async function addCommentToPost(req, res) {
  */
 async function getCommentsForPost(req, res) {
   try {
-    const { postId } = req.body; // Extract the post ID from the URL
+    const { postId } = req.params; // Extract the post ID from the URL
 
     // Find the post by its ID
-    const post = await Post.findOne({ _id: postId });
+    const post = await Post.findOne({ postId });
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
