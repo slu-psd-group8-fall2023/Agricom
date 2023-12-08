@@ -1,5 +1,6 @@
 <div>
-    <div id="post-bar"><!---just normal form which takes information from user and works on dropdown by clicking on post button-->
+    <div id="post-bar">
+        <!---just normal form which takes information from user and works on dropdown by clicking on post button-->
         <div class="dropdown-container">
             <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">Post</button>
             <div class="dropdown-content mt-2" id="dropdown-content"
@@ -20,9 +21,10 @@
                             placeholder="What's in you heart" [(ngModel)]="formData.description" required></textarea>
                     </div>
                     <div class="form-group" style="display: flex; justify-content: right;">
-                        <button type="submit" class="btn btn-success" id="post_submit"
-                            (click)="submitForm()" [disabled]="createPostBtnLoader">Submit
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="createPostBtnLoader"></span>
+                        <button type="submit" class="btn btn-success" id="post_submit" (click)="submitForm()"
+                            [disabled]="createPostBtnLoader">Submit
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                                *ngIf="createPostBtnLoader"></span>
                         </button>
                     </div>
                 </form>
@@ -35,6 +37,15 @@
     <!-- scrollable-and showing posts on screen -->
     <div class="container" style="padding-top: 80px;" (scroll)="onScroll()" [ngClass]="{'opacity-75':isDropdownOpen}">
         <div class="col-12">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="input-group mb-4">
+                        <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearch()"
+                            placeholder="Type to search...">
+
+                    </div>
+                </div>
+            </div>
             <div class="d-flex justify-content-center" *ngIf="isLoading">
                 <div class="spinner-grow m-5 " role="status">
                     <span class="sr-only">Loading...</span>
@@ -45,35 +56,29 @@
                 <div class="spinner-grow m-5 " role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-              </div>
- <!-- search-box.component.html -->
- <div class="row justify-content-center" *ngIf="!isLoading">
-    <div class="col-md-8">
-        <div class="input-group mb-4">
-            <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Type to search...">
-            
-        </div>
-    </div>
-</div>
-                    <!-- <button class="btn btn-primary">Discussion Box</button> -->
-                <div *ngFor="let item of data" class="card mb-4 custom-card"><!--it displays according to data got from backend on scrollling it calls scrolling funtion for more data-->
-                    <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.title }}</h5>
-                        <small class="text-muted">Created By:{{ item.username }}</small>
-                        <p class="card-text">{{ item.content }}</p>
-                        <button class="btn btn-primary" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
-                    </div>
+            </div>
+            <!-- search-box.component.html -->
+            <!-- <button class="btn btn-primary">Discussion Box</button> -->
+            <div *ngFor="let item of data" class="card mb-4 custom-card">
+                <!--it displays according to data got from backend on scrollling it calls scrolling funtion for more data-->
+                <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <small class="text-muted">Created By:{{ item.username }}</small>
+                    <p class="card-text">{{ item.content }}</p>
+                    <button class="btn btn-primary" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
                 </div>
+            </div>
         </div>
     </div>
 </div>
 <!--- this is to show templet on screan if user want to use discussion box-->
-<ng-template #myModal let-modal >
+<ng-template #myModal let-modal>
     <!-- <div class="modal-dailog"> -->
     <div class="modal-header">
         <h4 class="modal-title">Discussion Box</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button><!--it works on click y showing templete on screen-->
+        <button type="button" class="btn-close" aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button><!--it works on click y showing templete on screen-->
     </div>
     <div class="modal-body">
         <div class="d-flex justify-content-center" *ngIf="commentsLoader">
@@ -88,7 +93,8 @@
             </div>
             <p>
                 {{comment.content}}
-            </p><hr>
+            </p>
+            <hr>
         </ng-container>
         <ng-container *ngIf="!comments.length && !commentsLoader">
             <small class="text-muted">Nothing happened here!. <br> Start the Discussion by adding a comment</small>
@@ -96,8 +102,10 @@
     </div>
     <div class="modal-footer justify-content-between">
         <input type="text" class="width-70" id="comment-text" autocomplete="off" [(ngModel)]="commentText">
-        <button class="button btn btn-primary pt-10 pb-10" (click)="submitComment()" [disabled]="commentsBtnLoader">Add comment 
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="commentsBtnLoader"></span>
+        <button class="button btn btn-primary pt-10 pb-10" (click)="submitComment()" [disabled]="commentsBtnLoader">Add
+            comment
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                *ngIf="commentsBtnLoader"></span>
         </button>
     </div>
 </ng-template>

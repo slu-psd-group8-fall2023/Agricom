@@ -1,115 +1,123 @@
 <!--filter code-->
 <div class="container" style="padding-top: 80px;">
-<!-- <br><br><br><br> -->
-<div class="row justify-content-center mt-0">
-<form [formGroup]="form" class="row align-items-end justify-content-center filter-form ">
-  <div class="col-md-3 mb-3">
-    <label for="country" class="form-label">Country:</label>
-    <input type="text" id="country" formControlName="country" [(ngModel)]="filterParams.country" class="form-control filter-params">
-  </div>
-
-  <div class="col-md-3 mb-3">
-    <label for="state" class="form-label">State:</label>
-    <input type="text" id="state" formControlName="state" [(ngModel)]="filterParams.state" class="form-control filter-params">
-  </div>
-
-  <div class="col-md-3 mb-3">
-    <label for="city" class="form-label">City:</label>
-    <input type="text" id="city" formControlName="city" [(ngModel)]="filterParams.city" class="form-control filter-params">
-  </div>
-
-  <div class="col-md-3 mb-3 row text-center">
-    <!-- <label for="city" class="form-label"></label> -->
-    <div class="col-md-6">
-      <button type="submit" class="btn btn-primary btn-sm" (click)="filterPosts()">Filter</button>
-    </div>
-    <div class="col-md-6">
-      <button type="submit" [disabled]="!filterParams.isApplied" (click)="loadPosts()" class="btn btn-sm btn-secondary">Clear</button>
-    </div>
-  </div>
-</form>
-</div>
-<!-- </div> -->
-  
-<!--placing tool in market, it is just form to submit all the reqired infomation-->
-<div>
-    <div id="post-bar">
-        <div class="dropdown-container">
-            <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">List tool</button>
-            <div class="dropdown-content mt-2" id="dropdown-content"
-                [style.display]="isDropdownOpen ? 'block' : 'none'" style="max-height: 400px; overflow-y: auto;">
-                <form style="padding: 3% !important;">
-                    <div class="form-group">
-                        <input class="form-control" type="text" id="name" placeholder="Name of tool"
-                            [(ngModel)]="formData.title" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Year of Purchase:</label><input class="form-control" type="number" id="name" placeholder="YYYY"
-                            [(ngModel)]="formData.year_of_purchase" name="year" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Contact Number:</label>
-                        <input class="form-control" type="tel" id="name" placeholder="Name"
-                            [(ngModel)]="formData.contact" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" name="contact" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Upload picture of tool</label><input class="form-control" type="file" id="picture" (change)="handleUpload($event)"
-                            name="picture" accept="image/*" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Address:</label><input class="form-control" type="text" id="address" name="address" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Street" required>
-                        <input class="form-control" type="text" id="name" placeholder="Apartment"
-                            [(ngModel)]="formData.address" name="address" required>
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="text" id="address" placeholder="City"
-                            [(ngModel)]="formData.city" name="region" required>
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="text" id="address" placeholder="State"
-                            [(ngModel)]="formData.state" name="state" required>
-                    </div>
-                      
-                    <div class="form-group">
-                        <input class="form-control" type="text" id="address" placeholder="Country"
-                            [(ngModel)]="formData.country" name="country" required>
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" id="description" name="description" rows="4"
-                            placeholder="Describe about your tool" [(ngModel)]="formData.content" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success" id="place_submit"
-                            (click)="onSubmit()" [disabled]="createPostBtnLoader">Submit
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="createPostBtnLoader"></span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!--search bar-->
-<div class="row justify-content-center">
-  <div class="col-md-8">
-      <div class="input-group mb-4">
-          <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Type to search...">
-          
+  <!-- <br><br><br><br> -->
+  <div class="row justify-content-center mt-0">
+    <form [formGroup]="form" class="row align-items-end justify-content-center filter-form ">
+      <div class="col-md-3 mb-3">
+        <label for="country" class="form-label">Country:</label>
+        <input type="text" id="country" formControlName="country" [(ngModel)]="filterParams.country"
+          class="form-control filter-params">
       </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="state" class="form-label">State:</label>
+        <input type="text" id="state" formControlName="state" [(ngModel)]="filterParams.state"
+          class="form-control filter-params">
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="city" class="form-label">City:</label>
+        <input type="text" id="city" formControlName="city" [(ngModel)]="filterParams.city"
+          class="form-control filter-params">
+      </div>
+
+      <div class="col-md-3 mb-3 row text-center">
+        <!-- <label for="city" class="form-label"></label> -->
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-primary btn-sm" (click)="filterPosts()">Filter</button>
+        </div>
+        <div class="col-md-6">
+          <button type="submit" [disabled]="!filterParams.isApplied" (click)="loadPosts()"
+            class="btn btn-sm btn-secondary">Clear</button>
+        </div>
+      </div>
+    </form>
   </div>
-</div>
-<!--shows information that we got from api call on scrolling-->
-<!-- <div class="container mt-4"> -->
+  <!-- </div> -->
+
+  <!--placing tool in market, it is just form to submit all the reqired infomation-->
+  <div>
+    <div id="post-bar">
+      <div class="dropdown-container">
+        <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">List tool</button>
+        <div class="dropdown-content mt-2" id="dropdown-content" [style.display]="isDropdownOpen ? 'block' : 'none'"
+          style="max-height: 400px; overflow-y: auto;">
+          <form style="padding: 3% !important;">
+            <div class="form-group">
+              <input class="form-control" type="text" id="name" placeholder="Name of tool" [(ngModel)]="formData.title"
+                name="name" required>
+            </div>
+            <div class="form-group">
+              <label>Year of Purchase:</label><input class="form-control" type="number" id="name" placeholder="YYYY"
+                [(ngModel)]="formData.year_of_purchase" name="year" required>
+            </div>
+            <div class="form-group">
+              <label>Contact Number:</label>
+              <input class="form-control" type="tel" id="name" placeholder="Name" [(ngModel)]="formData.contact"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" name="contact" required>
+            </div>
+            <div class="form-group">
+              <label>Upload picture of tool</label><input class="form-control" type="file" id="picture"
+                (change)="handleUpload($event)" name="picture" accept="image/*" required>
+            </div>
+            <div class="form-group">
+              <label>Address:</label><input class="form-control" type="text" id="address" name="address"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Street" required>
+              <input class="form-control" type="text" id="name" placeholder="Apartment" [(ngModel)]="formData.address"
+                name="address" required>
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="text" id="address" placeholder="City" [(ngModel)]="formData.city"
+                name="region" required>
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="text" id="address" placeholder="State" [(ngModel)]="formData.state"
+                name="state" required>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" type="text" id="address" placeholder="Country" [(ngModel)]="formData.country"
+                name="country" required>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" id="description" name="description" rows="4"
+                placeholder="Describe about your tool" [(ngModel)]="formData.content" required></textarea>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-success" id="place_submit" (click)="onSubmit()"
+                [disabled]="createPostBtnLoader">Submit
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                  *ngIf="createPostBtnLoader"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--search bar-->
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="input-group mb-4">
+        <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearch()"
+          placeholder="Type to search...">
+
+      </div>
+    </div>
+  </div>
+  <!--shows information that we got from api call on scrolling-->
+  <!-- <div class="container mt-4"> -->
   <div class="d-flex justify-content-center" *ngIf="postLoader">
     <div class="spinner-border m-5" role="status">
-        <span class="sr-only">Loading...</span>
+      <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <div *ngIf="posts.length > 0; else noDataMessage" >
+  <div *ngIf="posts.length > 0; else noDataMessage">
     <div *ngFor="let post of posts; let i = index" class="card mb-4"><!--shows information present in posts list-->
       <div class="row no-gutters">
         <div class="col-md-4">
-          <img [src]="post.image" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+          <img [src]="post.image" class="card-img" alt="Post Image"
+            style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -117,7 +125,7 @@
             <p class="card-text"><strong>Created By:</strong> {{ post.username }}</p>
             <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year_of_purchase }}</p>
             <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
-  
+
             <div class="row">
               <div class="col-md-6">
                 <p class="card-text"><strong>Address:</strong> {{ post.address }}</p>
@@ -128,32 +136,29 @@
                 <p class="card-text"><strong>Country:</strong> {{ post.country }}</p>
               </div>
             </div>
-  
+
             <p class="card-text">{{ post.content }}</p>
-  
+
             <!-- Delete Button -->
             <!-- <button class="btn btn-danger" *ngIf="post.username==user.username" (click)="onDelete(i)">Delete</button> -->
           </div>
         </div>
       </div>
     </div>
-  
-  <div *ngIf="postLoader" class="text-center mt-3"><!--it shows loading view when data is loading-->
+
+    <div *ngIf="postLoader" class="text-center mt-3"><!--it shows loading view when data is loading-->
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-  
+
     <!-- Infinite Scroll -->
     <div (scroll)="onScroll()" style="height: 200px; overflow-y: scroll;">
     </div>
   </div>
-  <ng-template #noDataMessage >
+  <ng-template #noDataMessage>
     <div class="text-center mt-3" *ngIf="!postLoader">
       <p>No tools are here.</p>
     </div>
   </ng-template>
 </div>
-
-
-

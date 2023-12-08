@@ -13,9 +13,9 @@ import { AuthenticationService } from '../services/authentication.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  authCtrl:any;
-  toastrMessage:any;
-  constructor(private defaultService:DefaultService,
+  authCtrl: any;
+  toastrMessage: any;
+  constructor(private defaultService: DefaultService,
     private authenticationService: AuthenticationService,
     private router: Router,
     private route: ActivatedRoute,
@@ -28,10 +28,10 @@ export class LoginComponent {
 
   reset() {
     this.authCtrl = {
-      showSignIn:false,
-      showSignUp:false,
-      showPasswordReset:false,
-      showForgotPassword:false,
+      showSignIn: false,
+      showSignUp: false,
+      showPasswordReset: false,
+      showForgotPassword: false,
       username: '',
       email: '',
       password: '',
@@ -58,7 +58,7 @@ export class LoginComponent {
     this.reset()
     this.authCtrl.showForgotPassword = true;
   }
-  
+
   async showResetPassword() {
     this.reset()
     this.authCtrl.showPasswordReset = true;
@@ -69,30 +69,30 @@ export class LoginComponent {
       email: this.authCtrl.email,
       password: this.authCtrl.password
     };
-    if(!this.validateEmail(this.authCtrl.email)) {
+    if (!this.validateEmail(this.authCtrl.email)) {
       this.toastrMessage = "Invalid email"
       this.toastr.error(this.toastrMessage, "Form validation error");
       return;
     }
-    if(!this.authCtrl.password) {
+    if (!this.authCtrl.password) {
       this.toastrMessage = "Please enter password";
       this.toastr.error(this.toastrMessage, "Form validation error");
       return;
     }
     try {
       this.authenticationService.login(params.email, params.password)
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    // get return url from route parameters or default to '/'
-                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/feed';
-                    this.router.navigate([returnUrl]);
-                },
-                error: error => {
-                  this.authCtrl.errorMessage = error.error.error;
-                }
-            });
-    } catch(e) {
+        .pipe(first())
+        .subscribe({
+          next: () => {
+            // get return url from route parameters or default to '/'
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/feed';
+            this.router.navigate([returnUrl]);
+          },
+          error: error => {
+            this.authCtrl.errorMessage = error.error.error;
+          }
+        });
+    } catch (e) {
       this.authCtrl.errorMessage = e;
     }
   }
@@ -103,27 +103,27 @@ export class LoginComponent {
       username: this.authCtrl.username,
       password: this.authCtrl.password
     };
-    if(this.authCtrl.password != this.authCtrl.confirmPassword) {
+    if (this.authCtrl.password != this.authCtrl.confirmPassword) {
       this.toastr.error("Passwords didn't match", "Form validation error");
       return;
     }
-    if(!this.authCtrl.username) {
+    if (!this.authCtrl.username) {
       this.toastr.error("Please enter Username", "Form validation error");
       return;
     }
-    if(!this.validateEmail(this.authCtrl.email)) {
+    if (!this.validateEmail(this.authCtrl.email)) {
       this.toastr.error("Invalid email", "Form validation error");
       return;
     }
-    if(!this.authCtrl.password) {
+    if (!this.authCtrl.password) {
       this.toastr.error("Please enter password", "Form validation error");
       return;
     }
-    
+
     try {
       this.defaultService.httpPostCall(environment.SIGNUP_API, params).subscribe(
         data => {
-          if(data.error) {
+          if (data.error) {
             this.toastr.error(data.error);
           } else {
             this.toastr.success("You can now continue to login", "Signup Successful");
@@ -135,7 +135,7 @@ export class LoginComponent {
           console.log(err);
         }
       )
-    } catch(e) {
+    } catch (e) {
       this.authCtrl.errorMessage = e;
     }
   }
@@ -148,7 +148,7 @@ export class LoginComponent {
     let params = {
       email: this.authCtrl.email
     };
-    if(!this.validateEmail(this.authCtrl.email)) {
+    if (!this.validateEmail(this.authCtrl.email)) {
       this.toastr.error("Invalid email", "Form validation error");
       return;
     }
@@ -164,22 +164,22 @@ export class LoginComponent {
           console.log(err);
         }
       )
-    } catch(e) {
+    } catch (e) {
       this.authCtrl.errorMessage = e;
     }
   }
 
   async resetPasssword() {
-    if(this.authCtrl.newPassword != this.authCtrl.confirmNewPassword) {
+    if (this.authCtrl.newPassword != this.authCtrl.confirmNewPassword) {
       this.toastr.error("Passwords do not match", "Form validation error");
       this.authCtrl.errorMessage = 'Passwords do not match';
       return;
     }
-    if(!this.authCtrl.token) {
+    if (!this.authCtrl.token) {
       this.toastr.error("Please enter a valid token", "Form validation error");
       return;
     }
-    if(!this.authCtrl.newPassword) {
+    if (!this.authCtrl.newPassword) {
       this.toastr.error("Please enter password", "Form validation error");
       return;
     }
@@ -188,7 +188,7 @@ export class LoginComponent {
       username: this.authCtrl.email,
       newPassword: this.authCtrl.confirmNewPassword
     };
-    
+
     try {
       this.defaultService.httpPostCall(`${environment.RESET_PASS_API}/${this.authCtrl.token}`, params).subscribe(
         data => {
@@ -201,12 +201,12 @@ export class LoginComponent {
           console.log(err);
         }
       )
-    } catch(e) {
+    } catch (e) {
       this.authCtrl.errorMessage = e;
     }
   }
 
-  validateEmail(email:string){
+  validateEmail(email: string) {
     return String(email)
       .toLowerCase()
       .match(
