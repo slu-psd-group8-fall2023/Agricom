@@ -16,7 +16,7 @@ class model:
     def __init__(self):
         # Load the pre-trained model
         self._model = CNN.CNN(39)
-        self._model.load_state_dict(torch.load("plant_disease_model_1_latest.pt"))
+        self._model.load_state_dict(torch.load("plant_disease_model_1_latest.pt"))# using existing model for detecting the disease, instruction are provided for downloading model in readme, model is too big to upload into git
         self._model.eval()
     def prediction(self,image_path):
         try:
