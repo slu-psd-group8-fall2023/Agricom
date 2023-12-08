@@ -1,7 +1,6 @@
 const authUtil = require("./authutil");
 const userpost = require("./userpost");
 const marketpost = require("./marketuserpost.js");
-const { io } = require("./app")
 /**
  * handles login
  * @param {object} req

@@ -1,4 +1,4 @@
-import { Component,OnInit, NgModule   } from '@angular/core';
+import { Component,OnInit, NgModule, OnDestroy   } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { DefaultService } from "../default.service";
@@ -9,6 +9,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { UserService } from '../services/user.service';
 import { DomSanitizer } from '@angular/platform-browser';
 //import { CountryStateService } from './country-state.service';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'app-market',
@@ -16,7 +17,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./market.component.scss'],
 })
 
-export class MarketComponent implements OnInit{
+export class MarketComponent implements OnInit, OnDestroy {
   createPostBtnLoader: boolean = false;
   form: FormGroup;
   submittedData: any = {}; 
@@ -35,9 +36,22 @@ export class MarketComponent implements OnInit{
     });
   }
 
+socket:any;
 ngOnInit(): void {
+    this.socket = io("http://localhost:3000");
     this.user = this.authenticationService.userValue;
     this.loadPosts();
+
+    this.socket.on('newMarketPost', (data:any) => {
+      console.log("Socket data");
+      data.forEach((element:any, index:any) => {
+        data[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+      });
+      this.posts = data;
+    });
+}
+ngOnDestroy() {
+  this.socket.disconnect();
 }
 
   isDropdownOpen = false;
