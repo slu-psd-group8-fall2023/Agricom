@@ -21,7 +21,6 @@ export class FeedComponent implements OnInit, OnDestroy {
   user:any;
   constructor(
     // private socket: Socket,
-    private socketService: SocketioService,
     config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { 
     config.backdrop = 'static';
 		config.keyboard = false;
@@ -116,7 +115,9 @@ export class FeedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.socket.disconnect();
+    if(this.socket) {
+      this.socket.disconnect();
+    }
   }
 
   loadInitialUserData() {

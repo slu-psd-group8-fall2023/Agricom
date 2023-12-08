@@ -85,9 +85,10 @@ async function marketcreatePost(req, res) {
     // Save the new market post to the database
     await newMarketPost.save();
 
-    const result = await fetchMarketPosts(false, false);
-    emitMessage("newComment", result);
-
+    if(!process.env.JEST_WORKER_ID) {
+      const result = await fetchMarketPosts(false, false);
+      emitMessage("newComment", result);
+    }
     res
       .status(201)
       .json({ message: "Market Post created successfully", newMarketPost });

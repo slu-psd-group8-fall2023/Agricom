@@ -26,9 +26,10 @@ async function userPost(req, res) {
     });
 
     await newPost.save();
-    
-    const result = await fetchPosts(false, false);
-    emitMessage("newFeedPost", result);
+    if(!process.env.JEST_WORKER_ID) {
+      const result = await fetchPosts(false, false);
+      emitMessage("newFeedPost", result);
+    }
 
     res.status(201).json({ message: "Post created successfully", newPost });
   } catch (error) {
