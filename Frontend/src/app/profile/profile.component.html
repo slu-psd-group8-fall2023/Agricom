@@ -15,18 +15,26 @@
     <div class="col-12" style="max-height: 300px; overflow: scroll;">
       <div *ngIf="feed_posts.length > 0; else noDataMessage">
         <!-- <button class="btn btn-primary">Discussion Box</button> -->
-        <div *ngFor="let item of feed_posts" class="card mb-4 custom-card">
+        <div *ngFor="let item of feed_posts; let i =index" class="card mb-4 custom-card">
           <div class="row no-gutters">
             <div class="col-md-4">
-              <img class="card-img" [src]="item.image" alt="" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <img class="card-img" *ngIf="!item.tempImage" [src]="item.image" alt="" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <img class="card-img" *ngIf="item.tempImage" [src]="item.tempImage" alt="" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <input *ngIf="item.isEditing" type="file" (change)="handleUpload($event, i)" >
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-title">{{ item.title }}</h5>
-                <p class="card-text">{{ item.content }}</p>
-                <button class="btn btn-primary m-1" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
-                <button class="btn btn-secondary" disabled>Edit</button>
+                <h5 #feedTitle [attr.contenteditable]="item.isEditing" class="card-title" [ngClass]="{'editing':item.isEditing}" (input)="item.title = feedTitle.innerText">{{ item.title }}</h5>
+                <p class="card-text" #content [attr.contenteditable]="item.isEditing" [ngClass]="{'editing': item.isEditing}" (input)="item.content = content.innerText">{{item.content}}</p>
 
+                <!-- <p [attr.contenteditable]="item.isEditing" class="card-text" [ngClass]="{'editing':item.isEditing}" [(ngModel)]="item.content">{{ item.content }}</p> -->
+                <button *ngIf="!item.isEditing" class="btn btn-primary m-1" (click)="toggleDiscussionBox(myModal, item)">Discussion Box</button>
+                <button *ngIf="!item.isEditing" class="btn btn-secondary" (click)="editPost(item)">Edit</button>
+                <button *ngIf="item.isEditing" class="btn btn-success m-1" (click)="savePostEdit(item)">Save 
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="editPostBtnLoader"></span>
+                </button>
+                <button *ngIf="item.isEditing" class="btn btn-danger" (click)="cancelPostEdit(item)">Cancel</button>
+      
               </div>
             </div>
           </div>
@@ -37,14 +45,14 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <ng-template #noDataMessage>
+      <ng-template #noDataMessage><!-- if there is no objects in posts list it will shows this templete on screen-->
         <div class="text-center mt-3" *ngIf="!postLoader">
-          <h3>No posts found</h3>
+          <h5>No posts found</h5>
         </div>
       </ng-template>
     </div>
 
-<ng-template #myModal let-modal >
+<ng-template #myModal let-modal ><!--here too show discussion box and discussion occurred on that particular post-->
   <div class="modal-header">
     <h4 class="modal-title">Discussion Box</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -64,7 +72,7 @@
             {{comment.content}}
         </p><hr>
     </ng-container>
-    <ng-container *ngIf="!comments.length">
+    <ng-container *ngIf="!comments.length && !commentsLoader ">
         <small class="text-muted">Nothing happened here!. <br> Start the Discussion by adding a comment</small>
     </ng-container>
   </div>
@@ -89,19 +97,30 @@
         <div *ngFor="let post of marketPosts; let i = index" class="card mb-4">
           <div class="row no-gutters">
             <div class="col-md-4">
-              <img [src]="post.image" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <img [src]="post.image" *ngIf="!post.tempImage" class="card-img" alt="Post Image" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <img class="card-img" *ngIf="post.tempImage" [src]="post.tempImage" alt="" style="padding: 3%; height: -webkit-fill-available; height: -moz-available;">
+              <input *ngIf="post.isEditing" type="file" (change)="handleMarketPostUpload($event, i)" >
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-title">{{ post.title }}</h5>
-                <p class="card-text"><strong>Year of Purchase:</strong> {{ post.year_of_purchase }}</p>
-                <p class="card-text"><strong>Contact Number:</strong> {{ post.contact }}</p>
-                <p class="card-text">{{ post.content }}</p>
+                <h5 class="card-title" [attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #marketTitle (input)="post.title = marketTitle.innerText">{{ post.title }}</h5>
+                <p class="card-text"><strong>Year of Purchase:</strong>
+                   <span [attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #yop (input)="post.year_of_purchase = yop.innerText"> {{ post.year_of_purchase }}</span>
+                </p>
+                <p class="card-text"><strong>Contact Number:</strong>
+                  <span [attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #contact (input)="post.contact = contact.innerText"> {{ post.contact }}</span>
+                </p>
+                <p class="card-text"[attr.contenteditable]="post.isEditing" [ngClass]="{'editing': post.isEditing}" #listingDesc (input)="post.content = listingDesc.innerText">{{ post.content }}</p>
 
                 <!-- Delete Button -->
                 <div style="justify-content: space-between;">
-                  <button class="btn btn-secondary" disabled title="Coming soon...">Edit</button>
-                  <button class="btn btn-danger" style="margin-left: 2%;" [disabled]="deleteBtnLoader" (click)="onDelete_market(i)">Delete <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="deleteBtnLoader"></span></button>
+                  <button *ngIf="!post.isEditing" class="btn btn-secondary m-1" (click)="editMarketPost(post)">Edit</button>
+                  <button *ngIf="!post.isEditing" class="btn btn-danger" [disabled]="deleteBtnLoader" (click)="onDelete_market(i)">Delete <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="deleteBtnLoader"></span></button>
+                  <button *ngIf="post.isEditing" class="btn btn-success m-1" (click)="saveMarketPostEdit(post)">Save 
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="editMarketBtnLoader"></span>
+                  </button>
+                  <button *ngIf="post.isEditing" class="btn btn-danger" (click)="cancelMarketPostEdit(post)">Cancel</button>
+        
                 </div>
               </div>
             </div>
@@ -118,9 +137,9 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <ng-template #noData2Message>
-        <div class="text-center mt-3" *ngId="!marketListingLoader">
-          <h3>No market listings found.</h3>
+      <ng-template #noData2Message><!--if there is no market list it shows this templete-->
+        <div class="text-center mt-3" *ngIf="!marketListingLoader">
+          <h5>No market listings found.</h5>
         </div>
       </ng-template>
     </div>

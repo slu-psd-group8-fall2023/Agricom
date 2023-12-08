@@ -1,7 +1,7 @@
 const User = require("./models/User");
 const Post = require("./models/Post");
 const Iterator = require("./Iterator");
-
+const { emitMessage } = require("./socketConnection")
 /**
  * Function for user posts
  */
@@ -26,6 +26,10 @@ async function userPost(req, res) {
     });
 
     await newPost.save();
+    if(!process.env.JEST_WORKER_ID) {
+      const result = await fetchPosts(false, false);
+      emitMessage("newFeedPost", result);
+    }
 
     res.status(201).json({ message: "Post created successfully", newPost });
   } catch (error) {
@@ -39,31 +43,9 @@ async function userPost(req, res) {
  */
 async function retrievePosts(req, res) {
   try {
-    const { username } = req.body;
-    let query = {};
-    let posts = null;
-
-    // Check if the user exists
-    if (username) {
-      query = { username: username.toLowerCase() };
-      if (!(await User.findOne({ username }))) {
-        return res.status(400).json({ error: "User not found." });
-      } else {
-        posts = await Post.find(query).sort({ createdAt: -1 });
-      }
-    } else {
-      posts = await Post.find().sort({ createdAt: -1 });
-    }
-
-    const postIterator = new Iterator(posts);
-
-    const result = [];
-    let post = postIterator.next();
-    while (!post.done) {
-      result.push(post.value);
-      post = postIterator.next();
-    }
-
+    const { username, isSearch } = req.body;
+    
+    const result = await fetchPosts(username, isSearch);
     res.status(200).json({ posts: result });
   } catch (error) {
     console.error("Error retrieving posts:", error);
@@ -71,16 +53,46 @@ async function retrievePosts(req, res) {
   }
 }
 
+async function fetchPosts(username, isSearch) {
+  let query = {};
+  let posts = null;
+
+  if(isSearch) {
+    posts = await Post.find({username:{"$regex": username}}).sort({ createdAt: -1 });
+  }
+  // Check if the user exists
+  else if (username) {
+    query = { username: username.toLowerCase() };
+    if (!(await User.findOne({ username }))) {
+      return res.status(400).json({ error: "User not found." });
+    } else {
+      posts = await Post.find(query).sort({ createdAt: -1 });
+    }
+  } else {
+    posts = await Post.find().sort({ createdAt: -1 });
+  }
+
+  const postIterator = new Iterator(posts);
+
+  const result = [];
+  let post = postIterator.next();
+  while (!post.done) {
+    result.push(post.value);
+    post = postIterator.next();
+  }
+  return result
+}
+
 /**
  * Function to add a comment to a post
  */
 async function addCommentToPost(req, res) {
   try {
-    const { postId } = req.params; // Extract the post ID from the URL
-    const { username, content, createdAt } = req.body;
+    const { _id } = req.params; // Extract the post ID from the URL
+    const { username, content, createdAt, postId } = req.body;
 
     // Find the post by its ID
-    const post = await Post.findOne({ postId });
+    const post = await Post.findOne({ _id: _id??postId });
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -109,10 +121,10 @@ async function addCommentToPost(req, res) {
  */
 async function getCommentsForPost(req, res) {
   try {
-    const { postId } = req.params; // Extract the post ID from the URL
+    const { postId } = req.body; // Extract the post ID from the URL
 
     // Find the post by its ID
-    const post = await Post.findOne({ postId });
+    const post = await Post.findOne({ _id: postId });
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });

@@ -1,14 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const db = require("./database/db");
-const { cors, handleError } = require("./middleware");
+const { handleError } = require("./middleware");
 const api = require("./api");
 const http = require("http");
-const socketIo = require("socket.io");
+const cors = require('cors'); // Add this line
+const { Server } = require("socket.io");
 
 const app = express();
-const server = http.createServer(app); // Create an HTTP server
-const io = socketIo(server); // Attach WebSocket server to the HTTP server
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json({ limit: "50mb", extended: true }));
@@ -17,7 +16,14 @@ app.use(bodyParser.json({ limit: "50mb", extended: true }));
 db();
 
 // Register middleware
-app.use(cors);
+// app.use(cors);
+const corsOptions = {
+  origin: 'http://localhost:4200', // Replace with the actual origin of your Angular app
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -46,8 +52,20 @@ app.post("/filtermarketposts", api.filterMarketPosts);
 app.post("/deletemarketpost", api.deleteMarketPosts);
 app.post("/editmarketpost", api.editMarketPosts);
 
-// Handle errors
 app.use(handleError);
+
+const server = app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
+// const io = socketIo(server); // Attach WebSocket server to the HTTP server
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:4200',
+    methods:['GET','POST']
+  }
+})
 
 io.on("connection", (socket) => {
   console.log("A user connected");
@@ -76,6 +94,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+module.exports = {
+  io
+}

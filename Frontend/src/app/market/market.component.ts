@@ -1,4 +1,4 @@
-import { Component,OnInit, NgModule   } from '@angular/core';
+import { Component,OnInit, NgModule, OnDestroy   } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { DefaultService } from "../default.service";
@@ -9,6 +9,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { UserService } from '../services/user.service';
 import { DomSanitizer } from '@angular/platform-browser';
 //import { CountryStateService } from './country-state.service';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'app-market',
@@ -16,14 +17,16 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./market.component.scss'],
 })
 
-export class MarketComponent implements OnInit{
+export class MarketComponent implements OnInit, OnDestroy {
   createPostBtnLoader: boolean = false;
   form: FormGroup;
   submittedData: any = {}; 
   posts: any[] = [];
   postLoader = false;
   user: any;
-  filterParams: any = {}
+  filterParams: any = {};
+  searchTerm: string = '';
+  searchResults: string[] = [];
 
   constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService, private _sanitizer: DomSanitizer) {
     this.form = this.fb.group({
@@ -33,9 +36,22 @@ export class MarketComponent implements OnInit{
     });
   }
 
+socket:any;
 ngOnInit(): void {
+    this.socket = io("http://localhost:3000");
     this.user = this.authenticationService.userValue;
     this.loadPosts();
+
+    this.socket.on('newMarketPost', (data:any) => {
+      console.log("Socket data");
+      data.forEach((element:any, index:any) => {
+        data[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+      });
+      this.posts = data;
+    });
+}
+ngOnDestroy() {
+  this.socket.disconnect();
 }
 
   isDropdownOpen = false;
@@ -167,6 +183,27 @@ onScroll() {
     this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, {username:this.user.username, postId:postIdToDelete}).subscribe(() => {
       this.posts.splice(postIndex, 1); 
     });
+  }
+
+
+  onSearch() {
+    this.postLoader = true;
+    this.resetFilters();
+    try {
+      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API,{username:this.searchTerm, isSearch:true}).subscribe((data: any) => {
+        data.marketPosts.forEach((element:any, index:any) => {
+          data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
+        });
+        this.posts = this.posts.concat(data['marketPosts']);
+        this.postLoader = false;
+      }, (error:any)=> {
+        this.postLoader = false;
+        this.toastr.error("Error fetching posts");
+      });
+    } catch (error) {
+      this.postLoader = false;
+      this.toastr.error("Error fetching posts");
+    }
   }
 }
 

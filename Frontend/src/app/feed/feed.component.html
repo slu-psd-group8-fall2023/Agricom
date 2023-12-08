@@ -1,5 +1,5 @@
 <div>
-    <div id="post-bar">
+    <div id="post-bar"><!---just normal form which takes information from user and works on dropdown by clicking on post button-->
         <div class="dropdown-container">
             <button class="btn btn-primary" (click)="toggleDropdown()" id="dropdown-button">Post</button>
             <div class="dropdown-content mt-2" id="dropdown-content"
@@ -29,6 +29,8 @@
             </div>
         </div>
     </div>
+
+
     <!-- <br><br><br> -->
     <!-- scrollable-and showing posts on screen -->
     <div class="container" style="padding-top: 80px;" (scroll)="onScroll()" [ngClass]="{'opacity-75':isDropdownOpen}">
@@ -44,8 +46,17 @@
                     <span class="sr-only">Loading...</span>
                 </div>
               </div>
+ <!-- search-box.component.html -->
+ <div class="row justify-content-center" *ngIf="!isLoading">
+    <div class="col-md-8">
+        <div class="input-group mb-4">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Type to search...">
+            
+        </div>
+    </div>
+</div>
                     <!-- <button class="btn btn-primary">Discussion Box</button> -->
-                <div *ngFor="let item of data" class="card mb-4 custom-card">
+                <div *ngFor="let item of data" class="card mb-4 custom-card"><!--it displays according to data got from backend on scrollling it calls scrolling funtion for more data-->
                     <img class="card-img-top" [src]="item.image" *ngIf="item.image" alt="">
                     <div class="card-body">
                         <h5 class="card-title">{{ item.title }}</h5>
@@ -57,12 +68,12 @@
         </div>
     </div>
 </div>
-
+<!--- this is to show templet on screan if user want to use discussion box-->
 <ng-template #myModal let-modal >
     <!-- <div class="modal-dailog"> -->
     <div class="modal-header">
         <h4 class="modal-title">Discussion Box</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button><!--it works on click y showing templete on screen-->
     </div>
     <div class="modal-body">
         <div class="d-flex justify-content-center" *ngIf="commentsLoader">
@@ -79,7 +90,7 @@
                 {{comment.content}}
             </p><hr>
         </ng-container>
-        <ng-container *ngIf="!comments.length">
+        <ng-container *ngIf="!comments.length && !commentsLoader">
             <small class="text-muted">Nothing happened here!. <br> Start the Discussion by adding a comment</small>
         </ng-container>
     </div>

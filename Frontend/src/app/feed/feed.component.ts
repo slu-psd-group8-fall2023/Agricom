@@ -1,27 +1,35 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { DefaultService } from "../default.service";
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthenticationService } from '../services/authentication.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+// import { Socket } from 'ngx-socket-io';
+import { io } from 'socket.io-client';
+import { SocketioService } from "../socket.service";
 
 @Component({
   selector: 'app-feed',
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
 })
-export class FeedComponent {
+export class FeedComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') modalContent!: ElementRef;
 
   authService: any;
   user:any;
-  constructor(config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { 
+  constructor(
+    // private socket: Socket,
+    config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { 
     config.backdrop = 'static';
 		config.keyboard = false;
   }
 
   isDropdownOpen = false;
+  searchTerm: string = '';
+  searchResults: string[] = [];
+
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
     this.formData = {
@@ -90,10 +98,26 @@ export class FeedComponent {
   users: any[] = [];
   isLoading = false;
 
-
+  socket:any;
   ngOnInit(): void {
+    this.socket = io("http://localhost:3000");
     this.loadInitialUserData();
+
     this.user = this.authenticationService.userValue;
+    this.socket.on('newFeedPost', (data:any) => {
+      console.log("Socket data");
+      console.log(data)
+      data.forEach((element:any, index:any) => {
+        data[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
+      });
+      this.data = data;
+    });
+  }
+
+  ngOnDestroy() {
+    if(this.socket) {
+      this.socket.disconnect();
+    }
   }
 
   loadInitialUserData() {
@@ -145,6 +169,9 @@ export class FeedComponent {
     }
     this.defaultService.httpPostCall(environment.GET_COMMENT_API, params).subscribe((data: any) => {
       this.comments = data.comments;
+      this.comments.forEach((element:any, index:number)=>{
+        element.createdAt = new Date(element.createdAt).toLocaleDateString()
+      })
       this.commentsLoader = false;
     });
 
@@ -199,5 +226,23 @@ export class FeedComponent {
       modalContentElement.scrollTop = modalContentElement.scrollHeight;
     } catch(err) { }                 
 }
+
+//here is search funtion
+
+onSearch() {
+  this.isLoading = true;
+  this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{username:this.searchTerm, isSearch:true}).subscribe((data: any) => {
+    data.posts.forEach((element:any, index:any) => {
+      data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
+    });
+    this.data = data.posts;
+    this.isLoading = false;
+  }, (error:any)=> {
+    this.isLoading = false;
+    this.toastr.error("Error fetching posts");
+  });
+}
+
+
 
 }

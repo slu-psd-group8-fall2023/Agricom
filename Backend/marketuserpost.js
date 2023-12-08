@@ -1,6 +1,7 @@
 const User = require("./models/User");
 const Marketpost = require("./models/Marketpost");
 const Iterator = require("./Iterator");
+const { emitMessage } = require("./socketConnection")
 
 /**
  * Function for market user posts
@@ -84,6 +85,10 @@ async function marketcreatePost(req, res) {
     // Save the new market post to the database
     await newMarketPost.save();
 
+    if(!process.env.JEST_WORKER_ID) {
+      const result = await fetchMarketPosts(false, false);
+      emitMessage("newComment", result);
+    }
     res
       .status(201)
       .json({ message: "Market Post created successfully", newMarketPost });
@@ -99,34 +104,9 @@ async function marketcreatePost(req, res) {
  */
 async function retrieveMarketPosts(req, res) {
   try {
-    const { username } = req.body;
-    let query = {};
-    let marketPosts = null;
+    const { username, isSearch } = req.body;
 
-    // Check if the user exists
-    if (username) {
-      query = { username: username.toLowerCase() };
-      if (!(await User.findOne({ username }))) {
-        return res.status(400).json({ error: "User not found." });
-      } else {
-        marketPosts = await Marketpost.find(query).sort({ createdAt: -1 });
-      }
-    } else {
-      marketPosts = await Marketpost.find().sort({ createdAt: -1 });
-    }
-
-    // Create an iterator for the market posts array
-    const marketPostIterator = new Iterator(marketPosts);
-
-    const result = [];
-
-    // Iterate through the market posts using the custom iterator
-    let marketPost = marketPostIterator.next();
-    while (!marketPost.done) {
-      // Push the current market post to the result array
-      result.push(marketPost.value);
-      marketPost = marketPostIterator.next();
-    }
+    const result = await fetchMarketPosts(username, isSearch);
 
     // Respond with a 200 OK status and the sorted market posts
     res.status(200).json({ marketPosts: result });
@@ -134,6 +114,40 @@ async function retrieveMarketPosts(req, res) {
     console.error("Error retrieving market posts:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+}
+
+async function fetchMarketPosts(username, isSearch) {
+  let query = {};
+  let marketPosts = null;
+
+  if(isSearch) {
+    marketPosts = await Marketpost.find({username:{"$regex": username}}).sort({ createdAt: -1 });
+  }
+  // Check if the user exists
+  else if (username) {
+    query = { username: username.toLowerCase() };
+    if (!(await User.findOne({ username }))) {
+      return res.status(400).json({ error: "User not found." });
+    } else {
+      marketPosts = await Marketpost.find(query).sort({ createdAt: -1 });
+    }
+  } else {
+    marketPosts = await Marketpost.find().sort({ createdAt: -1 });
+  }
+
+  // Create an iterator for the market posts array
+  const marketPostIterator = new Iterator(marketPosts);
+
+  const result = [];
+
+  // Iterate through the market posts using the custom iterator
+  let marketPost = marketPostIterator.next();
+  while (!marketPost.done) {
+    // Push the current market post to the result array
+    result.push(marketPost.value);
+    marketPost = marketPostIterator.next();
+  }
+  return result;
 }
 
 /**

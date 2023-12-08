@@ -1,4 +1,5 @@
 <br><br><br>
+<!--asks for uploading picture and onsubmit triggers onsubmit funtion-->
 <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
@@ -12,6 +13,8 @@
         </form>
       </div>
     </div>
+
+<!--it shows information at result class "col-md-6" div which gets ondemand or else it will show "container mt-5" using variables picture_error,and response_got-->
 
 <div *ngIf="result" class="row justify-content-center mt-3" [hidden]="!picture_error">
   <div class="col-md-6">

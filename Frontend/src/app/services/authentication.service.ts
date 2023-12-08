@@ -24,14 +24,14 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
-    login(username: string, password: string) {
-        return this.http.post<any>(`${environment.LOGIN_API}`, { username, password })
-            .pipe(map(user => {
+    login(email: string, password: string) {
+        return this.http.post<any>(`${environment.LOGIN_API}`, { username:email , email, password })
+            .pipe(map(userResp => {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
-                user.authdata = window.btoa(username + ':' + password);
-                localStorage.setItem('user', JSON.stringify({...user, username}));
-                this.userSubject.next({...user, username});
-                return user;
+                userResp.authdata = window.btoa(email + ':' + password);
+                localStorage.setItem('user', JSON.stringify({...userResp, email, ...userResp.user}));
+                this.userSubject.next({...userResp, email, ...userResp.user});
+                return userResp;
             }));
     }
 
