@@ -71,7 +71,7 @@ describe("marketUserPost", () => {
 
     await marketcreatePost(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({ error: "User not found." });
   });
 
