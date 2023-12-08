@@ -14,11 +14,12 @@
           <h2>Sign In</h2>
           <form>
             <div class="form-group">
-              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Email / Username" required>
+              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control"
+                placeholder="Email / Username" required>
             </div>
             <div class="form-group">
-              <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control" placeholder="Password"
-                required>
+              <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control"
+                placeholder="Password" required>
             </div>
             <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
             <button (click)="login()" type="submit" class="btn btn-primary">Sign In</button>
@@ -28,22 +29,25 @@
               data-target="#forgotPasswordModal">Reset Password</a></p>
         </div>
 
-        <div class="form" [hidden]="!authCtrl.showSignUp"><!--it hides and provide showsignup enables onclicking signup-->
+        <div class="form" [hidden]="!authCtrl.showSignUp">
+          <!--it hides and provide showsignup enables onclicking signup-->
           <h2>Sign Up</h2>
           <form>
             <div class="form-group">
-              <input type="text" name="Username" [(ngModel)]="authCtrl.username" class="form-control" placeholder="Username" required>
+              <input type="text" name="Username" [(ngModel)]="authCtrl.username" class="form-control"
+                placeholder="Username" required>
             </div>
             <div class="form-group">
-              <input type="email" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-              <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control" placeholder="Password"
+              <input type="email" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Email"
                 required>
             </div>
             <div class="form-group">
-              <input type="password" name="reenter" [(ngModel)]="authCtrl.confirmPassword" class="form-control" placeholder="Confirm Password"
-                required>
+              <input type="password" name="Password" [(ngModel)]="authCtrl.password" class="form-control"
+                placeholder="Password" required>
+            </div>
+            <div class="form-group">
+              <input type="password" name="reenter" [(ngModel)]="authCtrl.confirmPassword" class="form-control"
+                placeholder="Confirm Password" required>
             </div>
             <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
             <button (click)="signup()" type="submit" class="btn btn-secondary">Sign Up</button>
@@ -51,12 +55,13 @@
           <p (click)="showLogin()">Already have an account? <a>Sign In</a></p>
         </div>
 
-        <div class="form" [hidden]="!authCtrl.showForgotPassword"><!--it hides and provide forgot password enables onclicking forgot password-->
+        <div class="form" [hidden]="!authCtrl.showForgotPassword">
+          <!--it hides and provide forgot password enables onclicking forgot password-->
           <h2>Password Reset</h2>
           <form>
             <div class="form-group">
-              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control" placeholder="Enter your email address"
-                required>
+              <input type="text" name="Email" [(ngModel)]="authCtrl.email" class="form-control"
+                placeholder="Enter your email address" required>
             </div>
             <p (click)="showLogin()">Remember the password? <a>Sign In</a></p>
             <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
@@ -68,16 +73,16 @@
           <h2>Password Reset</h2> <label> A password reset mail has been sent to your mail</label>
           <form>
             <div class="form-group">
-              <input type="text" name="Token" [(ngModel)]="authCtrl.token" class="form-control" placeholder="Enter the token"
-                required>
+              <input type="text" name="Token" [(ngModel)]="authCtrl.token" class="form-control"
+                placeholder="Enter the token" required>
             </div>
             <div class="form-group">
-              <input type="password" name="Password" [(ngModel)]="authCtrl.newPassword" class="form-control" placeholder="New Password"
-                required>
+              <input type="password" name="Password" [(ngModel)]="authCtrl.newPassword" class="form-control"
+                placeholder="New Password" required>
             </div>
             <div class="form-group">
-              <input type="password" name="Confirm Password" [(ngModel)]="authCtrl.confirmNewPassword" class="form-control"
-                placeholder="Confirm New Password" required>
+              <input type="password" name="Confirm Password" [(ngModel)]="authCtrl.confirmNewPassword"
+                class="form-control" placeholder="Confirm New Password" required>
               <label *ngIf="authCtrl.errorMessage">{{authCtrl.errorMessage}}</label>
             </div>
             <p (click)="showLogin()">Remember the password? <a>Sign In</a></p>

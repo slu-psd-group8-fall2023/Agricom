@@ -1,4 +1,4 @@
-import { Component,OnInit, NgModule, OnDestroy   } from '@angular/core';
+import { Component, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { DefaultService } from "../default.service";
@@ -20,7 +20,7 @@ import { io } from 'socket.io-client';
 export class MarketComponent implements OnInit, OnDestroy {
   createPostBtnLoader: boolean = false;
   form: FormGroup;
-  submittedData: any = {}; 
+  submittedData: any = {};
   posts: any[] = [];
   postLoader = false;
   user: any;
@@ -28,7 +28,7 @@ export class MarketComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   searchResults: string[] = [];
 
-  constructor(private fb: FormBuilder,private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService, private _sanitizer: DomSanitizer) {
+  constructor(private fb: FormBuilder, private defaultService: DefaultService, private toastr: ToastrService, private authenticationService: AuthenticationService, private _sanitizer: DomSanitizer) {
     this.form = this.fb.group({
       country: [''],
       state: [''],
@@ -36,56 +36,56 @@ export class MarketComponent implements OnInit, OnDestroy {
     });
   }
 
-socket:any;
-ngOnInit(): void {
+  socket: any;
+  ngOnInit(): void {
     this.socket = io("http://localhost:3000");
     this.user = this.authenticationService.userValue;
     this.loadPosts();
 
-    this.socket.on('newMarketPost', (data:any) => {
+    this.socket.on('newMarketPost', (data: any) => {
       console.log("Socket data");
-      data.forEach((element:any, index:any) => {
+      data.forEach((element: any, index: any) => {
         data[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
       });
       this.posts = data;
     });
-}
-ngOnDestroy() {
-  this.socket.disconnect();
-}
+  }
+  ngOnDestroy() {
+    this.socket.disconnect();
+  }
 
   isDropdownOpen = false;
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
-    this.formData={
-      title:'',
-      content:'',
-      image:'',
-      createdAt:'',
-      year_of_purchase:'',
-      address:'',
-      city:'',
-      state:'',
-      country:'',
+    this.formData = {
+      title: '',
+      content: '',
+      image: '',
+      createdAt: '',
+      year_of_purchase: '',
+      address: '',
+      city: '',
+      state: '',
+      country: '',
     }
   }
 
 
-  picture:any;
-  data:any;
-  formData: any={
-    title:'',
-    content:'',
-    image:'',
-    createdAt:'',
-    year_of_purchase:'',
-    address:'',
-    city:'',
-    state:'',
-    country:'',
+  picture: any;
+  data: any;
+  formData: any = {
+    title: '',
+    content: '',
+    image: '',
+    createdAt: '',
+    year_of_purchase: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
   }
 
-  handleUpload(event:any) {
+  handleUpload(event: any) {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -94,28 +94,28 @@ ngOnDestroy() {
     }
   }
   submitForm() {
-      // Your implementation for submitForm
-    }
-  
+    // Your implementation for submitForm
+  }
 
-  
+
+
   onSubmit() {
-    try{
+    try {
       this.createPostBtnLoader = true;
-      this.defaultService.httpPostCall(environment.CREATE_MARKET_POSTS_API,{...this.formData, username: this.user.username, createdAt:Date.now()}).subscribe(
-      (data: any) => {
-        this.createPostBtnLoader = false;
-        this.toastr.success("Tool listed successfully");
-        let response = data['data'];
-        this.loadPosts();
-        this.toggleDropdown();
-      },
-      (err: any) => {
-        this.toastr.error("Error listing your tool! \n Please try again");
-        this.createPostBtnLoader = false;
-      // this.loadingData = false;
-      }
-    )
+      this.defaultService.httpPostCall(environment.CREATE_MARKET_POSTS_API, { ...this.formData, username: this.user.username, createdAt: Date.now() }).subscribe(
+        (data: any) => {
+          this.createPostBtnLoader = false;
+          this.toastr.success("Tool listed successfully");
+          let response = data['data'];
+          this.loadPosts();
+          this.toggleDropdown();
+        },
+        (err: any) => {
+          this.toastr.error("Error listing your tool! \n Please try again");
+          this.createPostBtnLoader = false;
+          // this.loadingData = false;
+        }
+      )
     } catch (e) {
       this.createPostBtnLoader = false;
       this.toastr.error("Error ! \n Please try again");
@@ -126,8 +126,8 @@ ngOnDestroy() {
     this.postLoader = true;
     this.resetFilters();
     try {
-      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API,'').subscribe((data: any) => {
-        data.marketPosts.forEach((element:any, index:any) => {
+      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API, '').subscribe((data: any) => {
+        data.marketPosts.forEach((element: any, index: any) => {
           data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
         });
         this.posts = this.posts.concat(data['marketPosts']);
@@ -138,24 +138,24 @@ ngOnDestroy() {
       this.toastr.error("Error fetching posts");
     }
   }
-  
+
   resetFilters() {
     this.filterParams = {
-      country:'',
-      state:'',
-      city:'',
-      isApplied:false
+      country: '',
+      state: '',
+      city: '',
+      isApplied: false
     }
     this.posts = []
   }
-  
+
   filterPosts() {
     try {
       this.filterParams.isApplied = true;
       this.postLoader = true;
-      this.defaultService.httpPostCall(environment.FILTER_MARKET_POSTS_API, {...this.filterParams}).subscribe((data: any) => {
-        if(data.marketPosts && data.marketPosts.length) {
-          data.marketPosts.forEach((element:any, index:any) => {
+      this.defaultService.httpPostCall(environment.FILTER_MARKET_POSTS_API, { ...this.filterParams }).subscribe((data: any) => {
+        if (data.marketPosts && data.marketPosts.length) {
+          data.marketPosts.forEach((element: any, index: any) => {
             data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
           });
           this.posts = data['marketPosts'];
@@ -166,22 +166,22 @@ ngOnDestroy() {
         }
         this.postLoader = false;
       });
-    } catch(e) {
+    } catch (e) {
       this.postLoader = false;
       this.toastr.error("Error filtering posts");
     }
   }
 
-onScroll() {
-  if (!this.postLoader && ! this.filterParams.isApplied) {
-    this.loadPosts();
+  onScroll() {
+    if (!this.postLoader && !this.filterParams.isApplied) {
+      this.loadPosts();
+    }
   }
-}
 
   onDelete(postIndex: number) {
     const postIdToDelete = this.posts[postIndex]._id;
-    this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, {username:this.user.username, postId:postIdToDelete}).subscribe(() => {
-      this.posts.splice(postIndex, 1); 
+    this.defaultService.httpPostCall(`${environment.DELETE_MARKET_POSTS_API}`, { username: this.user.username, postId: postIdToDelete }).subscribe(() => {
+      this.posts.splice(postIndex, 1);
     });
   }
 
@@ -190,13 +190,13 @@ onScroll() {
     this.postLoader = true;
     this.resetFilters();
     try {
-      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API,{username:this.searchTerm, isSearch:true}).subscribe((data: any) => {
-        data.marketPosts.forEach((element:any, index:any) => {
+      this.defaultService.httpPostCall(environment.FETCH_MARKET_POSTS_API, { username: this.searchTerm, isSearch: true }).subscribe((data: any) => {
+        data.marketPosts.forEach((element: any, index: any) => {
           data.marketPosts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image)
         });
         this.posts = this.posts.concat(data['marketPosts']);
         this.postLoader = false;
-      }, (error:any)=> {
+      }, (error: any) => {
         this.postLoader = false;
         this.toastr.error("Error fetching posts");
       });

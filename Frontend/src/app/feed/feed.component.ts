@@ -18,27 +18,10 @@ export class FeedComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') modalContent!: ElementRef;
 
   authService: any;
-  user:any;
-  constructor(
-    // private socket: Socket,
-    config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) { 
-    config.backdrop = 'static';
-		config.keyboard = false;
-  }
-
+  user: any;
   isDropdownOpen = false;
   searchTerm: string = '';
   searchResults: string[] = [];
-
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-    this.formData = {
-      title: '',
-      picture: '',
-      description: ''
-    }
-  }
-  // app.ts
   data: any;
   picture: any;
   userId: any;
@@ -49,19 +32,43 @@ export class FeedComponent implements OnInit, OnDestroy {
     description: ''
   }
   comments: any = [];
-  public commentText:string = '';
-  selectedPostId:string='';
-  discussionBox:boolean = false;
-  commentsLoader:boolean = false;
-  commentsBtnLoader:boolean = false;
-  createPostBtnLoader:boolean = false;
+  public commentText: string = '';
+  selectedPostId: string = '';
+  discussionBox: boolean = false;
+  commentsLoader: boolean = false;
+  commentsBtnLoader: boolean = false;
+  createPostBtnLoader: boolean = false;
+  users: any[] = [];
+  isLoading = false;
+  socket: any;
+
+  /**
+   * Execute the commands when a component is created
+   */
+  constructor(
+    // private socket: Socket,
+    config: NgbModalConfig, private defaultService: DefaultService, private toastr: ToastrService, private _sanitizer: DomSanitizer, private authenticationService: AuthenticationService, private modalService: NgbModal) {
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
 
 
-  //submiting data to backend
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+    this.formData = {
+      title: '',
+      picture: '',
+      description: ''
+    }
+  }
+
+  /**
+   * Submit the details posted by user to create post in feed
+   */
   async submitForm() {
     this.createPostBtnLoader = true;
     console.log("Submitting")
-    
+
     // You can access the form data using 'formData' object
     console.log('Form Data:', this.formData);
     try {
@@ -94,36 +101,40 @@ export class FeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  // angular code to show post on page and onscrolling it retrives the data and shows on ascreen
-  users: any[] = [];
-  isLoading = false;
-
-  socket:any;
+  /**
+   * Execute the commands when a component is initiated
+   */
   ngOnInit(): void {
     this.socket = io("http://localhost:3000");
     this.loadInitialUserData();
 
     this.user = this.authenticationService.userValue;
-    this.socket.on('newFeedPost', (data:any) => {
+    this.socket.on('newFeedPost', (data: any) => {
       console.log("Socket data");
       console.log(data)
-      data.forEach((element:any, index:any) => {
+      data.forEach((element: any, index: any) => {
         data[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
       });
       this.data = data;
     });
   }
 
+  /**
+   * Executes when the component is closed/page is closed
+   */
   ngOnDestroy() {
-    if(this.socket) {
+    if (this.socket) {
       this.socket.disconnect();
     }
   }
 
+  /**
+   * Fetch post data 
+   */
   loadInitialUserData() {
     this.isLoading = true;
-    this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{}).subscribe((data: any) => {
-      data.posts.forEach((element:any, index:any) => {
+    this.defaultService.httpPostCall(environment.FETCH_POSTS_API, {}).subscribe((data: any) => {
+      data.posts.forEach((element: any, index: any) => {
         data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
       });
       this.data = data.posts;
@@ -131,11 +142,14 @@ export class FeedComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Fetch more data from backend while user is scrolling
+   */
   loadMoreUserData() {
     if (!this.isLoading) {
       this.isLoading = true;
-      this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{}).subscribe((data: any) => {
-        if(data.posts[data.posts.length-1]._id!=this.data[this.data.length-1]._id) {
+      this.defaultService.httpPostCall(environment.FETCH_POSTS_API, {}).subscribe((data: any) => {
+        if (data.posts[data.posts.length - 1]._id != this.data[this.data.length - 1]._id) {
           this.data = this.data.concat(data.posts);
           this.isLoading = false;
         }
@@ -143,6 +157,9 @@ export class FeedComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Listen for scroll events
+   */
   @HostListener('window:scroll', ['$event'])
   onScroll() {
     if (
@@ -153,9 +170,12 @@ export class FeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleDiscussionBox(modal:any, postData:any) {
+  /** 
+  * Open/close the discussion box for a particular post
+  */
+  toggleDiscussionBox(modal: any, postData: any) {
     this.commentsLoader = true
-    this.discussionBox = ! this.discussionBox;
+    this.discussionBox = !this.discussionBox;
     this.selectedPostId = postData._id
     // this.comments = postData.Comments
     this.commentText = '';
@@ -163,13 +183,16 @@ export class FeedComponent implements OnInit, OnDestroy {
     this.getPostComments();
   }
 
+  /**
+   * Fetch comments of given post
+   */
   async getPostComments() {
     let params = {
       postId: this.selectedPostId
     }
     this.defaultService.httpPostCall(environment.GET_COMMENT_API, params).subscribe((data: any) => {
       this.comments = data.comments;
-      this.comments.forEach((element:any, index:number)=>{
+      this.comments.forEach((element: any, index: number) => {
         element.createdAt = new Date(element.createdAt).toLocaleDateString()
       })
       this.commentsLoader = false;
@@ -177,7 +200,10 @@ export class FeedComponent implements OnInit, OnDestroy {
 
   }
 
-  handleUpload(event:any) {
+  /**
+   * Convert uploaded image to base64 to store in db
+   */
+  handleUpload(event: any) {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -186,6 +212,9 @@ export class FeedComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * Submit comment posted by user
+   */
   async submitComment() {
     this.commentsBtnLoader = true;
     try {
@@ -220,28 +249,32 @@ export class FeedComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Scroll to bottom of the container
+   */
   scrollToBottom(): void {
     try {
       const modalContentElement = this.modalContent.nativeElement;
       modalContentElement.scrollTop = modalContentElement.scrollHeight;
-    } catch(err) { }                 
-}
+    } catch (err) { }
+  }
 
-//here is search funtion
-
-onSearch() {
-  this.isLoading = true;
-  this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{username:this.searchTerm, isSearch:true}).subscribe((data: any) => {
-    data.posts.forEach((element:any, index:any) => {
-      data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
+  /**
+   * Implements post search functionality
+   */
+  onSearch() {
+    this.isLoading = true;
+    this.defaultService.httpPostCall(environment.FETCH_POSTS_API, { username: this.searchTerm, isSearch: true }).subscribe((data: any) => {
+      data.posts.forEach((element: any, index: any) => {
+        data.posts[index].image = this._sanitizer.bypassSecurityTrustResourceUrl(element.image[0])
+      });
+      this.data = data.posts;
+      this.isLoading = false;
+    }, (error: any) => {
+      this.isLoading = false;
+      this.toastr.error("Error fetching posts");
     });
-    this.data = data.posts;
-    this.isLoading = false;
-  }, (error:any)=> {
-    this.isLoading = false;
-    this.toastr.error("Error fetching posts");
-  });
-}
+  }
 
 
 

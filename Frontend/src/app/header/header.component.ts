@@ -9,9 +9,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 export class HeaderComponent implements OnInit {
 
-    loggedIn:boolean = false;
+    loggedIn: boolean = false;
 
-    constructor(private authenticationService: AuthenticationService, 
+    constructor(private authenticationService: AuthenticationService,
         private router: Router
     ) {
     }
@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
         this.authenticationService.user.subscribe(value => {
             console.log("From header")
             console.log(value)
-            if(!value?.username) {
+            if (!value?.username) {
                 this.router.navigate(['/']);
                 this.loggedIn = false
             } else {
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
             }
             // Subscription received B. It would not happen
             // for an Observable or Subject by default.
-          });
+        });
     }
 
     logout() {
