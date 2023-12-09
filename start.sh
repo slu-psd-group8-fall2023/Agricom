@@ -1,5 +1,5 @@
 echo "Starting AgriCom"
-cd Frontend && ng build
+cd Frontend && sudo ng build
 echo "build completed"
 cd ../
 npm run start:backend & 
