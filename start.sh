@@ -1,2 +1,2 @@
 echo "Starting AgriCom"
-npm run start:backend & npm run start:frontend
+npm run build:frontend && npm run start:backend & sudo npm run start:frontend

@@ -17,13 +17,12 @@ db();
 
 // Register middleware
 // app.use(cors);
-const corsOptions = {
-  origin: 'http://localhost:4200', // Replace with the actual origin of your Angular app
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: 'http://localhost:8080', // Replace with the actual origin of your Angular app
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
