@@ -1,4 +1,5 @@
 echo "Starting AgriCom"
+cp -r node_modules Frontend/
 cd Frontend && sudo ng build
 echo "build completed"
 cd ../
