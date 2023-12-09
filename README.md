@@ -96,6 +96,19 @@ Contributing
 We welcome contributions from the community to enhance and improve AgriCom. Please refer to our contribution guidelines for more information.
 
 
+### Creating Docker image
+- Install docker in your computer
+- Execute the following commands in root folder of application.
+- Create docker build using `docker build -t <image>:<tagname> .`
+- Run the created docker image from above command `docker run <image>:<tagname>`
+- This will setup the docker container and application will be accessible through the localhost url
+
+### Contributions
+We encourage any feedback or issues or improvements that are applicable to the application.
+Please raise a pull request through this [link](https://github.com/slu-psd-group8-fall2023/Agricom/compare) with your contribution to the repository. Our developer will review the pull request and merge your code if everything is good.
+  - Keep the base branch as `dev` and your branch as `compare`
+You can raise issue through this [link](https://github.com/slu-psd-group8-fall2023/Agricom/issues/new)
+
 ### Support
 If you encounter any issues or have questions, please reach out to our support team.
 

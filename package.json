@@ -3,7 +3,8 @@
     "version": "0.0.0",
     "scripts": {
       "ng": "ng",
-      "start:frontend": "cd Frontend/ && ng serve",
+      "build:frontend": "cd Frontend/ && ng build",
+      "start:frontend": "cd Frontend/ && http-server dist/agri-com",
       "start:backend": "cd Backend/ && node app.js",
       "build": "ng build",
       "watch": "ng build --watch --configuration development",
