@@ -1,50 +1,86 @@
-// import { ComponentFixture, TestBed,waitForAsync  } from '@angular/core/testing';
-// import { NgSelectModule } from '@ng-select/ng-select';
-// import { ProfileComponent } from './profile.component';
-// import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-// import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-// import { By } from '@angular/platform-browser';
-// import { DefaultService } from '../default.service';
-// import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProfileComponent } from './profile.component';
+import { AuthenticationService } from '../services/authentication.service';
+import { of } from 'rxjs';
+import { DefaultService } from '../default.service';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule, ToastrService } from 'ngx-toastr'
 
-// describe('ProfileComponent', () => {
-//   let component: ProfileComponent;
-//   let fixture: ComponentFixture<ProfileComponent>;
+describe('ProfileComponent', () => {
+  let component: ProfileComponent;
+  let fixture: ComponentFixture<ProfileComponent>;
+  let authService: AuthenticationService;
 
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       declarations: [ProfileComponent],
-//       imports: [HttpClientTestingModule, NgSelectModule, ReactiveFormsModule, ToastrModule.forRoot()],
-//       providers:[DefaultService]
-//     });
-//     fixture = TestBed.createComponent(ProfileComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ProfileComponent],
+      providers: [AuthenticationService], // Include any necessary providers
+    imports: [ToastrModule.forRoot(),HttpClientTestingModule],
+    }).compileComponents();
+  });
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ProfileComponent);
+    component = fixture.componentInstance;
+    authService = TestBed.inject(AuthenticationService);
 
+    // Mock the AuthenticationService
+    // spyOn(authService, 'userValue').and.returnValue({ username: 'testUser' });
 
-//   it('should create', () => {
-//     // expect(component).toBeTruthy();
-//   });
+    fixture.detectChanges();
+  });
 
-//   // it('should load feed posts and display them', () => {
-//   //   // Setting fake data
-//   //   component.feed_posts = [
-//   //     { id: 1, title: 'Post 1', content: 'Content 1', image: 'image_url_1' },
-//   //     { id: 2, title: 'Post 2', content: 'Content 2', image: 'image_url_2' },
-//   //   ];
-//   //   fixture.detectChanges();
-//   //   const postElements = fixture.debugElement.queryAll(By.css('.custom-card'));
-//   //   expect(postElements.length).toBe(2);
-//   //   expect(postElements[0].query(By.css('.card-title')).nativeElement.textContent).toBe('Post 1');
-//   //   expect(postElements[0].query(By.css('.card-text')).nativeElement.textContent).toBe('Content 1');
-//   //   expect(postElements[1].query(By.css('.card-title')).nativeElement.textContent).toBe('Post 2');
-//   //   expect(postElements[1].query(By.css('.card-text')).nativeElement.textContent).toBe('Content 2');
-//   // });
+  it('should create ProfileComponent', () => {
+    expect(component).toBeTruthy();
+  });
 
-// });
+  describe('editPost', () => {
+    it('should set post to editable mode', () => {
+      const mockPost = { username:'a',
+        title:'b',
+        content:'c', isEditing:false };
+      component.feed_posts = [mockPost];
+
+      component.editPost(mockPost);
+
+      expect(mockPost.isEditing).toBeTrue();
+    });
+
+    it('should cancel edit post when cancel button is clicked', () => {
+        const mockPost = { username:'a',
+          title:'b',
+          content:'c', isEditing:true };
+        component.feed_posts = [mockPost];
   
+        component.cancelPostEdit(mockPost);
   
+        expect(mockPost.isEditing).toBeFalse();
+      });
+  });
 
+  describe('editMarketPost', () => {
+    it('should set post to editable mode', () => {
+      const mockListing = { username:'a',
+        title:'b',
+        content:'c', isEditing:false };
+      component.feed_posts = [mockListing];
 
+      component.editMarketPost(mockListing);
+
+      expect(mockListing.isEditing).toBeTrue();
+    });
+
+    it('should cancel edit post when cancel button is clicked', () => {
+        const mockListing = { username:'a',
+          title:'b',
+          content:'c', isEditing:true };
+        component.feed_posts = [mockListing];
+  
+        component.cancelMarketPostEdit(mockListing);
+  
+        expect(mockListing.isEditing).toBeFalse();
+      });
+  });
+
+});

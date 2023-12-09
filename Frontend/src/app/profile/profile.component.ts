@@ -54,6 +54,9 @@ ngOnInit(): void {
   this.loadFeedData();
 }
 
+/**
+ * Load market listings created by username, we will be calling api by passing username of logged in user
+ */
 loadMarketListings() {
   try {
     this.marketListingLoader = true;
@@ -74,10 +77,17 @@ loadMarketListings() {
   }
 }
 
+/**
+ * Set flag to edit market listing
+ * This sets isEditing flasg to true which enables user to edit in frontend
+ */
 editMarketPost(marketPostsData:any) {
   marketPostsData.isEditing = true;
 }
 
+/**
+ * Save edited market post, pass whole market listing data
+ */
 async saveMarketPostEdit(marketPostsData:any) {
   
   this.editMarketBtnLoader = true;
@@ -118,11 +128,17 @@ async saveMarketPostEdit(marketPostsData:any) {
   }
 }
 
+/**
+ * Unset the edit flag of market listing
+ */
 cancelMarketPostEdit(postData:any) {
   postData.isEditing = false;
   delete postData.tempImage;
 }
 
+/**
+ * Handle image upload, convert image to base64 format
+ */
 handleMarketPostUpload(event:any, postIndex:any) {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -132,6 +148,9 @@ handleMarketPostUpload(event:any, postIndex:any) {
   };
 }
 
+/**
+ * Load feed posts created by user, we will be calling api by passing username of logged in user
+ */
 loadFeedData() {
   this.postLoader = true;
   this.defaultService.httpPostCall(environment.FETCH_POSTS_API,{username:this.userName}).subscribe((data: any) => {
@@ -145,10 +164,17 @@ loadFeedData() {
   });
 }
 
+/**
+ * Set flag to edit feed post
+ * This sets isEditing flasg to true which enables user to edit in frontend
+ */
 editPost(postData:any) {
   postData.isEditing = true;
 }
 
+/**
+ * Save edited feed post, pass whole feed post data
+ */
 async savePostEdit(postData:any) {
   
   this.editPostBtnLoader = true;
@@ -183,11 +209,17 @@ async savePostEdit(postData:any) {
   }
 }
 
+/**
+ * Unset the edit flag of feed post
+ */
 cancelPostEdit(postData:any) {
   postData.isEditing = false;
   delete postData.tempImage;
 }
 
+/**
+ * Handle image upload, convert image to base64 format
+ */
 handleUpload(event:any, postIndex:any) {
   const file = event.target.files[0];
   const reader = new FileReader();
@@ -201,6 +233,9 @@ onScroll(){
 
 }
 
+/**
+ * Set/unset flag to display the comment box
+ */
 toggleDiscussionBox(modal:any, postData:any) {
   this.commentsLoader = true
   this.discussionBox = ! this.discussionBox;
@@ -211,6 +246,9 @@ toggleDiscussionBox(modal:any, postData:any) {
   this.getPostComments();
 }
 
+/**
+ * Load comments of selected post
+ */
 async getPostComments() {
   let params = {
     postId: this.selectedPostId
@@ -222,6 +260,9 @@ async getPostComments() {
 
 }
 
+/**
+ * Function to submit comment and store it to db
+ */
 async submitComment() {
   this.commentsBtnLoader = true;
   try {
@@ -261,6 +302,10 @@ async submitComment() {
 onDelete_feed(id:any){
 
 }
+
+/**
+ * Delete a selected market listing
+ */
 onDelete_market(postIndex:any){
   this.deleteBtnLoader = true;
   const postIdToDelete = this.marketPosts[postIndex]._id;
@@ -270,6 +315,9 @@ onDelete_market(postIndex:any){
   });
 }
 
+/**
+ * Scroll component to the end
+ */
 scrollToBottom(): void {
   try {
     const modalContentElement = this.modalContent.nativeElement;
