@@ -12,6 +12,7 @@ COPY ./package.json .
 CMD ["cd", "~"]
 RUN sudo npm install -f
 RUN sudo npm install socket.io --save --force
+RUN sudo npm install http-server -g
 # CMD ["npm", "install", "-f"]
 EXPOSE 8080
 CMD ["sh","./start.sh"]
